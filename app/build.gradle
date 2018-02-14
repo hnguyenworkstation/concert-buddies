@@ -1,14 +1,28 @@
 apply plugin: 'com.android.application'
+apply from: '../dependencies.gradle'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
     defaultConfig {
         applicationId "com.app.concertbud.concertbuddies"
-        minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.compileSdk
+        versionCode versions.publishVersionCode
+        versionName versions.publishVersion
+
+        renderscriptSupportModeEnabled true
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "boolean", "LOGE", "true"
+        buildConfigField "boolean", "LOGW", "true"
+        buildConfigField "boolean", "LOGI", "true"
+        buildConfigField "boolean", "LOGD", "true"
+        buildConfigField "boolean", "LOGV", "true"
+
+        resConfigs "en", "en_US", "vi_VN"
     }
     buildTypes {
         release {
@@ -16,12 +30,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    // Fixed build error : Duplicate files copied in APK META-INF/xxx
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:' + versions.supportLib
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
