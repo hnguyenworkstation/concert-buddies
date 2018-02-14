@@ -1,0 +1,16 @@
+ext.versions = [
+        minSdk            : 19,
+        compileSdk        : 26,
+        buildTools        : '27.0.2',
+        publishVersion    : '0.9.4.5',
+        publishVersionCode: 175,
+        gradlePlugin      : '2.3.2',
+        spotlessPlugin    : '3.4.0',
+
+        supportLib        : '27.0.2',
+        googleSupportLib  : '11.8.0',
+        glideSupportLib   : '4.6.1',
+        squareUp          : '2.3.0',
+
+        butterKnife       : '8.4.0'
+]

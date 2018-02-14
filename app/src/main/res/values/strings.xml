@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">ConcertBuddies</string>
+
+    <!-- App Configuration Strings -->
+    <string name="file_provider_authorities">com.app.concertbud.concertbuddies.provider</string>
+
+    <string name="facebook_app_id">428914620878343</string>
+    <string name="fb_login_protocol_scheme">fb428914620878343</string>
+
 </resources>

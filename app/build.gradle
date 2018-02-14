@@ -1,14 +1,28 @@
 apply plugin: 'com.android.application'
+apply from: '../dependencies.gradle'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
     defaultConfig {
         applicationId "com.app.concertbud.concertbuddies"
-        minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.compileSdk
+        versionCode versions.publishVersionCode
+        versionName versions.publishVersion
+
+        renderscriptSupportModeEnabled true
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "boolean", "LOGE", "true"
+        buildConfigField "boolean", "LOGW", "true"
+        buildConfigField "boolean", "LOGI", "true"
+        buildConfigField "boolean", "LOGD", "true"
+        buildConfigField "boolean", "LOGV", "true"
+
+        resConfigs "en", "en_US", "vi_VN"
     }
     buildTypes {
         release {
@@ -16,13 +30,84 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    // Fixed build error : Duplicate files copied in APK META-INF/xxx
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
+    })
+    implementation 'com.android.support:appcompat-v7:' + versions.supportLib
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:multidex:1.0.2'
+
+
+    implementation 'com.android.support:cardview-v7:' + versions.supportLib
+    implementation 'com.android.support:design:' + versions.supportLib
+    implementation 'com.android.support:support-v4:' + versions.supportLib
+    implementation 'com.android.support:appcompat-v7:' + versions.supportLib
+    implementation 'com.android.support:recyclerview-v7:' + versions.supportLib
+    implementation 'com.android.support:support-core-utils:' + versions.supportLib
+    implementation 'com.android.support:customtabs:' + versions.supportLib
+    implementation 'com.android.support:mediarouter-v7:' + versions.supportLib
+
+    implementation 'com.google.android.gms:play-services-gcm:' + versions.googleSupportLib
+    implementation 'com.google.android.gms:play-services-maps:' + versions.googleSupportLib
+    implementation 'com.google.android.gms:play-services-places:' + versions.googleSupportLib
+    implementation 'com.google.android.gms:play-services-nearby:' + versions.googleSupportLib
+    implementation 'com.google.android.gms:play-services-identity:' + versions.googleSupportLib
+    implementation 'com.google.android.gms:play-services-location:' + versions.googleSupportLib
+    implementation "com.google.android.gms:play-services-auth:" + versions.googleSupportLib
+
+
+    implementation 'com.google.firebase:firebase-core:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-crash:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-auth:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-messaging:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-appindexing:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-database:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-storage:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-config:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-invites:' + versions.googleSupportLib
+
+
+    implementation 'com.github.bumptech.glide:glide:' + versions.glideSupportLib
+    implementation "com.github.bumptech.glide:okhttp3-integration:" + versions.glideSupportLib
+    implementation("com.github.bumptech.glide:recyclerview-integration:" + versions.glideSupportLib) {
+        transitive = false
+    }
+
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation 'com.squareup.retrofit2:retrofit:' + versions.squareUp
+    implementation 'com.squareup.retrofit2:adapter-rxjava:' + versions.squareUp
+    implementation 'com.squareup.retrofit2:converter-gson:' + versions.squareUp
+
+
+    implementation 'com.facebook.android:facebook-login:4.30.0'
+
+
+    implementation 'com.jakewharton:butterknife:' + versions.butterKnife
+
+    implementation 'com.birbit:android-priority-jobqueue:2.0.1'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:' + versions.butterKnife
 }
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.jakewharton.butterknife'
