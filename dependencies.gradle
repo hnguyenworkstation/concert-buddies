@@ -8,5 +8,9 @@ ext.versions = [
         spotlessPlugin    : '3.4.0',
 
         supportLib        : '27.0.2',
+        googleSupportLib  : '11.8.0',
+        glideSupportLib   : '4.6.1',
+        squareUp          : '2.3.0',
+
         butterKnife       : '8.4.0'
 ]
