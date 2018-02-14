@@ -15,6 +15,7 @@ Concert Buddies uses following approach/libraries:
 - [GSON](https://github.com/google/gson) for serialization/deserialization library to convert Java Objects into JSON and back
 - [EventBus](https://github.com/greenrobot/EventBus) for simplifing communication between Activities, Fragments, Threads, Services, etc. 
 - [Parceler](https://github.com/johncarl81/parceler) for sending objects to child activities/fragments
+- [Job Queue](https://github.com/yigit/android-priority-jobqueue) for managing threads/tasks running in the background
 
 
 ## Screenshots

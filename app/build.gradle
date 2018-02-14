@@ -73,6 +73,17 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:" + versions.googleSupportLib
 
 
+    implementation 'com.google.firebase:firebase-core:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-crash:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-auth:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-messaging:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-appindexing:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-database:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-storage:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-config:' + versions.googleSupportLib
+    implementation 'com.google.firebase:firebase-invites:' + versions.googleSupportLib
+
+
     implementation 'com.github.bumptech.glide:glide:' + versions.glideSupportLib
     implementation "com.github.bumptech.glide:okhttp3-integration:" + versions.glideSupportLib
     implementation("com.github.bumptech.glide:recyclerview-integration:" + versions.glideSupportLib) {
@@ -80,12 +91,18 @@ dependencies {
     }
 
     implementation 'com.google.code.gson:gson:2.8.0'
-    compile 'org.greenrobot:eventbus:3.0.0'
+    implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.squareup.retrofit2:retrofit:' + versions.squareUp
     implementation 'com.squareup.retrofit2:adapter-rxjava:' + versions.squareUp
     implementation 'com.squareup.retrofit2:converter-gson:' + versions.squareUp
 
+
+    implementation 'com.facebook.android:facebook-login:4.30.0'
+
+
     implementation 'com.jakewharton:butterknife:' + versions.butterKnife
+
+    implementation 'com.birbit:android-priority-jobqueue:2.0.1'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
