@@ -7,4 +7,8 @@
     <string name="facebook_app_id">428914620878343</string>
     <string name="fb_login_protocol_scheme">fb428914620878343</string>
 
+    <!-- Login Activity Strings -->
+    <string name="app_fullname">Concert Buddies</string>
+    <string name="welcome">Welcome to the concert buddies community</string>
+    <string name="continue_with_fb">Continue with Facebook</string>
 </resources>

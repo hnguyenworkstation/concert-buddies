@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin_32"
+    tools:context="com.app.concertbud.concertbuddies.Activity.LoginActivity">
+
+
+    <com.app.concertbud.concertbuddies.CustomUI.SquareImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/margin_16"
+        android:id="@+id/logo">
+        <com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView
+            android:layout_width="@dimen/med_logo_size"
+            android:layout_height="@dimen/med_logo_size"
+            android:id="@+id/logo_image"/>
+    </com.app.concertbud.concertbuddies.CustomUI.SquareImageView>
+
+    <TextView
+        style="@style/LargeTitleText"
+        android:layout_below="@+id/logo"
+        android:id="@+id/app_name_txt"
+        android:layout_marginTop="@dimen/margin_12"
+        android:layout_marginBottom="@dimen/margin_12"
+        android:text="@string/app_fullname"/>
+
+    <TextView
+        android:layout_below="@+id/app_name_txt"
+        style="@style/MediumTextStyle"
+        android:text="@string/welcome"/>
+
+
+    <FrameLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/frame_layout"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/margin_12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/fb_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_marginBottom="@dimen/margin_8"
+            android:id="@+id/login_button"
+            android:layout_width="fill_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/fb_button_shape"
+            android:padding="@dimen/margin_8"
+            android:textSize="@dimen/text_18"
+            android:textStyle="normal"
+            android:text="@string/continue_with_fb"
+            android:textColor="#ffffff" />
+    </FrameLayout>
+</RelativeLayout>

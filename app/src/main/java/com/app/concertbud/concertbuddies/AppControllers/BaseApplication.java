@@ -7,6 +7,7 @@ import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.R;
 
 import com.app.concertbud.concertbuddies.Tasks.Configs.AppGcmTaskService;
@@ -63,10 +64,20 @@ public class BaseApplication extends Application {
         /* Init Glide */
         mGlideRequestManager = Glide.with(getBaseContext());
 
+        /* Override Fonts */
+        overrideFonts();
+
         /* Fixing URI exposed */
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         builder.detectFileUriExposure();
+    }
+
+    private void overrideFonts() {
+        AppUtils.setDefaultFont(this, "DEFAULT", "fonts/Muli-Black.ttf");
+        AppUtils.setDefaultFont(this, "MONOSPACE", "fonts/Muli-Bold.ttf");
+        AppUtils.setDefaultFont(this, "SERIF", "fonts/Muli-BlackItalic.ttf");
+        AppUtils.setDefaultFont(this, "SANS_SERIF", "fonts/Muli-BoldItalic.ttf");
     }
 
 
