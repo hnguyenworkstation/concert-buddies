@@ -60,6 +60,14 @@
         <item name="android:textColor">@color/text_dark_color</item>
     </style>
 
+
+    <style name="MediumTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+        <item name="android:textColor">@color/text_dark_color</item>
+    </style>
+
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">Roboto-Regular</item>
     </style>
