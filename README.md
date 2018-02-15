@@ -9,7 +9,7 @@ Concert Buddies is an android application that pairs up strangers who are going 
 Concert Buddies uses following approach/libraries:
 
 - [Java] as main programming language
-- [Butter Kife](https://github.com/JakeWharton/butterknife) for views/functions binding
+- [Butter Knife](https://github.com/JakeWharton/butterknife) for views/functions binding
 - [Glide](https://github.com/bumptech/glide) for Image caching and loading
 - [Retrofit](https://github.com/square/retrofit) for Type-safe HTTP client for Android and Java by Square, Inc.
 - [GSON](https://github.com/google/gson) for serialization/deserialization library to convert Java Objects into JSON and back
