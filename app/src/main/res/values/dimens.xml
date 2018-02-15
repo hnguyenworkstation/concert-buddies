@@ -34,5 +34,5 @@
 
 
     <!-- Login Activity Dimens -->
-    <dimen name="med_logo_size">96dp</dimen>
+    <dimen name="med_logo_size">108dp</dimen>
 </resources>

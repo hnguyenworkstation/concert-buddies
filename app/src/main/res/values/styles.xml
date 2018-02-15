@@ -14,7 +14,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:textViewStyle">@style/MuliTextViewStyle</item>
         <item name="android:actionBarStyle">@style/ToolbarTextTitle</item>
         <item name="android:typeface">monospace</item>
     </style>
@@ -68,7 +68,7 @@
         <item name="android:textColor">@color/text_dark_color</item>
     </style>
 
-    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">Roboto-Regular</item>
+    <style name="MuliTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">Muli-Black</item>
     </style>
 </resources>

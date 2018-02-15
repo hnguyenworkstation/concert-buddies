@@ -74,10 +74,10 @@ public class BaseApplication extends Application {
     }
 
     private void overrideFonts() {
-        AppUtils.setDefaultFont(this, "DEFAULT", "Muli-Black.ttf");
-        AppUtils.setDefaultFont(this, "MONOSPACE", "Muli-Bold.ttf");
-        AppUtils.setDefaultFont(this, "SERIF", "Multi-BlackItalic.ttf");
-        AppUtils.setDefaultFont(this, "SANS_SERIF", "Muli-Bold-Italic.ttf");
+        AppUtils.setDefaultFont(this, "DEFAULT", "fonts/Muli-Black.ttf");
+        AppUtils.setDefaultFont(this, "MONOSPACE", "fonts/Muli-Bold.ttf");
+        AppUtils.setDefaultFont(this, "SERIF", "fonts/Muli-BlackItalic.ttf");
+        AppUtils.setDefaultFont(this, "SANS_SERIF", "fonts/Muli-BoldItalic.ttf");
     }
 
 

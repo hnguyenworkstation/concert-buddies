@@ -73,8 +73,7 @@ public class AppUtils {
         return df.format(new Date());
     }
 
-    public static void loadCircleImageFromUri(final Context context,
-                                              final Uri uri,
+    public static void loadCircleImageFromUri(final Uri uri,
                                               final ImageView imageView,
                                               final ProgressBar progressBar) {
         BaseApplication.getInstance().getGlide()
@@ -97,6 +96,16 @@ public class AppUtils {
                 })
                 .into(imageView);
     }
+
+    public static void loadImageFromDrawable(final Drawable drawable,
+                                             final ImageView imageView) {
+        BaseApplication.getInstance().getGlide()
+                .load(drawable)
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                .into(imageView);
+    }
+
+
 
 
     public static void startNewActivityAndFinish(@NonNull final Context context,
