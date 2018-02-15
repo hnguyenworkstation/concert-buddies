@@ -12,8 +12,14 @@
     <com.app.concertbud.concertbuddies.CustomUI.SquareImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        
+        <com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView
+            android:layout_width="@dimen/med_logo_size"
+            android:layout_height="@dimen/med_logo_size"
+            android:id="@+id/logo_image"/>
     </com.app.concertbud.concertbuddies.CustomUI.SquareImageView>
 
-
+    <TextView
+        style="@style/LargeTitleText"
+        android:id="@+id/login_title"
+        android:text="@string/welcome"/>
 </LinearLayout>

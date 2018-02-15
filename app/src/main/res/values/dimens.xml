@@ -32,4 +32,7 @@
     <dimen name="margin_32">32dp</dimen>
     <dimen name="margin_48">48dp</dimen>
 
+
+    <!-- Login Activity Dimens -->
+    <dimen name="med_logo_size">96dp</dimen>
 </resources>

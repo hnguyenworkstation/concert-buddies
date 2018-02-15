@@ -46,7 +46,6 @@
     <style name="LargeTitleText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:maxLines">1</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:textColor">@color/text_dark_color</item>
