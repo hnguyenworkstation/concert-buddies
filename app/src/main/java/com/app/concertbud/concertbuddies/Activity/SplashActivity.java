@@ -10,11 +10,8 @@ import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.R;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 public class SplashActivity extends BaseActivity {
-
     private final String TAG = SplashActivity.class.getSimpleName();
     private static final int SPLASH_TIME_OUT = 2000;
 

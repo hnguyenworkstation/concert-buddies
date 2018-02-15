@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -115,7 +117,28 @@ public class AppUtils {
         View view = activity.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+
+    public static void setDefaultFont(Context context,
+                                      String staticTypefaceFieldName, String fontAssetName) {
+        final Typeface regular = Typeface.createFromAsset(context.getAssets(),
+                fontAssetName);
+        replaceFont(staticTypefaceFieldName, regular);
+    }
+
+    private static void replaceFont(String staticTypefaceFieldName,
+                                    final Typeface newTypeface) {
+        try {
+            final Field staticField = Typeface.class
+                    .getDeclaredField(staticTypefaceFieldName);
+            staticField.setAccessible(true);
+            staticField.set(null, newTypeface);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 }
