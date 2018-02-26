@@ -9,6 +9,7 @@
     <dimen name="large_text_size">32sp</dimen>
     <dimen name="medium_text_size">22sp</dimen>
     <dimen name="normal_text_size">18sp</dimen>
+    <dimen name="small_text_size">16sp</dimen>
 
 
     <dimen name="text_10">10sp</dimen>
@@ -31,10 +32,6 @@
     <dimen name="margin_24">24dp</dimen>
     <dimen name="margin_32">32dp</dimen>
     <dimen name="margin_48">48dp</dimen>
-
-
-    <!-- Login Activity Dimens -->
-    <dimen name="med_logo_size">108dp</dimen>
 
     <!-- Login Activity Dimens -->
     <dimen name="med_logo_size">108dp</dimen>

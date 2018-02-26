@@ -17,4 +17,7 @@
     <string name="continue_str">Continue</string>
     <string name="change">Change</string>
     <string name="pick_username">Let\'s pick a username so it gets easier for everyone to find you</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
