@@ -71,4 +71,12 @@
     <style name="MuliTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">Muli-Black</item>
     </style>
+
+    <style name="SmallTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
+        <item name="android:textColor">@color/text_dark_color</item>
+    </style>
+
 </resources>

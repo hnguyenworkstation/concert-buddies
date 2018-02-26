@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.app.concertbud.concertbuddies.Activity.SignUpActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_48">
+
+        <RelativeLayout
+            android:layout_width="@dimen/med_logo_size"
+            android:layout_height="@dimen/med_logo_size"
+            android:layout_alignParentTop="true"
+            android:id="@+id/profile_view"
+            android:layout_marginTop="@dimen/margin_32">
+
+            <com.app.concertbud.concertbuddies.CustomUI.SquareImageView
+                android:layout_width="@dimen/med_logo_size"
+                android:layout_height="@dimen/med_logo_size"
+                android:id="@+id/logo">
+                <com.app.hoocons.hooconsride.CustomUI.AdjustableImageView
+                    android:layout_width="@dimen/med_logo_size"
+                    android:layout_height="@dimen/med_logo_size"
+                    android:id="@+id/logo_image"/>
+            </com.app.concertbud.concertbuddies.CustomUI.SquareImageView>
+
+
+            <ProgressBar
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:id="@+id/progress_bar"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+        <TextView
+            style="@style/LargeTitleText"
+            android:layout_below="@+id/profile_view"
+            android:id="@+id/user_name"
+            android:layout_marginTop="@dimen/margin_12"
+            android:layout_marginBottom="@dimen/margin_12"/>
+
+        <TextView
+            android:layout_below="@+id/user_name"
+            android:id="@+id/fb_fullname"
+            style="@style/SmallTextStyle"
+            android:text="@string/pick_username"/>
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginBottom="@dimen/margin_16"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/username_root"
+            android:layout_below="@+id/fb_fullname"
+            android:gravity="center"
+            android:background="@drawable/rounded_text_view">
+
+            <ImageView
+                android:layout_margin="@dimen/margin_8"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_left_arrow" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_20"
+                android:hint="@string/user_display_name"
+                android:textAlignment="center"
+                android:maxLines="2" />
+        </LinearLayout>
+
+
+        <Button
+            android:layout_marginBottom="@dimen/margin_4"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_below="@+id/username_root"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/update_info_btn"
+            android:background="@drawable/fb_button_shape"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/large_button_height"
+            android:text="Continue"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_16"
+            android:textStyle="bold"
+            android:textAllCaps="false" />
+    </RelativeLayout>
+</ScrollView>
