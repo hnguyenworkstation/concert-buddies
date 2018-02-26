@@ -11,4 +11,10 @@
     <string name="app_fullname">Concert Buddies</string>
     <string name="welcome">Welcome to the concert buddies community</string>
     <string name="continue_with_fb">Continue with Facebook</string>
+
+    <string name="user_display_name">Full name</string>
+    <string name="submit_info">Submit Information</string>
+    <string name="continue_str">Continue</string>
+    <string name="change">Change</string>
+    <string name="pick_username">Let\'s pick a username so it gets easier for everyone to find you</string>
 </resources>
