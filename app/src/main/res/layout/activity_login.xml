@@ -33,7 +33,11 @@
         style="@style/MediumTextStyle"
         android:text="@string/welcome"/>
 
-
+    <com.facebook.login.widget.LoginButton
+        android:layout_below="@id/app_name_txt"
+        android:id="@+id/fb_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <FrameLayout
         android:layout_alignParentBottom="true"
         android:id="@+id/frame_layout"
@@ -42,11 +46,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/fb_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+        <!--<com.facebook.login.widget.LoginButton-->
+            <!--android:id="@+id/fb_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone" />-->
 
         <Button
             android:layout_marginBottom="@dimen/margin_8"
