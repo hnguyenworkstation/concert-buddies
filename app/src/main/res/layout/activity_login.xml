@@ -33,7 +33,6 @@
         style="@style/MediumTextStyle"
         android:text="@string/welcome"/>
 
-
     <FrameLayout
         android:layout_alignParentBottom="true"
         android:id="@+id/frame_layout"
@@ -46,7 +45,7 @@
             android:id="@+id/fb_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <Button
             android:layout_marginBottom="@dimen/margin_8"

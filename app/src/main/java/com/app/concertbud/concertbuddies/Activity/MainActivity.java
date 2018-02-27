@@ -1,17 +1,30 @@
 package com.app.concertbud.concertbuddies.Activity;
 
+import android.annotation.SuppressLint;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.Adapters.CommonViewPagerAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
+import com.app.concertbud.concertbuddies.Helpers.ImageLoader;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.ViewFragments.LocateEventFragment;
 import com.app.concertbud.concertbuddies.ViewFragments.MatchesFragment;
 import com.app.concertbud.concertbuddies.ViewFragments.SubscribedEventsFragment;
+import com.facebook.Profile;
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.SettingService;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,8 +39,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     @BindView(R.id.advance_tab)
     FloatingActionButton mAdvanceTab;
 
+    @BindView(R.id.tab_title)
+    TextView mTabTitle;
+
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
+
+    @BindView(R.id.image_btn)
+    ImageView mProfileImg;
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
+
+    private Profile mUserProfile;
 
     private Unbinder unbinder;
     private CommonViewPagerAdapter mMainViewPagerAdapter;
@@ -35,7 +58,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private LocateEventFragment locateEventFragment;
     private MatchesFragment matchesFragment;
     private SubscribedEventsFragment subscribedEventsFragment;
-
+    private SettingService settingService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +67,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
         unbinder = ButterKnife.bind(this);
 
-        initContents();
+        getPermission();
+    }
 
-        initView();
-        initViewPager();
-        initOnClicks();
+    private void getPermission() {
+        AndPermission.with(this)
+                .permission(Permission.Group.LOCATION)
+                .onGranted(new Action() {
+                    @Override
+                    public void onAction(List<String> permissions) {
+                        initContents();
+
+                        initView();
+                        initViewPager();
+                        initOnClicks();
+                    }
+                }).onDenied(new Action() {
+                    @Override
+                    public void onAction(List<String> permissions) {
+                        if (AndPermission.hasAlwaysDeniedPermission(getBaseContext(), permissions)) {
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "need permission", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .start();
     }
 
     private void initContents() {
@@ -57,8 +101,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         subscribedEventsFragment = SubscribedEventsFragment.newInstance();
     }
 
+    @SuppressLint("SetTextI18n")
     private void initView() {
+        ImageLoader.loadSimpleCircleImage(mProfileImg,
+                Profile.getCurrentProfile().getProfilePictureUri(248, 248).toString(), mProgressBar);
 
+        mTabTitle.setText("Following");
     }
 
     private void initOnClicks() {
@@ -90,9 +138,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onPageSelected(int position){
-
+                switch (position) {
+                    case 0:
+                        mTabTitle.setText("Following");
+                        break;
+                    case 1:
+                        mTabTitle.setText("");
+                        break;
+                    case 2:
+                        mTabTitle.setText("Matches");
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
@@ -120,3 +181,4 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 }
+
