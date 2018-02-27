@@ -58,6 +58,10 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_key" />
+
         <!-- SERVICES FOR MANAGING TASKS IN BACKGROUND -->
         <service
             android:name=".Tasks.Configs.AppTaskSchedulerService"

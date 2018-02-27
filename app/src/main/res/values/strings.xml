@@ -6,6 +6,7 @@
 
     <string name="facebook_app_id">428914620878343</string>
     <string name="fb_login_protocol_scheme">fb428914620878343</string>
+    <string name="google_map_key">AIzaSyCsqqG6TLRq61EAirtUKZSnw-a4GObEiik</string>
 
     <!-- Login Activity Strings -->
     <string name="app_fullname">Concert Buddies</string>

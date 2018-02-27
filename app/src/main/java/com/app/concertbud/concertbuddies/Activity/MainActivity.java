@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.Adapters.CommonViewPagerAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
@@ -12,6 +13,12 @@ import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.ViewFragments.LocateEventFragment;
 import com.app.concertbud.concertbuddies.ViewFragments.MatchesFragment;
 import com.app.concertbud.concertbuddies.ViewFragments.SubscribedEventsFragment;
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.SettingService;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +42,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private LocateEventFragment locateEventFragment;
     private MatchesFragment matchesFragment;
     private SubscribedEventsFragment subscribedEventsFragment;
-
+    private SettingService settingService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +51,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
         unbinder = ButterKnife.bind(this);
 
-        initContents();
+        getPermission();
+    }
 
-        initView();
-        initViewPager();
-        initOnClicks();
+    private void getPermission() {
+        AndPermission.with(this)
+                .permission(Permission.Group.LOCATION)
+                .onGranted(new Action() {
+                    @Override
+                    public void onAction(List<String> permissions) {
+                        initContents();
+
+                        initView();
+                        initViewPager();
+                        initOnClicks();
+                    }
+                }).onDenied(new Action() {
+                    @Override
+                    public void onAction(List<String> permissions) {
+                        if (AndPermission.hasAlwaysDeniedPermission(getBaseContext(), permissions)) {
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "need permission", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .start();
     }
 
     private void initContents() {

@@ -102,7 +102,7 @@ dependencies {
 
 
     implementation 'com.jakewharton:butterknife:' + versions.butterKnife
-
+    implementation 'com.yanzhenjie:permission:2.0.0-rc2'
     implementation 'com.birbit:android-priority-jobqueue:2.0.1'
 
     testImplementation 'junit:junit:4.12'
