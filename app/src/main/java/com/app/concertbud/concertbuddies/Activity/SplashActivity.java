@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.R;
+import com.facebook.AccessToken;
 
 
 public class SplashActivity extends BaseActivity {
@@ -28,8 +29,13 @@ public class SplashActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                AppUtils.startNewActivityAndFinish(getBaseContext(), SplashActivity.this,
-                        LoginActivity.class);
+                if (AccessToken.getCurrentAccessToken() == null) {
+                    AppUtils.startNewActivityAndFinish(getBaseContext(), SplashActivity.this,
+                            LoginActivity.class);
+                } else {
+                    AppUtils.startNewActivityAndFinish(getBaseContext(), SplashActivity.this,
+                            SignUpActivity.class);
+                }
             }
         }, SPLASH_TIME_OUT);
     }

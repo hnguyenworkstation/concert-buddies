@@ -22,7 +22,7 @@
                 android:layout_width="@dimen/med_logo_size"
                 android:layout_height="@dimen/med_logo_size"
                 android:id="@+id/logo">
-                <com.app.hoocons.hooconsride.CustomUI.AdjustableImageView
+                <com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView
                     android:layout_width="@dimen/med_logo_size"
                     android:layout_height="@dimen/med_logo_size"
                     android:id="@+id/logo_image"/>
