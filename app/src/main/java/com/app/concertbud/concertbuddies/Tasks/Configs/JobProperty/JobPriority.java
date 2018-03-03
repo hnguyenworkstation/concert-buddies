@@ -5,4 +5,8 @@ package com.app.concertbud.concertbuddies.Tasks.Configs.JobProperty;
  */
 
 public class JobPriority {
+    public static int LOW = 0;
+    public static int MED = 5;
+    public static int HIGH = 10;
+
 }

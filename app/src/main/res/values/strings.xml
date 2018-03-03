@@ -19,6 +19,9 @@
     <string name="change">Change</string>
     <string name="pick_username">Let\'s pick a username so it gets easier for everyone to find you</string>
 
+    <!-- API ACCESS TOKEN -->
+    <string name="songkick_api_token">SoC1KPUMa6mRlrFx</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

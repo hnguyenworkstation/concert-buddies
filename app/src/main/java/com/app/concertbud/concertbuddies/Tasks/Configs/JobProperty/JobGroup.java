@@ -5,4 +5,5 @@ package com.app.concertbud.concertbuddies.Tasks.Configs.JobProperty;
  */
 
 public class JobGroup {
+    public static final String concert = "concert_group";
 }
