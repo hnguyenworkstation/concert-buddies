@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/stage"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/LargeTitleText"
+            android:id="@+id/user_name"
+            android:text="Boston Calling 2018"
+            android:textSize="@dimen/text_22"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginEnd="@dimen/margin_8"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Boston, MA -- 250 going"
+            android:id="@+id/location"
+            android:textSize="@dimen/text_16"
+            android:textColor="@color/text_light_color"
+            android:layout_marginEnd="@dimen/margin_10"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:id="@+id/stage"
+        android:layout_marginEnd="@dimen/margin_12"
+        android:src="@drawable/ic_filled_heart_red"/>
+</RelativeLayout>
