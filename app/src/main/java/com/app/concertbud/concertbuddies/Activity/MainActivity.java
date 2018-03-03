@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,15 +42,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     @BindView(R.id.tab_title)
     TextView mTabTitle;
-
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
-
     @BindView(R.id.image_btn)
     ImageView mProfileImg;
-
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
+
+    /* Binding Switcher Layout */
+    @BindView(R.id.switcher_layout)
+    RelativeLayout mSwitcherLayout;
+    @BindView(R.id.map_selector)
+    LinearLayout mMapSelector;
+    @BindView(R.id.map_text)
+    TextView mMapText;
+    @BindView(R.id.list_selector)
+    LinearLayout mListSelector;
+    @BindView(R.id.list_text)
+    TextView mListText;
 
     private Profile mUserProfile;
 
@@ -59,6 +70,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private MatchesFragment matchesFragment;
     private SubscribedEventsFragment subscribedEventsFragment;
     private SettingService settingService;
+    private int currentSecondStage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +133,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 
+
+    /*
+    * showSwitcherView function will be triggered when user are currently viewing the LocateEventFragment
+    * it allows user to switch between fragments between List View or Map View
+    * */
+    private void showSwitcherView(boolean shouldBeShown) {
+        if (shouldBeShown) {
+            mTabTitle.setVisibility(View.GONE);
+            mSwitcherLayout.setVisibility(View.VISIBLE);
+
+            if (currentSecondStage == 0) {
+                mMapSelector.setBackground(getResources().getDrawable(R.drawable.bg_button_selected));
+                mMapText.setTextColor(getResources().getColor(R.color.white));
+
+                mListSelector.setBackground(null);
+                mListText.setTextColor(getResources().getColor(R.color.text_light_color));
+            } else {
+                mListSelector.setBackground(getResources().getDrawable(R.drawable.bg_button_selected));
+                mListText.setTextColor(getResources().getColor(R.color.white));
+
+                mMapSelector.setBackground(null);
+                mMapText.setTextColor(getResources().getColor(R.color.text_light_color));
+            }
+        } else {
+            mTabTitle.setVisibility(View.VISIBLE);
+            mSwitcherLayout.setVisibility(View.GONE);
+        }
+    }
+
     private void initViewPager() {
         mMainViewPagerAdapter = new CommonViewPagerAdapter(getSupportFragmentManager());
 
@@ -144,12 +185,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 switch (position) {
                     case 0:
                         mTabTitle.setText("Following");
+                        showSwitcherView(false);
                         break;
                     case 1:
                         mTabTitle.setText("");
+                        showSwitcherView(true);
                         break;
                     case 2:
                         mTabTitle.setText("Matches");
+                        showSwitcherView(false);
                         break;
                     default:
                         break;
