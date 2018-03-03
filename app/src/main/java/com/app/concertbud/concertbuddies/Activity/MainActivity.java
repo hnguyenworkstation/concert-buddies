@@ -31,7 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
-
     @BindView(R.id.home_tab)
     FloatingActionButton mHomeTabBtn;
     @BindView(R.id.loc_map_tab)
@@ -47,6 +46,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     @BindView(R.id.image_btn)
     ImageView mProfileImg;
+
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
 
