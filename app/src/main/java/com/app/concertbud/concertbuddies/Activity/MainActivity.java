@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.Adapters.CommonViewPagerAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
+import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
+import com.app.concertbud.concertbuddies.EventBuses.TriggerViewBus;
 import com.app.concertbud.concertbuddies.Helpers.ImageLoader;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.ViewFragments.LocateEventFragment;
@@ -25,6 +27,9 @@ import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.SettingService;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -61,6 +66,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     @BindView(R.id.list_text)
     TextView mListText;
 
+    public static final int MAP_VIEW_CODE = 0;
+    public static final int LIST_VIEW_CODE = 1;
+
     private Profile mUserProfile;
 
     private Unbinder unbinder;
@@ -70,7 +78,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private MatchesFragment matchesFragment;
     private SubscribedEventsFragment subscribedEventsFragment;
     private SettingService settingService;
-    private int currentSecondStage = 0;
+    private int currentSecondStage = MAP_VIEW_CODE;
+
+    private boolean isMapAnimating = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,12 +135,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         mHomeTabBtn.setOnClickListener(this);
         mLocMapTabBtn.setOnClickListener(this);
         mAdvanceTab.setOnClickListener(this);
+
+        mMapSelector.setOnClickListener(this);
+        mListSelector.setOnClickListener(this);
     }
 
     private void showViewAt(int position) {
         if (position >= 0 && position <= 2) {
             mViewPager.setCurrentItem(position);
         }
+    }
+
+
+    /*
+    * This method will make sure to keep track of which stage the LocateEventFragment are on
+    * (either on Map stage or List stage). Then it will send a request signal (using Eventbus)
+    * to change stage from MainActivity to LocateEventFragment to trigger the view switch.
+    * */
+    private void triggerSwitchView(int code) {
+        currentSecondStage = code;
+        showSwitcherView(true);
+        EventBus.getDefault().post(new TriggerViewBus(code));
     }
 
 
@@ -220,9 +245,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             case R.id.advance_tab:
                 showViewAt(2);
                 break;
+            case R.id.map_selector:
+                if (!isMapAnimating)
+                    triggerSwitchView(MAP_VIEW_CODE);
+                break;
+            case R.id.list_selector:
+                if (!isMapAnimating)
+                    triggerSwitchView(LIST_VIEW_CODE);
+                break;
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(IsOnAnimationBus bus) {
+        isMapAnimating = bus.isOnAnimation();
     }
 }
 
