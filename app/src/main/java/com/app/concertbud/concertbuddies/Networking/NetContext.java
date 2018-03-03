@@ -2,8 +2,7 @@ package com.app.concertbud.concertbuddies.Networking;
 
 import android.util.Log;
 
-import com.app.concertbud.concertbuddies.Managers.SharedPreferencesManager;
-
+import com.app.concertbud.concertbuddies.AppControllers.BasePreferenceManager;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +41,7 @@ public class NetContext {
 
         @Override
         public Response intercept(Chain chain) throws IOException {
-            String token = SharedPreferencesManager.getDefault().getUserToken();
+            String token = BasePreferenceManager.getDefault().getUserToken();
             Request request;
             if (token != null) {
                 request = chain.request()
