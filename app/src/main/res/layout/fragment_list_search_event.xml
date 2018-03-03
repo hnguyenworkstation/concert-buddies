@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.concertbud.concertbuddies.ViewFragments.MatchesFragment">
+    android:id="@+id/swipe_ref_root"
+    tools:context="com.app.concertbud.concertbuddies.ViewFragments.ListSearchEventFragment">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -16,13 +17,14 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="128dp"
                 android:background="@android:color/transparent"/>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/chat_recycler"/>
+                android:id="@+id/events_recycler"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
 </android.support.v4.widget.SwipeRefreshLayout>

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
 import com.app.concertbud.concertbuddies.R;
 
 import com.google.android.gms.appindexing.AppIndex;
@@ -82,7 +83,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         initMap();
     }
 
-
     private void initMap() {
         if (mGoogleClient == null) {
             mGoogleClient = new GoogleApiClient.Builder(getContext())
@@ -100,7 +100,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void updateMapView() {
-        mMap.setPadding(24, 124, 24, 124);
+        mMap.setPadding(24, 324, 24, 188);
 
         if (lastKnownLocation != null) {
             mMap.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(),
@@ -111,19 +111,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     .target(new LatLng(lastKnownLocation.getLatitude(),
                             lastKnownLocation.getLongitude()))
                     .zoom(14)
-                    .tilt(45)
-                    .bearing(200)
                     .build();
 
+            EventBus.getDefault().post(new IsOnAnimationBus(true));
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPos), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
                     mMap.getUiSettings().setScrollGesturesEnabled(true);
+                    EventBus.getDefault().post(new IsOnAnimationBus(false));
                 }
 
                 @Override
                 public void onCancel() {
                     mMap.getUiSettings().setAllGesturesEnabled(true);
+                    EventBus.getDefault().post(new IsOnAnimationBus(false));
                 }
             });
         }

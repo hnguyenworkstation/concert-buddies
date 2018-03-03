@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_margin="@dimen/margin_8"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="@drawable/rounded_text_view">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_button_selected"
+        android:id="@+id/map_selector">
+
+        <TextView
+            android:id="@+id/map_text"
+            android:layout_width="98dp"
+            android:layout_margin="@dimen/margin_12"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Map"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_selector">
+        <TextView
+            android:id="@+id/list_text"
+            android:layout_width="98dp"
+            android:layout_margin="@dimen/margin_12"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="List"/>
+    </LinearLayout>
+</LinearLayout>
