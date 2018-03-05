@@ -13,33 +13,29 @@ import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.app.concertbud.concertbuddies.Abstracts.OnChatRoomClickListener;
+import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
 import com.app.concertbud.concertbuddies.Adapters.ChatRoomAdapter;
-import com.app.concertbud.concertbuddies.Helpers.AppUtils;
+import com.app.concertbud.concertbuddies.Adapters.EventsAdapter;
 import com.app.concertbud.concertbuddies.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class MatchesFragment extends Fragment implements OnChatRoomClickListener{
-    @BindView(R.id.chat_recycler)
-    RecyclerView mRoomsRecycler;
+public class ListSearchEventFragment extends Fragment implements OnEventClickListener{
+    @BindView(R.id.events_recycler)
+    RecyclerView mEventRecycler;
 
-    private ChatRoomAdapter chatRoomAdapter;
+    private EventsAdapter eventsAdapter;
     private Unbinder unbinder;
 
-    public MatchesFragment() {
+    public ListSearchEventFragment() {
         // Required empty public constructor
     }
 
-    public static MatchesFragment newInstance() {
-        MatchesFragment fragment = new MatchesFragment();
+    public static ListSearchEventFragment newInstance() {
+        ListSearchEventFragment fragment = new ListSearchEventFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -56,7 +52,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_matches, container, false);
+        return inflater.inflate(R.layout.fragment_list_search_event, container, false);
     }
 
     @Override
@@ -64,23 +60,23 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
 
-        initChatRoomsRecycler();
+        initEventsRecycler();
     }
 
-    private void initChatRoomsRecycler() {
-        chatRoomAdapter = new ChatRoomAdapter(getContext(), this);
+    private void initEventsRecycler() {
+        eventsAdapter = new EventsAdapter(getContext(), this);
 
         final RecyclerView.LayoutManager mLayoutManager =
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
-        mRoomsRecycler.setLayoutManager(mLayoutManager);
-        mRoomsRecycler.setItemAnimator(new DefaultItemAnimator());
-        mRoomsRecycler.setNestedScrollingEnabled(false);
-        mRoomsRecycler.setHasFixedSize(false);
-        mRoomsRecycler.setAdapter(chatRoomAdapter);
+        mEventRecycler.setLayoutManager(mLayoutManager);
+        mEventRecycler.setItemAnimator(new DefaultItemAnimator());
+        mEventRecycler.setNestedScrollingEnabled(false);
+        mEventRecycler.setHasFixedSize(false);
+        mEventRecycler.setAdapter(eventsAdapter);
 
         SnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(mRoomsRecycler);
+        snapHelper.attachToRecyclerView(mEventRecycler);
     }
 
 
@@ -90,15 +86,13 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         unbinder.unbind();
     }
 
-
     @Override
-    public void onChatRoomClicked(int position) {
-        Toast.makeText(getContext(), "clicked at: " + position, Toast.LENGTH_SHORT).show();
-        // AppUtils.startNewActivity(getContext(), getActivity(), ChatActivity.class);
+    public void onEventClicked(int position) {
+
     }
 
     @Override
-    public void onChatRoomLongClicked(int position) {
+    public void onEventLongClicked(int position) {
 
     }
 }

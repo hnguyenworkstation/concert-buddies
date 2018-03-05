@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@null">
 
     <LinearLayout
@@ -23,6 +24,7 @@
                 android:id="@+id/home_tab"
                 android:layout_margin="@dimen/margin_16"
                 android:src="@drawable/ic_left_arrow"
+                app:backgroundTint="@color/white"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:shadowColor="#A8A8A8"
@@ -42,6 +44,7 @@
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:layout_margin="@dimen/margin_16"
+                app:backgroundTint="@color/white"
                 android:scaleType="centerInside"
                 android:shadowColor="#A8A8A8"
                 android:shadowRadius="5"
@@ -58,6 +61,7 @@
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/advance_tab"
                 android:layout_margin="@dimen/margin_16"
+                app:backgroundTint="@color/white"
                 android:src="@drawable/ic_left_arrow"
                 android:layout_width="48dp"
                 android:layout_height="48dp"

@@ -11,7 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.concertbud.concertbuddies.EventBuses.TriggerViewBus;
 import com.app.concertbud.concertbuddies.R;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 
 public class LocateEventFragment extends Fragment {
@@ -20,6 +24,9 @@ public class LocateEventFragment extends Fragment {
     private FragmentTransaction mFragTransition;
 
     private MapFragment mapFragment;
+    private ListSearchEventFragment listSearchEventFragment;
+
+    private int currentStage = 0;
 
     public LocateEventFragment() {
         // Required empty public constructor
@@ -60,7 +67,55 @@ public class LocateEventFragment extends Fragment {
         if (mapFragment == null)
             mapFragment = MapFragment.newInstance();
 
+        if (listSearchEventFragment == null)
+            listSearchEventFragment = ListSearchEventFragment.newInstance();
+
         mFragTransition.replace(R.id.fragment_container, mapFragment, "map_fragment");
         mFragTransition.commit();
+    }
+
+    private void switchView() {
+        mFragTransition = mFragManager.beginTransaction();
+
+        if (mFragManager.findFragmentByTag("list_fragment") != null) {
+            mFragTransition.setCustomAnimations(R.anim.flip_right_in,
+                    R.anim.flip_right_out,
+                    R.anim.flip_left_in,
+                    R.anim.flip_left_out)
+                    .replace(R.id.fragment_container, mapFragment, "map_fragment")
+                    .commit();
+        } else {
+            mFragTransition.setCustomAnimations(R.anim.flip_right_in,
+                    R.anim.flip_right_out,
+                    R.anim.flip_left_in,
+                    R.anim.flip_left_out)
+                    .replace(R.id.fragment_container, listSearchEventFragment, "list_fragment")
+                    .commit();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+
+    /****************************************************************
+     * LISTENING TO ALL THE SIGNAL INTO THIS FRAGMENT BY EVENT BUS
+     * @UpdateMapPaddingBus: Update the map padding
+     **/
+    @Subscribe
+    public void onEvent(TriggerViewBus bus) {
+        if (bus.getViewCode() != currentStage) {
+            switchView();
+            currentStage = bus.getViewCode();
+        }
     }
 }
