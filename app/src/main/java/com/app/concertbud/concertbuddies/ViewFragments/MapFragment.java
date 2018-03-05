@@ -7,10 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.app.concertbud.concertbuddies.EventBus.DeliverLocationBus;
+import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
 import com.app.concertbud.concertbuddies.R;
 
@@ -30,11 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
-import java.util.concurrent.Executor;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -93,7 +90,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     .addApi(AppIndex.API).build();
         }
 
-
         supportMapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map_fragment);
         supportMapFragment.getMapAsync(this);
@@ -141,18 +137,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            lastKnownLocation = location;
-                            EventBus.getDefault().post(new DeliverLocationBus(location));
-                            updateMapView();
-                        }
-                    }
-                });
+        // get known location
+        getLastKnowLocation();
+
+        updateMapView();
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -169,7 +157,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        getLastKnowLocation();
     }
 
     @Override
@@ -177,9 +166,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-
+    /****************************************************************
+     * UTILITIES
+     ***************************************************************/
+    @SuppressLint("MissingPermission")
+    private void getLastKnowLocation() {
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        Log.e("HUONG", "getting location");
+                        if (location != null) {
+                            lastKnownLocation = location;
+                            EventBus.getDefault().post(new DeliverLocationBus(location));
+                            updateMapView();
+                        }
+                    }
+                });
+    }
     /****************************************************************
      * LISTENING TO ALL THE SIGNAL INTO THIS FRAGMENT BY EVENT BUS
      * @UpdateMapPaddingBus: Update the map padding
      **/
+
+    /* Subscribe to get events nearby */
 }

@@ -1,4 +1,4 @@
-package com.app.concertbud.concertbuddies.EventBus;
+package com.app.concertbud.concertbuddies.EventBuses;
 
 import android.location.Location;
 

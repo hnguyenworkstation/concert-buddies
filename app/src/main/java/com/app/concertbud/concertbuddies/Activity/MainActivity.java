@@ -1,10 +1,12 @@
 package com.app.concertbud.concertbuddies.Activity;
 
 import android.annotation.SuppressLint;
+import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.Adapters.CommonViewPagerAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
+import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
 import com.app.concertbud.concertbuddies.EventBuses.TriggerViewBus;
 import com.app.concertbud.concertbuddies.Helpers.ImageLoader;
@@ -78,6 +81,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private MatchesFragment matchesFragment;
     private SubscribedEventsFragment subscribedEventsFragment;
     private SettingService settingService;
+    private Location lastKnowLocation;
+
     private int currentSecondStage = MAP_VIEW_CODE;
 
     private boolean isMapAnimating = false;
@@ -261,6 +266,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        Log.e(TAG, "onStart");
     }
 
     @Override
@@ -271,7 +277,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     @Subscribe
     public void onEvent(IsOnAnimationBus bus) {
+        Log.e(TAG, "animation");
         isMapAnimating = bus.isOnAnimation();
+    }
+
+    /* Subscribe last known location event */
+    @Subscribe
+    public void onEvent(DeliverLocationBus bus) {
+        lastKnowLocation = bus.getLocation();
+        Log.e(TAG, "Last known location: " + lastKnowLocation.toString());
     }
 }
 

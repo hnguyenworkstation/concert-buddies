@@ -1,8 +1,18 @@
-package com.app.concertbud.concertbuddies.Networking.Responses;
+package com.app.concertbud.concertbuddies.Networking.Responses.Entities;
 
-/**
- * Created by huongnguyen on 3/5/18.
- */
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-class StateEntity {
+public class StateEntity {
+    @Expose
+    @SerializedName("displayName")
+    private String displayname;
+
+    public String getDisplayname() {
+        return displayname;
+    }
+
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
+    }
 }

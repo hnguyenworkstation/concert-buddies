@@ -25,26 +25,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 public class FetchNearbyConcertsJob extends Job {
 
     /* User's Location information */
-    private FusedLocationProviderClient mFusedLocationClient;
-    private Location mLocation;
+    double longtitude = 0.0;
+    double latitude = 0.0;
 
-    public FetchNearbyConcertsJob(int pageNum) {
+    public FetchNearbyConcertsJob(int pageNum, double lng, double lat) {
         super(new Params(JobPriority.HIGH).requireNetwork().persist().groupBy(JobGroup.concert));
-
-        /* Get User Location */
+        longtitude = lng;
+        latitude = lat;
     }
 
     @SuppressLint("MissingPermission")
     @Override
     public void onRun() throws Throwable {
-        /* Get Longtitude and Latitude */
-        double longtitude = 0.0;
-        double latitude = 0.0;
-        if (mLocation != null) {
-            longtitude = mLocation.getLongitude();
-            latitude = mLocation.getLatitude();
-        }
-
         SongKickServices service = NetContext.instance.create(SongKickServices.class);
         service.getNearbyConcerts(longtitude, latitude,
                 getApplicationContext().getString(R.string.songkick_api_token));
