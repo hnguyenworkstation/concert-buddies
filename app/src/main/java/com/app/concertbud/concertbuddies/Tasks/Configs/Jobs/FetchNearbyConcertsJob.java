@@ -31,21 +31,7 @@ public class FetchNearbyConcertsJob extends Job {
     public FetchNearbyConcertsJob(int pageNum) {
         super(new Params(JobPriority.HIGH).requireNetwork().persist().groupBy(JobGroup.concert));
 
-        /* get User's location */
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-        try {
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                mLocation = location;
-                            }
-                        }
-                    });
-        } catch (SecurityException e) {
-            /* When no permission is issued */
-        }
+        /* Get User Location */
     }
 
     @SuppressLint("MissingPermission")
@@ -61,7 +47,7 @@ public class FetchNearbyConcertsJob extends Job {
 
         SongKickServices service = NetContext.instance.create(SongKickServices.class);
         service.getNearbyConcerts(longtitude, latitude,
-                getApplicationContext().getResources().getString(R.string.songkick_api_token));
+                getApplicationContext().getString(R.string.songkick_api_token));
     }
 
     @Override

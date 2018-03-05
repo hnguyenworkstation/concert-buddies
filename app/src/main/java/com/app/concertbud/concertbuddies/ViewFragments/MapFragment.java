@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.concertbud.concertbuddies.EventBus.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.R;
 
 import com.google.android.gms.appindexing.AppIndex;
@@ -147,7 +148,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             lastKnownLocation = location;
-
+                            EventBus.getDefault().post(new DeliverLocationBus(location));
                             updateMapView();
                         }
                     }
