@@ -114,7 +114,7 @@ public class AppUtils {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                context.startActivity(new Intent(fromActivity, toActivity));
+                context.startActivity(new Intent(fromActivity, toActivity).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 fromActivity.finish();
             }
         };
