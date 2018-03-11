@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,14 @@ import android.view.ViewGroup;
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
 import com.app.concertbud.concertbuddies.Adapters.ChatRoomAdapter;
 import com.app.concertbud.concertbuddies.Adapters.EventsAdapter;
+import com.app.concertbud.concertbuddies.Networking.Responses.CompleteConcertsResponse;
+import com.app.concertbud.concertbuddies.Networking.Responses.ConcertResponse;
 import com.app.concertbud.concertbuddies.R;
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
+
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,16 +35,22 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     @BindView(R.id.events_recycler)
     RecyclerView mEventRecycler;
 
+    private String TAG = getTag();
+
     private EventsAdapter eventsAdapter;
     private Unbinder unbinder;
+
+    /* Array List of all Nearby Concerts */
+    ArrayList<ConcertResponse> mConcertsList;
 
     public ListSearchEventFragment() {
         // Required empty public constructor
     }
 
-    public static ListSearchEventFragment newInstance() {
+    public static ListSearchEventFragment newInstance(int position) {
         ListSearchEventFragment fragment = new ListSearchEventFragment();
         Bundle args = new Bundle();
+        args.putInt("page_position", position + 1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,7 +59,9 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            // TODO: initialize local position here ??
         }
+
     }
 
     @Override
@@ -94,5 +110,16 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     @Override
     public void onEventLongClicked(int position) {
 
+    }
+
+    /***********
+     * SUBSCRIBERS
+     */
+
+    @Subscribe
+    public void onEvent(FetchNearbyConcertsJob request) {
+        // update adapter
+        Log.e(TAG, request.toString());
+        eventsAdapter.notifyItemChanged(1);
     }
 }

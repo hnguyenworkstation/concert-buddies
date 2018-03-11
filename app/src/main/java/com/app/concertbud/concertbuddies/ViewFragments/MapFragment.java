@@ -11,10 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
 import com.app.concertbud.concertbuddies.R;
 
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
+import com.birbit.android.jobqueue.JobManager;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +48,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private GoogleApiClient mGoogleClient;
     private SupportMapFragment supportMapFragment;
     private FusedLocationProviderClient mFusedLocationClient;
+    private final JobManager jobManager = BaseApplication.getInstance().getJobManager();
 
     public MapFragment() {
         // Required empty public constructor
@@ -61,7 +66,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
-
+        /* Get current location */
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
     }
 
@@ -141,7 +146,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         getLastKnowLocation();
 
         updateMapView();
-
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -189,6 +193,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
      * LISTENING TO ALL THE SIGNAL INTO THIS FRAGMENT BY EVENT BUS
      * @UpdateMapPaddingBus: Update the map padding
      **/
-
-    /* Subscribe to get events nearby */
 }

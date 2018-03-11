@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void initContents() {
-        locateEventFragment = LocateEventFragment.newInstance();
+        locateEventFragment = LocateEventFragment.newInstance(mViewPager.getCurrentItem());
         matchesFragment = MatchesFragment.newInstance();
         subscribedEventsFragment = SubscribedEventsFragment.newInstance();
     }

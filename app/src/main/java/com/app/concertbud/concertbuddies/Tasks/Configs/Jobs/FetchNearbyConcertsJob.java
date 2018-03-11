@@ -1,12 +1,12 @@
 package com.app.concertbud.concertbuddies.Tasks.Configs.Jobs;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.app.concertbud.concertbuddies.Networking.NetContext;
+import com.app.concertbud.concertbuddies.Networking.Responses.CompleteConcertsResponse;
 import com.app.concertbud.concertbuddies.Networking.Services.SongKickServices;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.Tasks.Configs.JobProperty.JobGroup;
@@ -14,9 +14,10 @@ import com.app.concertbud.concertbuddies.Tasks.Configs.JobProperty.JobPriority;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by huongnguyen on 3/3/18.
@@ -25,21 +26,39 @@ import com.google.android.gms.tasks.OnSuccessListener;
 public class FetchNearbyConcertsJob extends Job {
 
     /* User's Location information */
-    double longtitude = 0.0;
-    double latitude = 0.0;
+    private double longitude = 0.0;
+    private double latitude = 0.0;
+    private String queryLocation;
 
     public FetchNearbyConcertsJob(int pageNum, double lng, double lat) {
         super(new Params(JobPriority.HIGH).requireNetwork().persist().groupBy(JobGroup.concert));
-        longtitude = lng;
+        longitude = lng;
         latitude = lat;
+        //queryLocation = "geo:-" + Double.toString(latitude) + "," + Double.toString(longitude);
+        queryLocation = "geo:" + Double.toString(42.336) + "," + Double.toString(-71.0179);
     }
 
     @SuppressLint("MissingPermission")
     @Override
     public void onRun() throws Throwable {
         SongKickServices service = NetContext.instance.create(SongKickServices.class);
-        service.getNearbyConcerts(longtitude, latitude,
-                getApplicationContext().getString(R.string.songkick_api_token));
+        service.getNearbyConcerts(queryLocation, getApplicationContext().getString(R.string.songkick_api_token))
+                .enqueue(new Callback<CompleteConcertsResponse>() {
+                    @Override
+                    public void onResponse(Call<CompleteConcertsResponse> call, Response<CompleteConcertsResponse> response) {
+                        Log.e("Huong", response.toString());
+                        if (response.code() == 200) {
+                            // OK
+                            Log.e("Huong", response.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CompleteConcertsResponse> call, Throwable t) {
+
+                    }
+                });
+
     }
 
     @Override
