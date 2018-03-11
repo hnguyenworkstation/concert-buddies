@@ -1,6 +1,7 @@
 package com.app.concertbud.concertbuddies.ViewFragments;
 
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,8 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
+import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.EventBuses.TriggerViewBus;
 import com.app.concertbud.concertbuddies.R;
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
+import com.birbit.android.jobqueue.JobManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,13 +33,22 @@ public class LocateEventFragment extends Fragment {
 
     private int currentStage = 0;
 
+    private static int mPostion;
+    /* Location */
+    private Location mLocation;
+
+    /* Job Manager */
+    private final JobManager jobManager = BaseApplication.getInstance().getJobManager();
+
     public LocateEventFragment() {
         // Required empty public constructor
     }
 
-    public static LocateEventFragment newInstance() {
+    public static LocateEventFragment newInstance(int position) {
         LocateEventFragment fragment = new LocateEventFragment();
         Bundle args = new Bundle();
+        mPostion = position;
+        args.putInt("page_position", position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,6 +58,7 @@ public class LocateEventFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+
     }
 
     @Override
@@ -68,7 +83,7 @@ public class LocateEventFragment extends Fragment {
             mapFragment = MapFragment.newInstance();
 
         if (listSearchEventFragment == null)
-            listSearchEventFragment = ListSearchEventFragment.newInstance();
+            listSearchEventFragment = ListSearchEventFragment.newInstance(mPostion);
 
         mFragTransition.replace(R.id.fragment_container, mapFragment, "map_fragment");
         mFragTransition.commit();
@@ -117,5 +132,12 @@ public class LocateEventFragment extends Fragment {
             switchView();
             currentStage = bus.getViewCode();
         }
+    }
+
+    @Subscribe
+    public void onEvent(DeliverLocationBus location) {
+        mLocation = location.getLocation();
+        jobManager.addJobInBackground(new FetchNearbyConcertsJob(0,
+                mLocation.getLongitude(), mLocation.getLatitude()));
     }
 }

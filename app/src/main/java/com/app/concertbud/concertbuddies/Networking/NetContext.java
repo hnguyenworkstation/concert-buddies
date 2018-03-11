@@ -2,7 +2,10 @@ package com.app.concertbud.concertbuddies.Networking;
 
 import android.util.Log;
 
+import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.AppControllers.BasePreferenceManager;
+import com.app.concertbud.concertbuddies.R;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +20,7 @@ import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSource;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by huongnguyen on 3/3/18.
@@ -34,6 +38,12 @@ public class NetContext {
                 .Builder().connectTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(new HeaderInterceptor())
                 .addInterceptor(new LoggerInterceptor())
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(BaseApplication.getInstance().getResources().getString(R.string.base_url))
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
 
