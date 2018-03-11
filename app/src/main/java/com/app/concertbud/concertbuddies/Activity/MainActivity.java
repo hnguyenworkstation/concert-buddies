@@ -26,6 +26,9 @@ import com.app.concertbud.concertbuddies.ViewFragments.LocateEventFragment;
 import com.app.concertbud.concertbuddies.ViewFragments.MatchesFragment;
 import com.app.concertbud.concertbuddies.ViewFragments.SubscribedEventsFragment;
 import com.facebook.Profile;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
@@ -192,6 +195,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 
+
     private void initViewPager() {
         mMainViewPagerAdapter = new CommonViewPagerAdapter(getSupportFragmentManager());
 
@@ -262,6 +266,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 break;
         }
     }
+
+
     @Override
     protected void onStart() {
         super.onStart();

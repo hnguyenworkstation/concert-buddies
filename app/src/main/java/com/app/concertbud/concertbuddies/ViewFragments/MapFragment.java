@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
+import com.app.concertbud.concertbuddies.EventBuses.DeliverPlaceBus;
 import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
 import com.app.concertbud.concertbuddies.R;
 
@@ -21,10 +22,14 @@ import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJ
 import com.birbit.android.jobqueue.JobManager;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,6 +40,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -49,6 +55,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private SupportMapFragment supportMapFragment;
     private FusedLocationProviderClient mFusedLocationClient;
     private final JobManager jobManager = BaseApplication.getInstance().getJobManager();
+    private Place currentPlace;
 
     public MapFragment() {
         // Required empty public constructor
@@ -131,6 +138,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    // this method will take a place location on a map and start animation to that location
+    private void moveCameraToNewPlace(Place newPlace) {
+        CameraPosition newPos = new CameraPosition.Builder()
+                .target(newPlace.getLatLng())
+                .zoom(14)
+                .build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPos), new GoogleMap.CancelableCallback() {
+            @Override
+            public void onFinish() {
+                mMap.getUiSettings().setAllGesturesEnabled(true);
+            }
+
+            @Override
+            public void onCancel() {
+                mMap.getUiSettings().setAllGesturesEnabled(true);
+            }
+        });
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -170,6 +197,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+
     /****************************************************************
      * UTILITIES
      ***************************************************************/
@@ -189,8 +229,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     }
                 });
     }
+
+
     /****************************************************************
      * LISTENING TO ALL THE SIGNAL INTO THIS FRAGMENT BY EVENT BUS
      * @UpdateMapPaddingBus: Update the map padding
      **/
+    @Subscribe(sticky = true)
+    public void onEvent(DeliverPlaceBus bus) {
+        currentPlace = bus.getPlace();
+
+        moveCameraToNewPlace(currentPlace);
+
+        EventBus.getDefault().removeStickyEvent(bus);
+    }
 }
