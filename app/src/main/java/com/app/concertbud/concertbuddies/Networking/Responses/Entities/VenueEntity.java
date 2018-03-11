@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 public class VenueEntity {
     @Expose
     @SerializedName("metroArea")
-    private MetroareaEntity metroarea;
+    private MetroAreaEntity metroarea;
     @Expose
     @SerializedName("lat")
     private double lat;
@@ -23,11 +23,11 @@ public class VenueEntity {
     @SerializedName("id")
     private int id;
 
-    public MetroareaEntity getMetroarea() {
+    public MetroAreaEntity getMetroarea() {
         return metroarea;
     }
 
-    public void setMetroarea(MetroareaEntity metroarea) {
+    public void setMetroarea(MetroAreaEntity metroarea) {
         this.metroarea = metroarea;
     }
 

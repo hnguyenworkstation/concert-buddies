@@ -106,8 +106,6 @@ public class AppUtils {
     }
 
 
-
-
     public static void startNewActivityAndFinish(@NonNull final Context context,
                                                  @NonNull final Activity fromActivity,
                                                  @NonNull final Class toActivity) {

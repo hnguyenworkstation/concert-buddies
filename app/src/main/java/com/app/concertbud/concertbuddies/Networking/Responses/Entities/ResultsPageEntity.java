@@ -3,7 +3,7 @@ package com.app.concertbud.concertbuddies.Networking.Responses.Entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ResultspageEntity {
+public class ResultsPageEntity {
     @Expose
     @SerializedName("status")
     private String status;

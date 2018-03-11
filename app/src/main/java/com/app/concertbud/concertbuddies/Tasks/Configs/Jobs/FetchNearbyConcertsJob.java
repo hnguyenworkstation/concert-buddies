@@ -8,6 +8,7 @@ import android.util.Log;
 import com.app.concertbud.concertbuddies.Networking.NetContext;
 import com.app.concertbud.concertbuddies.Networking.Responses.CompleteConcertsResponse;
 import com.app.concertbud.concertbuddies.Networking.Services.SongKickServices;
+import com.app.concertbud.concertbuddies.Networking.SongKickContext;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.Tasks.Configs.JobProperty.JobGroup;
 import com.app.concertbud.concertbuddies.Tasks.Configs.JobProperty.JobPriority;
@@ -38,10 +39,9 @@ public class FetchNearbyConcertsJob extends Job {
         queryLocation = "geo:" + Double.toString(42.336) + "," + Double.toString(-71.0179);
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onRun() throws Throwable {
-        SongKickServices service = NetContext.instance.create(SongKickServices.class);
+        SongKickServices service = SongKickContext.instance.create(SongKickServices.class);
         service.getNearbyConcerts(queryLocation, getApplicationContext().getString(R.string.songkick_api_token))
                 .enqueue(new Callback<CompleteConcertsResponse>() {
                     @Override

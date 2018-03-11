@@ -5,19 +5,19 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by huongnguyen on 3/5/18.
+ * Created by hungnguyen on 3/11/18.
  */
 
-public class CompleteConcertsResponse {
+public class CompleteConcertsLocationResponse {
     @Expose
     @SerializedName("resultsPage")
     private ResultsPageEntity resultspage;
 
-    public ResultsPageEntity getResultspage() {
+    public ResultsPageEntity getResultsPage() {
         return resultspage;
     }
 
-    public void setResultspage(ResultsPageEntity resultspage) {
+    public void setResultsPage(ResultsPageEntity resultspage) {
         this.resultspage = resultspage;
     }
 }

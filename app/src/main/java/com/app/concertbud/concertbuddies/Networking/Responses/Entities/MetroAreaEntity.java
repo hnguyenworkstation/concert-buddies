@@ -3,7 +3,7 @@ package com.app.concertbud.concertbuddies.Networking.Responses.Entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MetroareaEntity {
+public class MetroAreaEntity {
     @Expose
     @SerializedName("state")
     private StateEntity state;
