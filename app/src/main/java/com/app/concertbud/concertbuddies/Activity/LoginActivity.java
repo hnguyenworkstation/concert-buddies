@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView;
@@ -69,6 +70,8 @@ public class LoginActivity extends BaseActivity {
         mFbLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                Toast.makeText(getApplicationContext(), "Logging In Success", Toast.LENGTH_SHORT).show();
+                Log.d("HUONG", "loginsuccess");
                 onFacebookLoginSuccessful(loginResult);
             }
 
@@ -83,6 +86,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void onFacebookLoginSuccessful(LoginResult loginResults){
+        Toast.makeText(getApplicationContext(), "Login to SignUp", Toast.LENGTH_SHORT).show();
         AppUtils.startNewActivityAndFinish(this, LoginActivity.this,
                 SignUpActivity.class);
     }

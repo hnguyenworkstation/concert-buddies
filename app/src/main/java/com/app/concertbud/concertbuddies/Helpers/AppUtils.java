@@ -106,15 +106,13 @@ public class AppUtils {
     }
 
 
-
-
     public static void startNewActivityAndFinish(@NonNull final Context context,
                                                  @NonNull final Activity fromActivity,
                                                  @NonNull final Class toActivity) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                context.startActivity(new Intent(fromActivity, toActivity));
+                context.startActivity(new Intent(fromActivity, toActivity).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 fromActivity.finish();
             }
         };

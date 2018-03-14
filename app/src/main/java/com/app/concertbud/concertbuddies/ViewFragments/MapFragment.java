@@ -7,19 +7,29 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
+import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
+import com.app.concertbud.concertbuddies.EventBuses.DeliverPlaceBus;
 import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
 import com.app.concertbud.concertbuddies.R;
 
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
+import com.birbit.android.jobqueue.JobManager;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,9 +42,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.concurrent.Executor;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -47,6 +54,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private GoogleApiClient mGoogleClient;
     private SupportMapFragment supportMapFragment;
     private FusedLocationProviderClient mFusedLocationClient;
+    private final JobManager jobManager = BaseApplication.getInstance().getJobManager();
+    private Place currentPlace;
 
     public MapFragment() {
         // Required empty public constructor
@@ -64,7 +73,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
-
+        /* Get current location */
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
     }
 
@@ -92,7 +101,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     .addApi(Places.GEO_DATA_API)
                     .addApi(AppIndex.API).build();
         }
-
 
         supportMapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map_fragment);
@@ -130,6 +138,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    // this method will take a place location on a map and start animation to that location
+    private void moveCameraToNewPlace(Place newPlace) {
+        CameraPosition newPos = new CameraPosition.Builder()
+                .target(newPlace.getLatLng())
+                .zoom(14)
+                .build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPos), new GoogleMap.CancelableCallback() {
+            @Override
+            public void onFinish() {
+                mMap.getUiSettings().setAllGesturesEnabled(true);
+            }
+
+            @Override
+            public void onCancel() {
+                mMap.getUiSettings().setAllGesturesEnabled(true);
+            }
+        });
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -141,19 +169,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            lastKnownLocation = location;
+        // get known location
+        getLastKnowLocation();
 
-                            updateMapView();
-                        }
-                    }
-                });
-
+        updateMapView();
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -169,7 +188,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        getLastKnowLocation();
     }
 
     @Override
@@ -177,9 +197,50 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+
+    /****************************************************************
+     * UTILITIES
+     ***************************************************************/
+    @SuppressLint("MissingPermission")
+    private void getLastKnowLocation() {
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        Log.e("HUONG", "getting location");
+                        if (location != null) {
+                            lastKnownLocation = location;
+                            EventBus.getDefault().post(new DeliverLocationBus(location));
+                            updateMapView();
+                        }
+                    }
+                });
+    }
+
 
     /****************************************************************
      * LISTENING TO ALL THE SIGNAL INTO THIS FRAGMENT BY EVENT BUS
      * @UpdateMapPaddingBus: Update the map padding
      **/
+    @Subscribe(sticky = true)
+    public void onEvent(DeliverPlaceBus bus) {
+        currentPlace = bus.getPlace();
+
+        moveCameraToNewPlace(currentPlace);
+
+        EventBus.getDefault().removeStickyEvent(bus);
+    }
 }

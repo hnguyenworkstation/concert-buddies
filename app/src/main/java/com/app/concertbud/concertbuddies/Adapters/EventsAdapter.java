@@ -20,6 +20,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> {
     private Context context;
     private OnEventClickListener listener;
 
+    /* Get a list of events */
+    //TODO: ArrayList
+
     public EventsAdapter(Context context, OnEventClickListener listener) {
         this.context = context;
         this.listener = listener;

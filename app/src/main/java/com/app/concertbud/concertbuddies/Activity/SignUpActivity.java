@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView;
@@ -62,6 +63,7 @@ public class SignUpActivity extends BaseActivity {
         mContinueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "SignUp to Main", Toast.LENGTH_SHORT).show();
                 AppUtils.startNewActivityAndFinish(getBaseContext(), SignUpActivity.this, MainActivity.class);
             }
         });
