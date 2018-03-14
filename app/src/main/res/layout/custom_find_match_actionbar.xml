@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+
+    <ImageButton
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:background="@null"
+        android:id="@+id/action_back"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_left_arrow"
+        android:layout_marginStart="@dimen/margin_12"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_12"
+        android:layout_toEndOf="@+id/action_back"
+        android:layout_toStartOf="@+id/action_more"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fullname"
+            android:layout_centerVertical="true"
+            android:text="Boston Calling"
+            android:textSize="@dimen/text_22"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/date"
+            android:layout_centerVertical="true"
+            android:text="Feb 23, 2018"
+            android:textSize="@dimen/text_14"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:ellipsize="end"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        android:id="@+id/action_more"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_left_arrow"
+        android:layout_marginEnd="@dimen/margin_12"/>
+</RelativeLayout>

@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
+import com.app.concertbud.concertbuddies.Activity.FindMatchActivity;
 import com.app.concertbud.concertbuddies.Adapters.ChatRoomAdapter;
 import com.app.concertbud.concertbuddies.Adapters.EventsAdapter;
+import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.Networking.Responses.CompleteConcertsResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.ConcertResponse;
 import com.app.concertbud.concertbuddies.R;
@@ -104,7 +106,7 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
 
     @Override
     public void onEventClicked(int position) {
-
+        AppUtils.startNewActivity(getContext(), getActivity(), FindMatchActivity.class);
     }
 
     @Override

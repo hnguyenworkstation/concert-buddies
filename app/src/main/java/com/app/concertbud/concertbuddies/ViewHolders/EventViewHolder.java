@@ -31,10 +31,16 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         unbinder = ButterKnife.bind(this, itemView);
     }
 
-    public void init(int position, OnEventClickListener listener) {
+    public void init(final int position, final OnEventClickListener listener) {
         unbinder = ButterKnife.bind(this, itemView);
 
         ImageLoader.loadAdjustImageFromURL(mEventImage, "https://consequenceofsound.files.wordpress.com/2018/01/bsoton-calling-2018.png?w=807", mEventProgress);
+        mEventImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onEventClicked(position);
+            }
+        });
     }
 
 
