@@ -12,6 +12,7 @@ import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.Helpers.StringUtils;
+import com.app.concertbud.concertbuddies.Networking.FacebookContext;
 import com.app.concertbud.concertbuddies.Networking.NetContext;
 import com.app.concertbud.concertbuddies.Networking.Responses.CompleteFacebookUserResponse;
 import com.app.concertbud.concertbuddies.Networking.Services.BackendServices;
@@ -82,6 +83,9 @@ public class LoginActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "Logging In Success", Toast.LENGTH_SHORT).show();
                 Log.d("HUONG", "loginsuccess");
 
+                /* TODO: Set user token */
+                // setUserToken in SharedPreferencesManager
+
                 /* Update Backend */
                 updateBackend(loginResult.getAccessToken().getToken());
 
@@ -109,6 +113,10 @@ public class LoginActivity extends BaseActivity {
         // Get user information
         CompleteFacebookUserResponse user = getUserInformation(token);
 
+        if (user == null) {
+            // TODO: error handling
+        }
+
         // POST call to backend
         BackendServices services = NetContext.instance.create(BackendServices.class);
         // TODO: get dynamic DOB and gender
@@ -129,7 +137,7 @@ public class LoginActivity extends BaseActivity {
                 });
     }
     private CompleteFacebookUserResponse getUserInformation(String token) {
-        FacebookServices services = NetContext.instance.create(FacebookServices.class);
+        FacebookServices services = FacebookContext.instance.create(FacebookServices.class);
         // TODO: update permission of facebook to also get DOB and gender
         String fields = "id,name,email";
         try {

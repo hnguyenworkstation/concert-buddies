@@ -35,7 +35,7 @@ public class FetchNearbyConcertsJob extends Job {
     private String queryLocation;
 
     public FetchNearbyConcertsJob(int pageNum, double lng, double lat) {
-            super(new Params(JobPriority.HIGH).requireNetwork().persist().groupBy(JobGroup.concert));
+        super(new Params(JobPriority.HIGH).requireNetwork().persist().groupBy(JobGroup.concert));
         queryLocation = Double.toString(lat) + "," + Double.toString(lng);
     }
 
