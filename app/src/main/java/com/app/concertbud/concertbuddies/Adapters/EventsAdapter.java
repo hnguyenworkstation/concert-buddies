@@ -6,11 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.app.concertbud.concertbuddies.Abstracts.OnChatRoomClickListener;
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
+import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 import com.app.concertbud.concertbuddies.R;
-import com.app.concertbud.concertbuddies.ViewHolders.ChatRoomViewHolder;
 import com.app.concertbud.concertbuddies.ViewHolders.EventViewHolder;
+
+import java.util.ArrayList;
 
 /**
  * Created by hungnguyen on 3/3/18.
@@ -22,10 +23,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> {
 
     /* Get a list of events */
     //TODO: ArrayList
+    ArrayList<EventsEntity> mConcertsList;
 
-    public EventsAdapter(Context context, OnEventClickListener listener) {
+    public EventsAdapter(Context context, OnEventClickListener listener, ArrayList<EventsEntity> concerts) {
         this.context = context;
         this.listener = listener;
+        this.mConcertsList = concerts;
     }
 
     @Override
@@ -38,7 +41,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> {
 
     @Override
     public void onBindViewHolder(EventViewHolder holder, int position) {
-        holder.init(position, listener);
+        if (!mConcertsList.isEmpty())
+            holder.init(position, listener, mConcertsList.get(position));
     }
 
     @Override

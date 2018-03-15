@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.Activity.MainActivity;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
+import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverPlaceBus;
 import com.app.concertbud.concertbuddies.EventBuses.TriggerViewBus;
@@ -204,7 +206,9 @@ public class LocateEventFragment extends Fragment {
     @Subscribe
     public void onEvent(DeliverLocationBus location) {
         mLocation = location.getLocation();
+        Log.e("LocateEventFragment", "fetching concerts");
         jobManager.addJobInBackground(new FetchNearbyConcertsJob(0,
                 mLocation.getLongitude(), mLocation.getLatitude()));
     }
+
 }

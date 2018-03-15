@@ -3,16 +3,32 @@ package com.app.concertbud.concertbuddies.Networking.Responses.Entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Created by huongnguyen on 3/14/18.
+ */
+
+
 public class CountryEntity {
     @Expose
-    @SerializedName("displayName")
-    private String displayname;
+    @SerializedName("countryCode")
+    private String countrycode;
+    @Expose
+    @SerializedName("name")
+    private String name;
 
-    public String getDisplayname() {
-        return displayname;
+    public String getCountrycode() {
+        return countrycode;
     }
 
-    public void setDisplayname(String displayname) {
-        this.displayname = displayname;
+    public void setCountrycode(String countrycode) {
+        this.countrycode = countrycode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

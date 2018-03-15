@@ -6,18 +6,16 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by huongnguyen on 3/14/18.
  */
-
-
-public class CityEntity {
+public class MusicbrainzEntity {
     @Expose
-    @SerializedName("name")
-    private String name;
+    @SerializedName("id")
+    private String id;
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(String id) {
+        this.id = id;
     }
 }

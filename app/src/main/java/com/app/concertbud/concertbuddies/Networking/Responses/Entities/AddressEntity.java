@@ -6,18 +6,17 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by huongnguyen on 3/14/18.
  */
-
-
-public class CityEntity {
+public class AddressEntity {
     @Expose
-    @SerializedName("name")
-    private String name;
+    @SerializedName("line1")
+    private String line1;
 
-    public String getName() {
-        return name;
+    public String getLine1() {
+        return line1;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLine1(String line1) {
+        this.line1 = line1;
     }
 }
+
