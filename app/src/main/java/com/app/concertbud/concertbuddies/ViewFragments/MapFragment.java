@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
+import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverPlaceBus;
 import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
@@ -220,7 +221,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     @Override
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
-                        Log.e("HUONG", "getting location");
                         if (location != null) {
                             lastKnownLocation = location;
                             EventBus.getDefault().post(new DeliverLocationBus(location));

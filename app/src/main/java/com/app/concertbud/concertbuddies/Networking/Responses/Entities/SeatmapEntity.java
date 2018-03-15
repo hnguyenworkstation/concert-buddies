@@ -7,17 +7,16 @@ import com.google.gson.annotations.SerializedName;
  * Created by huongnguyen on 3/14/18.
  */
 
-
-public class CityEntity {
+public class SeatmapEntity {
     @Expose
-    @SerializedName("name")
-    private String name;
+    @SerializedName("staticUrl")
+    private String staticurl;
 
-    public String getName() {
-        return name;
+    public String getStaticurl() {
+        return staticurl;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStaticurl(String staticurl) {
+        this.staticurl = staticurl;
     }
 }

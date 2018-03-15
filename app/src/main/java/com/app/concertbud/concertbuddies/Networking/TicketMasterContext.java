@@ -3,14 +3,12 @@ package com.app.concertbud.concertbuddies.Networking;
 import android.util.Log;
 
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
-import com.app.concertbud.concertbuddies.AppControllers.BasePreferenceManager;
 import com.app.concertbud.concertbuddies.R;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -23,26 +21,26 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by hungnguyen on 3/11/18.
+ * Created by huongnguyen on 3/14/18.
  */
 
-public class SongKickContext {
+public class TicketMasterContext {
     private static final String TAG = NetContext.class.getSimpleName();
-    public static SongKickContext instance = new SongKickContext();
+    public static TicketMasterContext instance = new TicketMasterContext();
 
     private Retrofit retrofit;
     private OkHttpClient client;
 
-    private SongKickContext() {
+    private TicketMasterContext() {
         client = new OkHttpClient
                 .Builder().connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(new SongKickContext.HeaderInterceptor())
-                .addInterceptor(new SongKickContext.LoggerInterceptor())
+                .addInterceptor(new TicketMasterContext.HeaderInterceptor())
+                .addInterceptor(new TicketMasterContext.LoggerInterceptor())
                 .build();
 
         retrofit = new Retrofit.Builder()
                 .client(client)
-                .baseUrl(BaseApplication.getInstance().getResources().getString(R.string.songkick_url))
+                .baseUrl(BaseApplication.getInstance().getResources().getString(R.string.ticketmaster_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

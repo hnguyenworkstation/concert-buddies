@@ -8,16 +8,16 @@ import com.google.gson.annotations.SerializedName;
  */
 
 
-public class CityEntity {
+public class LastfmEntity {
     @Expose
-    @SerializedName("name")
-    private String name;
+    @SerializedName("url")
+    private String url;
 
-    public String getName() {
-        return name;
+    public String getUrl() {
+        return url;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

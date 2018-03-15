@@ -8,21 +8,13 @@ import com.google.gson.annotations.SerializedName;
  */
 
 
-public class StateEntity {
-    @Expose
-    @SerializedName("stateCode")
-    private String statecode;
+public class SubtypeEntity {
     @Expose
     @SerializedName("name")
     private String name;
-
-    public String getStatecode() {
-        return statecode;
-    }
-
-    public void setStatecode(String statecode) {
-        this.statecode = statecode;
-    }
+    @Expose
+    @SerializedName("id")
+    private String id;
 
     public String getName() {
         return name;
@@ -30,5 +22,13 @@ public class StateEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

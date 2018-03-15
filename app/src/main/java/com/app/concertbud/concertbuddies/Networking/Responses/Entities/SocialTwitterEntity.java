@@ -7,17 +7,17 @@ import com.google.gson.annotations.SerializedName;
  * Created by huongnguyen on 3/14/18.
  */
 
+public class SocialTwitterEntity {
 
-public class CityEntity {
     @Expose
-    @SerializedName("name")
-    private String name;
+    @SerializedName("handle")
+    private String handle;
 
-    public String getName() {
-        return name;
+    public String getHandle() {
+        return handle;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHandle(String handle) {
+        this.handle = handle;
     }
 }

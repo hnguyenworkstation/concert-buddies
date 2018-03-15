@@ -7,17 +7,18 @@ import com.google.gson.annotations.SerializedName;
  * Created by huongnguyen on 3/14/18.
  */
 
+public class NestedEmbeddedLinksEntity {
 
-public class CityEntity {
     @Expose
-    @SerializedName("name")
-    private String name;
+    @SerializedName("self")
+    private SelfEntity self;
 
-    public String getName() {
-        return name;
+    public SelfEntity getSelf() {
+        return self;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSelf(SelfEntity self) {
+        this.self = self;
     }
+
 }

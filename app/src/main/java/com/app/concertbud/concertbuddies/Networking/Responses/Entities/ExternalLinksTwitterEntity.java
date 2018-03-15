@@ -7,17 +7,16 @@ import com.google.gson.annotations.SerializedName;
  * Created by huongnguyen on 3/14/18.
  */
 
-
-public class CityEntity {
+public class ExternalLinksTwitterEntity {
     @Expose
-    @SerializedName("name")
-    private String name;
+    @SerializedName("url")
+    private String url;
 
-    public String getName() {
-        return name;
+    public String getUrl() {
+        return url;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

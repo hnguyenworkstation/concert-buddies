@@ -16,7 +16,7 @@
 
         <TextView
             style="@style/LargeTitleText"
-            android:id="@+id/user_name"
+            android:id="@+id/event_name"
             android:text="Boston Calling 2018"
             android:textSize="@dimen/text_22"
             android:maxLines="2"
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Boston, MA -- 250 going"
-            android:id="@+id/location"
+            android:id="@+id/event_location"
             android:textSize="@dimen/text_16"
             android:textColor="@color/text_light_color"
             android:layout_marginEnd="@dimen/margin_10"/>

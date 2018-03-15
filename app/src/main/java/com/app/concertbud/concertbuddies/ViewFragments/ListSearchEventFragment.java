@@ -16,14 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
-import com.app.concertbud.concertbuddies.Adapters.ChatRoomAdapter;
 import com.app.concertbud.concertbuddies.Adapters.EventsAdapter;
-import com.app.concertbud.concertbuddies.Networking.Responses.CompleteConcertsResponse;
-import com.app.concertbud.concertbuddies.Networking.Responses.ConcertResponse;
+import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
+import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 import com.app.concertbud.concertbuddies.R;
-import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -34,14 +34,11 @@ import butterknife.Unbinder;
 public class ListSearchEventFragment extends Fragment implements OnEventClickListener{
     @BindView(R.id.events_recycler)
     RecyclerView mEventRecycler;
-
-    private String TAG = getTag();
-
     private EventsAdapter eventsAdapter;
     private Unbinder unbinder;
 
     /* Array List of all Nearby Concerts */
-    ArrayList<ConcertResponse> mConcertsList;
+    ArrayList<EventsEntity> mConcertsList = new ArrayList<>();
 
     public ListSearchEventFragment() {
         // Required empty public constructor
@@ -79,8 +76,19 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
         initEventsRecycler();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
     private void initEventsRecycler() {
-        eventsAdapter = new EventsAdapter(getContext(), this);
+        eventsAdapter = new EventsAdapter(getContext(), this, mConcertsList);
 
         final RecyclerView.LayoutManager mLayoutManager =
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -116,10 +124,13 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
      * SUBSCRIBERS
      */
 
-    @Subscribe
-    public void onEvent(FetchNearbyConcertsJob request) {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(ConcertsNearbyBus bus) {
         // update adapter
-        Log.e(TAG, request.toString());
+        for (int i = 0; i < bus.getConcerts().size(); i++) {
+            mConcertsList.add(bus.getConcerts().get(i));
+        }
         eventsAdapter.notifyItemChanged(1);
+        EventBus.getDefault().removeStickyEvent(bus);
     }
 }

@@ -8,16 +8,17 @@ import com.google.gson.annotations.SerializedName;
  */
 
 
-public class CityEntity {
-    @Expose
-    @SerializedName("name")
-    private String name;
 
-    public String getName() {
-        return name;
+public class SelfEntity {
+    @Expose
+    @SerializedName("href")
+    private String href;
+
+    public String getHref() {
+        return href;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHref(String href) {
+        this.href = href;
     }
 }
