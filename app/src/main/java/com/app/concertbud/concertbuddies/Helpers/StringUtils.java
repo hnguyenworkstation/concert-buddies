@@ -9,7 +9,11 @@ public class StringUtils {
     private static final String USER_POSTS = "user_posts";
     private static final String PROFILE = "public_profile";
 
-    private static String[] FB_PERMISSIONS = {EMAIL, PROFILE};
+    // <<<
+    private static final String BIRTHDAY = "user_birthday";
+    private static final String ABOUT = "user_about_me";
+
+    private static String[] FB_PERMISSIONS = {EMAIL, PROFILE, BIRTHDAY, ABOUT};
 
     public static String[] getFbPermissions() {
         return FB_PERMISSIONS;
