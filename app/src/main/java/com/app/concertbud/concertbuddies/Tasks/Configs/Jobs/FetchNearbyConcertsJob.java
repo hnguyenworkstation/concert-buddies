@@ -33,6 +33,9 @@ public class FetchNearbyConcertsJob extends Job {
 
     /* User's Location information */
     private String queryLocation;
+    private int DEFAULT_RADIUS = 50;
+    private String DEFAULT_SEGMENT = "Music";
+    private String DEFAULT_SORT_OPTION = "date,asc";
 
     public FetchNearbyConcertsJob(int pageNum, double lng, double lat) {
         super(new Params(JobPriority.HIGH).requireNetwork().persist().groupBy(JobGroup.concert));
@@ -42,7 +45,8 @@ public class FetchNearbyConcertsJob extends Job {
     @Override
     public void onRun() throws Throwable {
         TicketMasterServices service = TicketMasterContext.instance.create(TicketMasterServices.class);
-        service.getConcertsNearby(queryLocation, getApplicationContext().getString(R.string.ticket_master_api_token))
+        service.getConcertsNearby(DEFAULT_RADIUS, queryLocation, DEFAULT_SORT_OPTION,
+                DEFAULT_SEGMENT, getApplicationContext().getString(R.string.ticket_master_api_token))
                 .enqueue(new Callback<CompleteTMConcertsResponse>() {
                     @Override
                     public void onResponse(Call<CompleteTMConcertsResponse> call, Response<CompleteTMConcertsResponse> response) {
