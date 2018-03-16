@@ -14,6 +14,7 @@ import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.Helpers.StringUtils;
 import com.app.concertbud.concertbuddies.Networking.FacebookContext;
 import com.app.concertbud.concertbuddies.Networking.NetContext;
+import com.app.concertbud.concertbuddies.Networking.Requests.NewUserRequest;
 import com.app.concertbud.concertbuddies.Networking.Responses.CompleteFacebookUserResponse;
 import com.app.concertbud.concertbuddies.Networking.Services.BackendServices;
 import com.app.concertbud.concertbuddies.Networking.Services.FacebookServices;
@@ -109,19 +110,34 @@ public class LoginActivity extends BaseActivity {
     }
 
     // <<<
-    private void updateBackend(String token) {
+    private void updateBackend(final String token) {
         // Get user information
-        CompleteFacebookUserResponse user = getUserInformation(token);
+        FacebookServices services = FacebookContext.instance.create(FacebookServices.class);
+        // TODO: update permission of facebook to also get DOB and gender
+        String fields = "id,name,email";
+        services.getUserInformation(fields, token)
+                .enqueue(new Callback<CompleteFacebookUserResponse>() {
+                    @Override
+                    public void onResponse(Call<CompleteFacebookUserResponse> call, Response<CompleteFacebookUserResponse> response) {
+                        if (response.code() == 200) {
+                            postUserInformation(token, response.body());
+                        }
+                    }
 
-        if (user == null) {
-            // TODO: error handling
-        }
+                    @Override
+                    public void onFailure(Call<CompleteFacebookUserResponse> call, Throwable t) {
 
+                    }
+                });
+    }
+
+    private void postUserInformation(String token, CompleteFacebookUserResponse user)
+    {
         // POST call to backend
         BackendServices services = NetContext.instance.create(BackendServices.class);
         // TODO: get dynamic DOB and gender
-        services.postUser(user.getName(), "2012-05-03T00:00:00.00Z",
-                "female", token)
+        services.postUser(new NewUserRequest(user.getName(), "2012/05/03",
+                "false", token))
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -135,19 +151,6 @@ public class LoginActivity extends BaseActivity {
 
                     }
                 });
-    }
-    private CompleteFacebookUserResponse getUserInformation(String token) {
-        FacebookServices services = FacebookContext.instance.create(FacebookServices.class);
-        // TODO: update permission of facebook to also get DOB and gender
-        String fields = "id,name,email";
-        try {
-            CompleteFacebookUserResponse response = services.getUserInformation(fields, token)
-                    .execute().body();
-            return response;
-        } catch (IOException e) {
-            // TODO: handle error
-            return null;
-        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.app.concertbud.concertbuddies.Networking;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.R;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class FacebookContext {
 
         retrofit = new Retrofit.Builder()
                 .client(client)
-                .baseUrl(Resources.getSystem().getString(R.string.facebook_graph_url))
+                .baseUrl(BaseApplication.getInstance().getResources().getString(R.string.facebook_graph_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

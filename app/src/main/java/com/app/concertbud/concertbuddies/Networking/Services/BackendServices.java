@@ -1,6 +1,9 @@
 package com.app.concertbud.concertbuddies.Networking.Services;
 
+import com.app.concertbud.concertbuddies.Networking.Requests.NewUserRequest;
+
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -15,7 +18,6 @@ public interface BackendServices {
     @GET("/users/{user_id}")
     Call<Void> getUser(@Path("user_id") int user_id);
 
-    @POST("/users/")
-    Call<Void> postUser(@Query("name") String name, @Query("dob") String dateOfBirth,
-                        @Query("gender") String gender, @Query("fb_token") String facebook_token);
+    @POST("/users")
+    Call<Void> postUser(@Body NewUserRequest request);
 }
