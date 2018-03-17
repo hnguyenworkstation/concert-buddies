@@ -26,6 +26,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,8 +39,12 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     private EventsAdapter eventsAdapter;
     private Unbinder unbinder;
 
+    /* HashMap of all Nearby Concerts */
+    private HashMap<String, EventsEntity> mConcertsHashMap = new HashMap<>();
     /* Array List of all Nearby Concerts */
-    ArrayList<EventsEntity> mConcertsList = new ArrayList<>();
+    private ArrayList<EventsEntity> mConcertsList = new ArrayList<>();
+
+    private int mPosition;
 
     public ListSearchEventFragment() {
         // Required empty public constructor
@@ -56,7 +62,7 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            // TODO: initialize local position here ??
+            mPosition = getArguments().getInt("page_position");
         }
 
     }
@@ -126,11 +132,12 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(ConcertsNearbyBus bus) {
-        // update adapter
+        /* Put all events in HashMap to make sure no duplicated event is allowed */
         for (int i = 0; i < bus.getConcerts().size(); i++) {
-            mConcertsList.add(bus.getConcerts().get(i));
+            mConcertsHashMap.put(bus.getConcerts().get(i).getName(), bus.getConcerts().get(i));
         }
-        eventsAdapter.notifyItemChanged(1);
+        mConcertsList.addAll(mConcertsHashMap.values());
+        eventsAdapter.notifyItemChanged(mPosition);
         EventBus.getDefault().removeStickyEvent(bus);
     }
 }

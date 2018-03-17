@@ -22,7 +22,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> {
     private OnEventClickListener listener;
 
     /* Get a list of events */
-    //TODO: ArrayList
     ArrayList<EventsEntity> mConcertsList;
 
     public EventsAdapter(Context context, OnEventClickListener listener, ArrayList<EventsEntity> concerts) {
@@ -53,6 +52,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 20;
+        return mConcertsList.size();
     }
 }
