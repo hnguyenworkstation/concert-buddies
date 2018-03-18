@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
-import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverPlaceBus;
 import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
@@ -57,14 +56,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private FusedLocationProviderClient mFusedLocationClient;
     private final JobManager jobManager = BaseApplication.getInstance().getJobManager();
     private Place currentPlace;
+    private String TAG = MapFragment.class.getSimpleName();
+    private int mPosition;
 
     public MapFragment() {
         // Required empty public constructor
     }
 
-    public static MapFragment newInstance() {
+    public static MapFragment newInstance(int position) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
+        args.putInt("page_position", position + 1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,6 +75,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mPosition = getArguments().getInt("page_position");
         }
         /* Get current location */
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
@@ -239,6 +242,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onEvent(DeliverPlaceBus bus) {
         currentPlace = bus.getPlace();
 
+        /* Fetch events nearby that location */
+        Log.e(TAG, "fetching concerts for newly picked location");
+        LatLng location = currentPlace.getLatLng();
+        jobManager.addJobInBackground(new FetchNearbyConcertsJob(mPosition, location.longitude,
+                location.latitude));
+
+        /* Move dropped pin to newly picked location */
         moveCameraToNewPlace(currentPlace);
 
         EventBus.getDefault().removeStickyEvent(bus);

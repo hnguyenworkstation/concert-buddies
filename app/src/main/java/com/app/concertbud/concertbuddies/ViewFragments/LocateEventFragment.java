@@ -57,6 +57,7 @@ public class LocateEventFragment extends Fragment {
     private int currentStage = 0;
 
     private static int mPostion;
+    private String TAG = LocateEventFragment.class.getSimpleName();
 
 
     /* Location */
@@ -107,7 +108,7 @@ public class LocateEventFragment extends Fragment {
         mFragTransition = mFragManager.beginTransaction();
 
         if (mapFragment == null)
-            mapFragment = MapFragment.newInstance();
+            mapFragment = MapFragment.newInstance(mPostion);
 
         if (listSearchEventFragment == null)
             listSearchEventFragment = ListSearchEventFragment.newInstance(mPostion);
@@ -206,9 +207,9 @@ public class LocateEventFragment extends Fragment {
     @Subscribe
     public void onEvent(DeliverLocationBus location) {
         mLocation = location.getLocation();
-        Log.e("LocateEventFragment", "fetching concerts");
-        jobManager.addJobInBackground(new FetchNearbyConcertsJob(0,
-                mLocation.getLongitude(), mLocation.getLatitude()));
+        Log.e(TAG, "fetching concerts");
+        jobManager.addJobInBackground(new FetchNearbyConcertsJob(mPostion, mLocation.getLongitude(),
+                mLocation.getLatitude()));
     }
 
 }
