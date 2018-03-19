@@ -12,6 +12,9 @@ import retrofit2.http.Query;
 
 public interface TicketMasterServices {
     @GET("/discovery/v2/events.json")
-    Call<CompleteTMConcertsResponse> getConcertsNearby(@Query("geoPoint") String geo_point,
+    Call<CompleteTMConcertsResponse> getConcertsNearby(@Query("radius") int radius,
+                                                       @Query("geoPoint") String geo_point,
+                                                       @Query("sort") String sort_option,
+                                                       @Query("segmentName") String segment,
                                                        @Query("apikey") String api_key);
 }

@@ -51,7 +51,18 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         unbinder = ButterKnife.bind(this, itemView);
 
         // Get Event Image
-        ImageLoader.loadAdjustImageFromURL(mEventImage, concert.getImages().get(0).getUrl(), mEventProgress);
+        // Only choose one whose width is 500px or larger
+        boolean edited = false;
+        for (int i = 0; i < concert.getImages().size(); i++) {
+            if (concert.getImages().get(i).getWidth() > 500) {
+                ImageLoader.loadAdjustImageFromURL(mEventImage, concert.getImages().get(i).getUrl(), mEventProgress);
+                edited = true;
+                break;
+            }
+        }
+        if (!edited) {
+            ImageLoader.loadAdjustImageFromURL(mEventImage, concert.getImages().get(0).getUrl(), mEventProgress);
+        }
         // Get Event Name
         mEventName.setText(concert.getName());
         // Get Date
@@ -72,7 +83,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
 
         // Get Distance
         Double distance = concert.getDistance();
-        mRideDistance.setText(Double.toString(distance) + " miles");
+        mRideDistance.setText(Long.toString(Math.round(distance)) + " miles");
     }
 
     public void onRecycled() {
