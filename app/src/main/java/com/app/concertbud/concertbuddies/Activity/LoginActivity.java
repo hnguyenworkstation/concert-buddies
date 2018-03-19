@@ -109,40 +109,14 @@ public class LoginActivity extends BaseActivity {
                 SignUpActivity.class);
     }
 
-    // <<<
     private void updateBackend(final String token) {
-        // Get user information
-        FacebookServices services = FacebookContext.instance.create(FacebookServices.class);
-        // TODO: update permission of facebook to also get DOB and gender
-        String fields = "id,name,email";
-        services.getUserInformation(fields, token)
-                .enqueue(new Callback<CompleteFacebookUserResponse>() {
-                    @Override
-                    public void onResponse(Call<CompleteFacebookUserResponse> call, Response<CompleteFacebookUserResponse> response) {
-                        if (response.code() == 200) {
-                            postUserInformation(token, response.body());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<CompleteFacebookUserResponse> call, Throwable t) {
-
-                    }
-                });
-    }
-
-    private void postUserInformation(String token, CompleteFacebookUserResponse user)
-    {
-        // POST call to backend
         BackendServices services = NetContext.instance.create(BackendServices.class);
-        // TODO: get dynamic DOB and gender
-        services.postUser(new NewUserRequest(user.getName(), "2012/05/03",
-                "false", token))
+        services.postUser(new NewUserRequest(token))
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.code() == 200) {
-                            Log.e(TAG, "Succesfully posted to DB");
+                            Log.e(TAG, "Successfully posted to database");
                         }
                     }
 

@@ -9,47 +9,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class NewUserRequest {
     @Expose
-    @SerializedName("name")
-    private String name;
-    @Expose
-    @SerializedName("dob")
-    private String dob;
-    @Expose
-    @SerializedName("gender")
-    private String gender;
-    @Expose
     @SerializedName("fb_token")
     private String fb_token;
 
-    public NewUserRequest(String name, String dob, String gender, String fb_token) {
-        this.name = name;
-        this.dob = dob;
-        this.gender = gender;
+    public NewUserRequest(String fb_token) {
         this.fb_token = fb_token;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
     }
 
     public String getFb_token() {
