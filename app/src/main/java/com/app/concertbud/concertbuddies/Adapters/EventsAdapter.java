@@ -2,6 +2,7 @@ package com.app.concertbud.concertbuddies.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -50,6 +51,7 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position >= getItemCount() - 1 && isMoreDataAvailable && !isLoading && onLoadMoreListener != null) {
+            Log.e("onBindViewHolder", "is at last position");
             isLoading = true;
             onLoadMoreListener.onLoadMore();
         }
