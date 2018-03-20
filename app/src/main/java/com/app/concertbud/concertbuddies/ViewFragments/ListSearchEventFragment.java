@@ -1,6 +1,7 @@
 package com.app.concertbud.concertbuddies.ViewFragments;
 
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,10 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
+import com.app.concertbud.concertbuddies.Abstracts.OnLoadMoreListener;
 import com.app.concertbud.concertbuddies.Adapters.EventsAdapter;
+import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
+import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 import com.app.concertbud.concertbuddies.R;
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
+import com.birbit.android.jobqueue.JobManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,8 +46,10 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     private Unbinder unbinder;
     /* Array List of all Nearby Concerts */
     private ArrayList<EventsEntity> mConcertsList = new ArrayList<>();
+    private Location location;
     private int mPosition;
     private String TAG = ListSearchEventFragment.class.getSimpleName();
+    private final JobManager jobManager = BaseApplication.getInstance().getJobManager();
 
     public ListSearchEventFragment() {
         // Required empty public constructor
@@ -93,6 +101,20 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
 
     private void initEventsRecycler() {
         eventsAdapter = new EventsAdapter(getContext(), this, mConcertsList);
+        eventsAdapter.setOnLoadMoreListener(new EventsAdapter.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                mEventRecycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO: add progress bar while loading new data
+                        Log.e(TAG, "Loading new data");
+                        // TODO: get correct page num
+                        loadMoreConcerts(2);
+                    }
+                });
+            }
+        });
 
         final RecyclerView.LayoutManager mLayoutManager =
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -125,20 +147,46 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     }
 
     /***********
+     * UTILITIES
+     ***********/
+    void loadMoreConcerts(int index) {
+        Log.e(TAG, "loadMoreConcerts");
+        mConcertsList.add(null);
+        eventsAdapter.notifyItemInserted(mConcertsList.size() - 1);
+        jobManager.addJobInBackground(new FetchNearbyConcertsJob(mPosition,
+                location.getLongitude(), location.getLatitude()));
+    }
+    /***********
      * SUBSCRIBERS
      */
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(DeliverLocationBus bus) {
+        location = bus.getLocation();
+        EventBus.getDefault().removeStickyEvent(bus);
+    }
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(ConcertsNearbyBus bus) {
-        /* Put all events in HashMap to make sure no duplicated event is allowed */
-        HashMap<String, EventsEntity> mConcertsHashMap = new HashMap<>();
-        for (int i = 0; i < bus.getConcerts().size(); i++) {
-            mConcertsHashMap.put(bus.getConcerts().get(i).getName(), bus.getConcerts().get(i));
+        // remove null event if added at onLoadMore
+        if (!mConcertsList.isEmpty() && mConcertsList.get(mConcertsList.size() - 1) == null) {
+            mConcertsList.remove(mConcertsList.size() - 1);
         }
-        Log.e(TAG, "Updating new concerts");
-        // TODO: ?? Double check if we need to clear mConcertsList
-        mConcertsList.clear();
-        mConcertsList.addAll(mConcertsHashMap.values());
+
+        /* check if there's still data left */
+        if (bus.getConcerts().size() == 0) {
+            eventsAdapter.setMoreDataAvailable(false);
+        }
+        else {
+            /* Put all events in HashMap to make sure no duplicated event is allowed */
+            HashMap<String, EventsEntity> mConcertsHashMap = new HashMap<>();
+            for (int i = 0; i < bus.getConcerts().size(); i++) {
+                mConcertsHashMap.put(bus.getConcerts().get(i).getName(), bus.getConcerts().get(i));
+            }
+            Log.e(TAG, "Updating new concerts");
+            // TODO: ?? Double check if we need to clear mConcertsList
+            mConcertsList.clear();
+            mConcertsList.addAll(mConcertsHashMap.values());
+        }
         eventsAdapter.notifyItemChanged(mPosition);
         EventBus.getDefault().removeStickyEvent(bus);
     }

@@ -226,7 +226,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             lastKnownLocation = location;
-                            EventBus.getDefault().post(new DeliverLocationBus(location));
+                            EventBus.getDefault().postSticky(new DeliverLocationBus(location));
                             updateMapView();
                         }
                     }

@@ -51,8 +51,14 @@ public class FetchNearbyConcertsJob extends Job {
                     @Override
                     public void onResponse(Call<CompleteTMConcertsResponse> call, Response<CompleteTMConcertsResponse> response) {
                         if (response.code() == 200) {
-                            List<EventsEntity> concerts = response.body().getEmbedded().getEvents();
-                            EventBus.getDefault().postSticky(new ConcertsNearbyBus(concerts));
+                            if (response.body().getEmbedded() != null) {
+                                List<EventsEntity> concerts = response.body().getEmbedded().getEvents();
+                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(concerts));
+                            }
+                            else {
+                                // TODO: double check if this will update subscribing components
+                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(null));
+                            }
                         }
                     }
 
