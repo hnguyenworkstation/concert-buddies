@@ -107,7 +107,6 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
                 mEventRecycler.post(new Runnable() {
                     @Override
                     public void run() {
-                        // TODO: add progress bar while loading new data
                         Log.e(TAG, "Loading new data");
                         // TODO: get correct page num
                         loadMoreConcerts(2);
@@ -151,8 +150,10 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
      ***********/
     void loadMoreConcerts(int index) {
         Log.e(TAG, "loadMoreConcerts");
-        mConcertsList.add(null);
+        // TODO: add progress bar while loading new data
+        mConcertsList.add(new EventsEntity("loading"));
         eventsAdapter.notifyItemInserted(mConcertsList.size() - 1);
+        // Add job to load more concerts in the background
         jobManager.addJobInBackground(new FetchNearbyConcertsJob(mPosition,
                 location.getLongitude(), location.getLatitude()));
     }
@@ -167,8 +168,8 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     }
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(ConcertsNearbyBus bus) {
-        // remove null event if added at onLoadMore
-        if (!mConcertsList.isEmpty() && mConcertsList.get(mConcertsList.size() - 1) == null) {
+        // remove null event if added at loadMoreConcerts
+        if (!mConcertsList.isEmpty() && mConcertsList.get(mConcertsList.size() - 1).getType().equals("loading")) {
             mConcertsList.remove(mConcertsList.size() - 1);
         }
 
@@ -186,8 +187,9 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
             // TODO: ?? Double check if we need to clear mConcertsList
             mConcertsList.clear();
             mConcertsList.addAll(mConcertsHashMap.values());
+            //eventsAdapter.notifyItemChanged(mPosition);
+            eventsAdapter.notifyDataChanged();
         }
-        eventsAdapter.notifyItemChanged(mPosition);
         EventBus.getDefault().removeStickyEvent(bus);
     }
 }

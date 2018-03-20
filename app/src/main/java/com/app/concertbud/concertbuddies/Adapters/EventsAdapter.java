@@ -28,7 +28,7 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public final int TYPE_LOADING = 1;
 
     /* Get a list of events */
-    ArrayList<EventsEntity> mConcertsList;
+    private ArrayList<EventsEntity> mConcertsList;
 
     public EventsAdapter(Context context, OnEventClickListener listener, ArrayList<EventsEntity> concerts) {
         this.context = context;
@@ -54,7 +54,7 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             onLoadMoreListener.onLoadMore();
         }
 
-        else if (!mConcertsList.isEmpty() && getItemViewType(position) == TYPE_CONCERT) {
+        if (!mConcertsList.isEmpty() && getItemViewType(position) == TYPE_CONCERT) {
             ((EventViewHolder)holder).init(position, listener, mConcertsList.get(position));
         }
     }
@@ -62,7 +62,7 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
         super.onViewRecycled(holder);
-        ((EventViewHolder)holder).onRecycled();
+        //holder.onRecycled();
     }
 
     @Override
@@ -84,6 +84,10 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         void onLoadMore();
     }
 
+    public void notifyDataChanged() {
+        notifyDataSetChanged();
+        isLoading = false;
+    }
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
         this.onLoadMoreListener = onLoadMoreListener;
     }
