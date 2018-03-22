@@ -120,15 +120,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMap.setPadding(24, 324, 24, 188);
 
         if (lastKnownLocation != null) {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(),
-                    lastKnownLocation.getLongitude()))
-                    .title("Marker in Sydney"));
-
             CameraPosition newPos = new CameraPosition.Builder()
                     .target(new LatLng(lastKnownLocation.getLatitude(),
                             lastKnownLocation.getLongitude()))
                     .zoom(14)
                     .build();
+
+            addCustomMarkerToMap(getContext(), mMap, 56, 56, "Current Location",
+                    new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()),
+                    R.drawable.vector_map_pin);
 
             EventBus.getDefault().post(new IsOnAnimationBus(true));
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPos), new GoogleMap.CancelableCallback() {
@@ -156,7 +156,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         mMap.clear();
         addCustomMarkerToMap(getContext(), mMap, 56, 56, newPlace.getName().toString(),
-                newPlace.getLatLng(), R.drawable.ic_left_arrow);
+                newPlace.getLatLng(), R.drawable.vector_map_pin);
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPos), new GoogleMap.CancelableCallback() {
             @Override
@@ -183,7 +183,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         CircleOptions circle = new CircleOptions()
                 .center(loc)
-                .radius(200)
+                .radius(800)
                 .strokeColor(context.getResources().getColor(android.R.color.transparent))
                 .fillColor(context.getResources().getColor(R.color.trans_accent));
 
