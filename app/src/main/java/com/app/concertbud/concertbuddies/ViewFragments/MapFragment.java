@@ -128,7 +128,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             addCustomMarkerToMap(getContext(), mMap, 56, 56, "Current Location",
                     new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()),
-                    R.drawable.vector_map_pin);
+                    R.drawable.ic_maps_and_flags);
 
             EventBus.getDefault().post(new IsOnAnimationBus(true));
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPos), new GoogleMap.CancelableCallback() {
@@ -156,7 +156,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         mMap.clear();
         addCustomMarkerToMap(getContext(), mMap, 56, 56, newPlace.getName().toString(),
-                newPlace.getLatLng(), R.drawable.vector_map_pin);
+                newPlace.getLatLng(), R.drawable.ic_maps_and_flags);
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPos), new GoogleMap.CancelableCallback() {
             @Override
