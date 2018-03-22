@@ -22,14 +22,11 @@ import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJ
 import com.birbit.android.jobqueue.JobManager;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -246,7 +243,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         Log.e(TAG, "fetching concerts for newly picked location");
         LatLng location = currentPlace.getLatLng();
         jobManager.addJobInBackground(new FetchNearbyConcertsJob(mPosition, location.longitude,
-                location.latitude));
+                location.latitude, true));
 
         /* Move dropped pin to newly picked location */
         moveCameraToNewPlace(currentPlace);

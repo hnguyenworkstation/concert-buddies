@@ -1,6 +1,8 @@
 package com.app.concertbud.concertbuddies.Adapters;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,10 +25,13 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private Context context;
     private OnEventClickListener listener;
     private OnLoadMoreListener onLoadMoreListener;
+    /* before loading more */
     private boolean isLoading = false, isMoreDataAvailable = true;
+    private int visibleThreshold = 5;
+    private int lastVisibleItem, totalItemCount;
     /* View Type */
-    public final int TYPE_CONCERT = 0;
-    public final int TYPE_LOADING = 1;
+    private final int TYPE_CONCERT = 0;
+    private final int TYPE_LOADING = 1;
 
     /* Get a list of events */
     private ArrayList<EventsEntity> mConcertsList;
@@ -64,26 +69,24 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
         super.onViewRecycled(holder);
-        //holder.onRecycled();
+        if (holder instanceof EventViewHolder) {
+            ((EventViewHolder)holder).onRecycled();
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (!mConcertsList.get(position).getType().equals("loading")) {
-            return TYPE_CONCERT;
+        if (mConcertsList.get(position).getType().equals("loading")) {
+            return TYPE_LOADING;
         }
         else {
-            return TYPE_LOADING;
+            return TYPE_CONCERT;
         }
     }
 
     @Override
     public int getItemCount() {
         return mConcertsList.size();
-    }
-
-    public interface OnLoadMoreListener {
-        void onLoadMore();
     }
 
     public void notifyDataChanged() {

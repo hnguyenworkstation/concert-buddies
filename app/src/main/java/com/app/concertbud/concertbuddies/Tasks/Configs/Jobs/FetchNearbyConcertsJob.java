@@ -33,31 +33,35 @@ public class FetchNearbyConcertsJob extends Job {
 
     /* User's Location information */
     private String queryLocation;
+    private int pageNum;
+    private boolean newLocation = false;
     private int DEFAULT_RADIUS = 50;
     private String DEFAULT_SEGMENT = "Music";
     private String DEFAULT_SORT_OPTION = "date,asc";
 
-    public FetchNearbyConcertsJob(int pageNum, double lng, double lat) {
+    public FetchNearbyConcertsJob(int pageNum, double lng, double lat, boolean newLocation) {
         super(new Params(JobPriority.HIGH).requireNetwork().persist().groupBy(JobGroup.concert));
         queryLocation = Double.toString(lat) + "," + Double.toString(lng);
+        this.pageNum = pageNum;
+        this.newLocation = newLocation;
     }
 
     @Override
     public void onRun() throws Throwable {
         TicketMasterServices service = TicketMasterContext.instance.create(TicketMasterServices.class);
         service.getConcertsNearby(DEFAULT_RADIUS, queryLocation, DEFAULT_SORT_OPTION,
-                DEFAULT_SEGMENT, getApplicationContext().getString(R.string.ticket_master_api_token))
+                DEFAULT_SEGMENT, pageNum, getApplicationContext().getString(R.string.ticket_master_api_token))
                 .enqueue(new Callback<CompleteTMConcertsResponse>() {
                     @Override
                     public void onResponse(Call<CompleteTMConcertsResponse> call, Response<CompleteTMConcertsResponse> response) {
                         if (response.code() == 200) {
                             if (response.body().getEmbedded() != null) {
                                 List<EventsEntity> concerts = response.body().getEmbedded().getEvents();
-                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(concerts));
+                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(concerts, newLocation));
                             }
-                            else {
+                            else { /* reach the end */
                                 // TODO: double check if this will update subscribing components
-                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(null));
+                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(null, newLocation));
                             }
                         }
                     }
