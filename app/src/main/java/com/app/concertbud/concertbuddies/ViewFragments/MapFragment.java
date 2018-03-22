@@ -2,6 +2,9 @@ package com.app.concertbud.concertbuddies.ViewFragments;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,7 +37,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -115,15 +120,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMap.setPadding(24, 324, 24, 188);
 
         if (lastKnownLocation != null) {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(),
-                    lastKnownLocation.getLongitude()))
-                    .title("Marker in Sydney"));
-
             CameraPosition newPos = new CameraPosition.Builder()
                     .target(new LatLng(lastKnownLocation.getLatitude(),
                             lastKnownLocation.getLongitude()))
                     .zoom(14)
                     .build();
+
+            addCustomMarkerToMap(getContext(), mMap, 56, 56, "Current Location",
+                    new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()),
+                    R.drawable.ic_maps_and_flags);
 
             EventBus.getDefault().post(new IsOnAnimationBus(true));
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPos), new GoogleMap.CancelableCallback() {
@@ -149,6 +154,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 .zoom(14)
                 .build();
 
+        mMap.clear();
+        addCustomMarkerToMap(getContext(), mMap, 56, 56, newPlace.getName().toString(),
+                newPlace.getLatLng(), R.drawable.ic_maps_and_flags);
+
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPos), new GoogleMap.CancelableCallback() {
             @Override
             public void onFinish() {
@@ -160,6 +169,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 mMap.getUiSettings().setAllGesturesEnabled(true);
             }
         });
+    }
+
+    private void addCustomMarkerToMap(Context context, GoogleMap mMap, int width, int height,
+                                            String title, LatLng loc, int drawable) {
+        BitmapDrawable bitmapdraw = (BitmapDrawable)context.getResources().getDrawable(drawable);
+        Bitmap bitmap = bitmapdraw.getBitmap();
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+
+        MarkerOptions marker = new MarkerOptions().position(loc).title(title);
+        marker.icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap));
+        mMap.addMarker(marker);
+
+        CircleOptions circle = new CircleOptions()
+                .center(loc)
+                .radius(800)
+                .strokeColor(context.getResources().getColor(android.R.color.transparent))
+                .fillColor(context.getResources().getColor(R.color.trans_accent));
+
+        mMap.addCircle(circle);
     }
 
     @Override

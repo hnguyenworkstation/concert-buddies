@@ -127,7 +127,6 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     /***********
      * SUBSCRIBERS
      */
-
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(ConcertsNearbyBus bus) {
         /* Put all events in HashMap to make sure no duplicated event is allowed */
