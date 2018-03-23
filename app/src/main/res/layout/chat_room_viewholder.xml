@@ -4,91 +4,90 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/root_view"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:layout_margin="@dimen/margin_8"
-        app:cardCornerRadius="12dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <com.app.concertbud.concertbuddies.CustomUI.SquareImageView
+            android:layout_width="@dimen/large_icon_size"
+            android:layout_height="@dimen/large_icon_size"
+            android:layout_margin="@dimen/margin_16"
+            android:id="@+id/logo">
+            <com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView
+                android:layout_width="@dimen/large_icon_size"
+                android:layout_height="@dimen/large_icon_size"
+                android:id="@+id/logo_image"/>
+
+            <ProgressBar
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:id="@+id/profile_progress"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:id="@+id/room_status"
+                android:src="@drawable/ic_left_arrow"
+                android:layout_gravity="bottom|end"/>
+        </com.app.concertbud.concertbuddies.CustomUI.SquareImageView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:orientation="vertical">
 
-            <com.app.concertbud.concertbuddies.CustomUI.SquareImageView
-                android:layout_width="@dimen/large_icon_size"
-                android:layout_height="@dimen/large_icon_size"
-                android:layout_margin="@dimen/margin_16"
-                android:id="@+id/logo">
-                <com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView
-                    android:layout_width="@dimen/large_icon_size"
-                    android:layout_height="@dimen/large_icon_size"
-                    android:id="@+id/logo_image"/>
-
-                <ProgressBar
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:id="@+id/profile_progress"
-                    android:layout_gravity="center"/>
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:id="@+id/room_status"
-                    android:src="@drawable/ic_left_arrow"
-                    android:layout_gravity="bottom|end"/>
-            </com.app.concertbud.concertbuddies.CustomUI.SquareImageView>
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        style="@style/RegTextStyle"
-                        android:singleLine="true"
-                        android:textStyle="bold"
-                        android:id="@+id/room_name"
-                        android:textColor="@color/text_dark_color"
-                        android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@+id/timestamp"
-                        android:textSize="@dimen/text_16"
-                        android:text="Hung Nguyen"/>
-
-                    <TextView
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/margin_16"
-                        android:id="@+id/timestamp"
-                        style="@style/RegTextStyle"
-                        android:singleLine="true"
-                        android:textColor="@color/colorAccent"
-                        android:layout_alignParentEnd="true"
-                        android:textSize="@dimen/text_12"
-                        android:text="5 mins ago"/>
-                </RelativeLayout>
-
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_marginTop="@dimen/margin_4"
-                    android:maxLines="2"
                     style="@style/RegTextStyle"
-                    android:id="@+id/last_message"
-                    android:layout_marginEnd="@dimen/margin_8"
+                    android:layout_width="wrap_content"
+                    android:singleLine="true"
+                    android:textStyle="bold"
+                    android:id="@+id/room_name"
                     android:textColor="@color/text_dark_color"
-                    android:textSize="14sp"
-                    android:text="Hello! Let's chat about something. Let's chat about something. Let's chat about something"/>
-            </LinearLayout>
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/timestamp"
+                    android:textSize="@dimen/text_16"
+                    android:text="Hung Nguyen"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/margin_16"
+                    android:id="@+id/timestamp"
+                    style="@style/RegTextStyle"
+                    android:singleLine="true"
+                    android:textColor="@color/colorAccent"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/text_12"
+                    android:text="5 mins ago"/>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_marginTop="@dimen/margin_4"
+                android:maxLines="2"
+                style="@style/RegTextStyle"
+                android:id="@+id/last_message"
+                android:layout_marginEnd="@dimen/margin_8"
+                android:textColor="@color/text_dark_color"
+                android:textSize="14sp"
+                android:text="Hello! Let's chat about something. Let's chat about something. Let's chat about something"/>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_alpha"/>
 </LinearLayout>

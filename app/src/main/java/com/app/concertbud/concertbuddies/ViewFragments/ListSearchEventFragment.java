@@ -163,7 +163,6 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     /***********
      * SUBSCRIBERS
      */
-
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(DeliverLocationBus bus) {
         location = bus.getLocation();
