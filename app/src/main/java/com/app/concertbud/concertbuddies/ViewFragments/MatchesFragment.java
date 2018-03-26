@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnChatRoomClickListener;
+import com.app.concertbud.concertbuddies.Activity.ChatActivity;
 import com.app.concertbud.concertbuddies.Adapters.ChatRoomAdapter;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.R;
@@ -94,7 +95,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
     @Override
     public void onChatRoomClicked(int position) {
         Toast.makeText(getContext(), "clicked at: " + position, Toast.LENGTH_SHORT).show();
-        // AppUtils.startNewActivity(getContext(), getActivity(), ChatActivity.class);
+        AppUtils.startNewActivity(getContext(), getActivity(), ChatActivity.class);
     }
 
     @Override
