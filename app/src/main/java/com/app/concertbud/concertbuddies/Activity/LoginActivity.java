@@ -92,13 +92,14 @@ public class LoginActivity extends BaseActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // TODO: Update Firebase database with facebook login info (Server or Client side's job??)
+                            // Don't update Firebase here.
                             Log.e(TAG, "signInWithCredential succeeds");
-                            Profile profile = Profile.getCurrentProfile();
-                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                            mDatabase.child("Users").setValue(mAuth.getUid());
-                            mDatabase.child("Users").child(mAuth.getUid()).setValue(
-                                    new User(profile.getName(), profile.getId())
-                            );
+//                            Profile profile = Profile.getCurrentProfile();
+//                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+//                            mDatabase.child("Users").setValue(mAuth.getUid());
+//                            mDatabase.child("Users").child(mAuth.getUid()).setValue(
+//                                    new User(profile.getName(), profile.getId())
+//                            );
                         }
                     }
                 });

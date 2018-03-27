@@ -1,6 +1,7 @@
 package com.app.concertbud.concertbuddies.Activity;
 
 import android.arch.lifecycle.LifecycleRegistry;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,8 +18,11 @@ import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.Networking.Responses.Message;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.ViewHolders.MessageViewHolder;
+import com.facebook.Profile;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +31,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +57,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     private FirebaseUser mCurrentUser;
     private DatabaseReference mDatabaseUsers;
     private FirebaseAuth mAuth;
+
+    private String chatRoomID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +67,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         mAuth = FirebaseAuth.getInstance();
         unbinder = ButterKnife.bind(this);
 
+        Intent intent = getIntent();
+        chatRoomID = intent.getStringExtra("chatRoomID");
         initChatRecycler();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Messages");
@@ -90,16 +100,16 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.send_btn:
                 mCurrentUser = mAuth.getCurrentUser();
-                mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
+                mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Messages").child(chatRoomID);
                 final String message = mEditMsg.getText().toString().trim();
-                mDatabaseUsers.child(mCurrentUser.getUid());
                 if (!TextUtils.isEmpty(message)) {
-                    final DatabaseReference newPost = mDatabase.push();
+                    final DatabaseReference newPost = mDatabaseUsers.push();
                     mDatabaseUsers.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            newPost.child("timestamp").setValue(String.valueOf(Calendar.getInstance().getTimeInMillis()));
                             newPost.child("content").setValue(message);
-                            newPost.child("username").setValue(dataSnapshot.child("name"));
+                            newPost.child("senderName").setValue(Profile.getCurrentProfile().getName());
                         }
 
                         @Override

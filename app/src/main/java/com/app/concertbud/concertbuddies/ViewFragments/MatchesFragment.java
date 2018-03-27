@@ -1,7 +1,9 @@
 package com.app.concertbud.concertbuddies.ViewFragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +21,10 @@ import com.app.concertbud.concertbuddies.Abstracts.OnChatRoomClickListener;
 import com.app.concertbud.concertbuddies.Activity.ChatActivity;
 import com.app.concertbud.concertbuddies.Adapters.ChatRoomAdapter;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
+import com.app.concertbud.concertbuddies.Networking.Responses.Chatroom;
 import com.app.concertbud.concertbuddies.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,7 +100,27 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
     @Override
     public void onChatRoomClicked(int position) {
         Toast.makeText(getContext(), "clicked at: " + position, Toast.LENGTH_SHORT).show();
-        AppUtils.startNewActivity(getContext(), getActivity(), ChatActivity.class);
+        /* Chatrooms database ref */
+        DatabaseReference chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
+        final String chatRoomId = chatRoomsRef.push().getKey();
+
+        /* Users database ref */
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        usersRef.child(chatRoomId).setValue(new Chatroom(chatRoomId, "Katy", "John"));
+
+        // TODO: update heroku
+
+        /* Messages database ref */
+
+        //AppUtils.startNewActivity(getContext(), getActivity(), ChatActivity.class);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                getContext().startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("chatRoomID", chatRoomId));
+            }
+        };
+        Handler handler = new Handler();
+        handler.postDelayed(runnable, 0);
     }
 
     @Override

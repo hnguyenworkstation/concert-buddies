@@ -17,6 +17,8 @@ import butterknife.Unbinder;
 public class MessageViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.message)
     TextView message;
+    @BindView(R.id.user_name)
+    TextView username;
 
     private Unbinder unbinder;
 
@@ -27,6 +29,10 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
 
     public void setContent(String content) {
         message.setText(content);
+    }
+
+    public void setUsername(String name) {
+        username.setText(name);
     }
 
     public void onRecycled() {
