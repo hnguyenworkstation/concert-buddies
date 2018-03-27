@@ -16,5 +16,6 @@ public interface TicketMasterServices {
                                                        @Query("geoPoint") String geo_point,
                                                        @Query("sort") String sort_option,
                                                        @Query("segmentName") String segment,
+                                                       @Query("page") int pageNum,
                                                        @Query("apikey") String api_key);
 }

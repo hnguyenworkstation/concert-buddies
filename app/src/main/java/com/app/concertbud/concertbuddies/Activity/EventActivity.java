@@ -1,14 +1,13 @@
-package com.app.concertbud.concertbuddies.ViewHolders;
+package com.app.concertbud.concertbuddies.Activity;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
+import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView;
 import com.app.concertbud.concertbuddies.Helpers.ImageLoader;
+import com.app.concertbud.concertbuddies.Helpers.MapUtils;
 import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 import com.app.concertbud.concertbuddies.R;
 
@@ -22,13 +21,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-/**
- * Created by hungnguyen on 3/3/18.
- */
-
-public class EventViewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.root_view)
-    LinearLayout mRootView;
+public class EventActivity extends BaseActivity {
+    // Event Card Profile
     @BindView(R.id.event_image)
     AdjustableImageView mEventImage;
     @BindView(R.id.event_progress)
@@ -42,19 +36,35 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.event_location)
     TextView mEventLocation;
 
-
+    // Event Map Location
+    @BindView(R.id.map_image)
+    AdjustableImageView mMapImage;
+    @BindView(R.id.map_progress_bar)
+    ProgressBar mMapProgressBar;
 
     private Unbinder unbinder;
+    private EventsEntity concert;
 
-    public EventViewHolder(View itemView) {
-        super(itemView);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_event_detail);
 
-        unbinder = ButterKnife.bind(this, itemView);
+        unbinder = ButterKnife.bind(this);
+
+        concert = (EventsEntity) getIntent().getSerializableExtra("EventsEntity");
+
+        if (concert != null) {
+            initConcertView();
+        }
     }
 
-    public void init(final int position, final OnEventClickListener listener, EventsEntity concert) {
-        unbinder = ButterKnife.bind(this, itemView);
 
+    /*
+    * Draw every details of the event entity
+    * Using Huong'code from event entity viewholder
+    * */
+    private void initConcertView() {
         // Get Event Image
         // Only choose one whose width is 500px or larger
         boolean edited = false;
@@ -68,6 +78,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         if (!edited) {
             ImageLoader.loadAdjustImageFromURL(mEventImage, concert.getImages().get(0).getUrl(), mEventProgress);
         }
+
         // Get Event Name
         mEventName.setText(concert.getName());
         // Get Date
@@ -90,17 +101,14 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         Double distance = concert.getDistance();
         mEventDistance.setText(Long.toString(Math.round(distance)) + " miles");
 
-
-        // Init OnClicklistener
-        mRootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onEventClicked(position);
-            }
-        });
+        // Load Map Image
+        ImageLoader.loadAdjustImageFromURL(mMapImage, MapUtils.getMapLocationUrl(concert.getEmbedded().getVenues().get(0).getLocation().getLatitude(),
+                concert.getEmbedded().getVenues().get(0).getLocation().getLongitude()), mMapProgressBar);
     }
 
-    public void onRecycled() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         unbinder.unbind();
     }
 }
