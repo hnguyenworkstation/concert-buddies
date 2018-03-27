@@ -1,5 +1,6 @@
 package com.app.concertbud.concertbuddies.Activity;
 
+import android.arch.lifecycle.LifecycleRegistry;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.ViewHolders.MessageViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -30,7 +32,7 @@ import butterknife.Unbinder;
  * Created by huongnguyen on 3/22/18.
  */
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener {
+public class ChatActivity extends BaseActivity implements View.OnClickListener{
     @BindView(R.id.send_btn)
     Button mSendButton;
     @BindView(R.id.edit_message)
@@ -41,6 +43,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private DatabaseReference mDatabase;
     private Unbinder unbinder;
     private FirebaseRecyclerAdapter<Message,MessageViewHolder> FBRA;
+
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +58,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
         mSendButton.setOnClickListener(this);
     }
+
 
     @Override
     protected void onStart() {
@@ -97,6 +102,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         FirebaseRecyclerOptions<Message> options =
                 new FirebaseRecyclerOptions.Builder<Message>().setQuery(query, Message.class).build();
         FBRA = new MessageAdapter(options);
+        FBRA.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                mLayoutManager.smoothScrollToPosition(mChatRecycler, null, FBRA.getItemCount());
+            }
+        });
         mChatRecycler.setAdapter(FBRA);
     }
+
 }
