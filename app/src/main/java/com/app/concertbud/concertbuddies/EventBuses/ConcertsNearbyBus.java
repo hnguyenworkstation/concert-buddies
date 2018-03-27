@@ -10,8 +10,10 @@ import java.util.List;
 
 public class ConcertsNearbyBus {
     private List<EventsEntity> concerts;
-    public  ConcertsNearbyBus(List<EventsEntity> concerts) {
+    private boolean newLocation;
+    public  ConcertsNearbyBus(List<EventsEntity> concerts, boolean newLocation) {
         this.concerts = concerts;
+        this.newLocation = newLocation;
     }
 
     public List<EventsEntity> getConcerts() {
@@ -20,5 +22,13 @@ public class ConcertsNearbyBus {
 
     public void setConcerts(List<EventsEntity> concerts) {
         this.concerts = concerts;
+    }
+
+    public boolean isNewLocation() {
+        return newLocation;
+    }
+
+    public void setNewLocation(boolean newLocation) {
+        this.newLocation = newLocation;
     }
 }

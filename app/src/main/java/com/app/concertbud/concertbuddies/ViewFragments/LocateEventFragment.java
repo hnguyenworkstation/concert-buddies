@@ -250,7 +250,7 @@ public class LocateEventFragment extends Fragment {
         mLocation = location.getLocation();
         Log.e(TAG, "fetching concerts");
         jobManager.addJobInBackground(new FetchNearbyConcertsJob(mPostion, mLocation.getLongitude(),
-                mLocation.getLatitude()));
+                mLocation.getLatitude(), false));
     }
 
 }

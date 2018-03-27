@@ -74,6 +74,11 @@ public class EventsEntity {
     @SerializedName("name")
     private String name;
 
+    /* Customized constructor */
+    public EventsEntity(String type) {
+        this.type = type;
+    }
+
     public NestedEmbeddedEntity getEmbedded() {
         return Embedded;
     }
