@@ -287,6 +287,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         isMapAnimating = bus.isOnAnimation();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mViewPager.getCurrentItem() == 1 && getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            EventBus.getDefault().post(new TriggerViewBus(MAP_VIEW_CODE));
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     /* Subscribe last known location event */
     @Subscribe
     public void onEvent(DeliverLocationBus bus) {
