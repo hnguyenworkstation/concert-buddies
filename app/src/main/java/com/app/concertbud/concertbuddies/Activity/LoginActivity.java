@@ -14,10 +14,12 @@ import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.Helpers.StringUtils;
+import com.app.concertbud.concertbuddies.Networking.Responses.User;
 import com.app.concertbud.concertbuddies.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +28,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
@@ -87,8 +91,15 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            /* sign in firebase successfully, update SharedPreference */
-                            // TODO
+                            // TODO: Update Firebase database with facebook login info (Server or Client side's job??)
+                            Log.e(TAG, "signInWithCredential succeeds");
+                            Profile profile = Profile.getCurrentProfile();
+                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                            String mUid = mAuth.getUid();
+                            mDatabase.child("Users").child("uid").setValue(mAuth.getUid());
+                            mDatabase.child("Users").child("uid").child(mAuth.getUid()).setValue(
+                                    new User(profile.getName(), profile.getId())
+                            );
                         }
                     }
                 });

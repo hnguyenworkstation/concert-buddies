@@ -113,6 +113,7 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
         handler = new Handler();
 
         /* Create an Object for adapter */
+        Log.e(TAG, "Creating adapter");
         eventsAdapter = new EventsAdapter(getContext(), this, mConcertsList);
         eventsAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override

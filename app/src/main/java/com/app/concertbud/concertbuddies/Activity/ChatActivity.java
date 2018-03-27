@@ -20,9 +20,13 @@ import com.app.concertbud.concertbuddies.ViewHolders.MessageViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,12 +48,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     private Unbinder unbinder;
     private FirebaseRecyclerAdapter<Message,MessageViewHolder> FBRA;
 
+    private FirebaseUser mCurrentUser;
+    private DatabaseReference mDatabaseUsers;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
 
+        mAuth = FirebaseAuth.getInstance();
         unbinder = ButterKnife.bind(this);
 
         initChatRecycler();
@@ -82,10 +89,24 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.send_btn:
+                mCurrentUser = mAuth.getCurrentUser();
+                mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
                 final String message = mEditMsg.getText().toString().trim();
+                mDatabaseUsers.child(mCurrentUser.getUid());
                 if (!TextUtils.isEmpty(message)) {
                     final DatabaseReference newPost = mDatabase.push();
-                    newPost.child("content").setValue(message);
+                    mDatabaseUsers.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            newPost.child("content").setValue(message);
+                            newPost.child("username").setValue(dataSnapshot.child("Name"));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
                 break;
         }
