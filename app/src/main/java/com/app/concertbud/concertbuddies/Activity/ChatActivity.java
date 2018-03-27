@@ -99,7 +99,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             newPost.child("content").setValue(message);
-                            newPost.child("username").setValue(dataSnapshot.child("Name"));
+                            newPost.child("username").setValue(dataSnapshot.child("name"));
                         }
 
                         @Override

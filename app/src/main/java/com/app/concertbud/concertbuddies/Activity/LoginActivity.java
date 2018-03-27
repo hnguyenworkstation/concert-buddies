@@ -95,9 +95,8 @@ public class LoginActivity extends BaseActivity {
                             Log.e(TAG, "signInWithCredential succeeds");
                             Profile profile = Profile.getCurrentProfile();
                             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                            String mUid = mAuth.getUid();
-                            mDatabase.child("Users").child("uid").setValue(mAuth.getUid());
-                            mDatabase.child("Users").child("uid").child(mAuth.getUid()).setValue(
+                            mDatabase.child("Users").setValue(mAuth.getUid());
+                            mDatabase.child("Users").child(mAuth.getUid()).setValue(
                                     new User(profile.getName(), profile.getId())
                             );
                         }
