@@ -16,9 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
+import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverPlaceBus;
 import com.app.concertbud.concertbuddies.EventBuses.IsOnAnimationBus;
+import com.app.concertbud.concertbuddies.Helpers.EventClusterRenderer;
+import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventClusterItemEntity;
+import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 import com.app.concertbud.concertbuddies.R;
 
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
@@ -38,17 +42,30 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
-        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
+        ClusterManager.OnClusterInfoWindowClickListener<EventClusterItemEntity>,
+        ClusterManager.OnClusterItemClickListener<EventClusterItemEntity>,
+        ClusterManager.OnClusterClickListener<EventClusterItemEntity>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<EventClusterItemEntity>{
 
     private Unbinder unbinder;
     private GoogleMap mMap;
@@ -60,6 +77,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private Place currentPlace;
     private String TAG = MapFragment.class.getSimpleName();
     private int mPosition;
+    private ClusterManager<EventClusterItemEntity> clusterManager;
+    private ArrayList<EventsEntity> mConcertsList = new ArrayList<>();
 
     public MapFragment() {
         // Required empty public constructor
@@ -208,7 +227,44 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             }
         });
+
+        initClusterManager();
     }
+
+    private void initClusterManager() {
+        clusterManager = new ClusterManager<EventClusterItemEntity>(getActivity(), mMap);
+        clusterManager.setRenderer(new EventClusterRenderer(getContext(), mMap, clusterManager));
+
+        mMap.setOnCameraIdleListener(clusterManager);
+        mMap.setOnMarkerClickListener(clusterManager);
+        mMap.setOnInfoWindowClickListener(clusterManager);
+
+        clusterManager.setOnClusterClickListener(this);
+        clusterManager.setOnClusterItemClickListener(this);
+        clusterManager.setOnClusterInfoWindowClickListener(this);
+        clusterManager.setOnClusterItemInfoWindowClickListener(this);
+    }
+
+    protected void showClusters(List<EventsEntity> eventsEntities) {
+        clusterManager.clearItems();
+        clusterManager.cluster();
+
+        List<EventClusterItemEntity> entities = new ArrayList<>();
+
+        for (EventsEntity eventsEntity: eventsEntities) {
+            LatLng position = new LatLng(
+                    Double.parseDouble(eventsEntity.getEmbedded().getVenues().get(0).getLocation().getLatitude()),
+                    Double.parseDouble(eventsEntity.getEmbedded().getVenues().get(0).getLocation().getLongitude()));
+
+            final EventClusterItemEntity clusterItemEntity = new EventClusterItemEntity(eventsEntity, position, eventsEntity.getName(),
+                    eventsEntity.getEmbedded().getVenues().get(0).getAddress().getLine1());
+            entities.add(clusterItemEntity);
+        }
+
+        clusterManager.addItems(entities);
+        clusterManager.cluster();
+    }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -259,6 +315,42 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
+    @Override
+    public boolean onClusterClick(Cluster<EventClusterItemEntity> cluster) {
+        // Create the builder to collect all essential cluster items for the bounds.
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        for (ClusterItem item : cluster.getItems()) {
+            builder.include(item.getPosition());
+        }
+        // Get the LatLngBounds
+        final LatLngBounds bounds = builder.build();
+
+        // Animate camera to the bounds
+        try {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onClusterInfoWindowClick(Cluster<EventClusterItemEntity> cluster) {
+
+    }
+
+    @Override
+    public boolean onClusterItemClick(EventClusterItemEntity eventClusterItemEntity) {
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(EventClusterItemEntity eventClusterItemEntity) {
+
+    }
+
+
     /****************************************************************
      * LISTENING TO ALL THE SIGNAL INTO THIS FRAGMENT BY EVENT BUS
      * @UpdateMapPaddingBus: Update the map padding
@@ -277,5 +369,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         moveCameraToNewPlace(currentPlace);
 
         EventBus.getDefault().removeStickyEvent(bus);
+    }
+
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(ConcertsNearbyBus bus) {
+        if (bus.getToClass().equals(MapFragment.class.getSimpleName())) {
+            /* check if there's still data left */
+            if (bus.getConcerts().size() > 0) {
+            /* Put all events in HashMap to make sure no duplicated event is allowed */
+                HashMap<String, EventsEntity> mConcertsHashMap = new HashMap<>();
+                for (int i = 0; i < bus.getConcerts().size(); i++) {
+                    mConcertsHashMap.put(bus.getConcerts().get(i).getName(), bus.getConcerts().get(i));
+                }
+                Log.e(TAG, "Updating new concerts");
+                mConcertsList.addAll(mConcertsHashMap.values());
+                showClusters(mConcertsList);
+            }
+            EventBus.getDefault().removeStickyEvent(bus);
+        }
     }
 }

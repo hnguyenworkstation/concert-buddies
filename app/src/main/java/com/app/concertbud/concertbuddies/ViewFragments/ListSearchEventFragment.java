@@ -181,31 +181,33 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(ConcertsNearbyBus bus) {
-        /* remove progress item */
-        if (!mConcertsList.isEmpty() && mConcertsList.get(mConcertsList.size() - 1).getType().equals("loading")) {
-            mConcertsList.remove(mConcertsList.size() - 1);
-            eventsAdapter.notifyItemRemoved(mConcertsList.size() - 1);
-        }
-        if (bus.isNewLocation()) {
-            int size = mConcertsList.size();
-            mConcertsList.clear();
-            // TODO: reset scroll position (i.e. jump to top) when clearing all data
-            eventsAdapter.notifyItemRangeRemoved(0, size);
-        }
-        /* check if there's still data left */
-        if (bus.getConcerts().size() == 0) {
-            eventsAdapter.setMoreDataAvailable(false);
-        }
-        else {
-            /* Put all events in HashMap to make sure no duplicated event is allowed */
-            HashMap<String, EventsEntity> mConcertsHashMap = new HashMap<>();
-            for (int i = 0; i < bus.getConcerts().size(); i++) {
-                mConcertsHashMap.put(bus.getConcerts().get(i).getName(), bus.getConcerts().get(i));
+        if (bus.getToClass().equals(ListSearchEventFragment.class.getSimpleName())) {
+            /* remove progress item */
+            if (!mConcertsList.isEmpty() && mConcertsList.get(mConcertsList.size() - 1).getType().equals("loading")) {
+                mConcertsList.remove(mConcertsList.size() - 1);
+                eventsAdapter.notifyItemRemoved(mConcertsList.size() - 1);
             }
-            Log.e(TAG, "Updating new concerts");
-            mConcertsList.addAll(mConcertsHashMap.values());
-            eventsAdapter.notifyDataChanged();
+            if (bus.isNewLocation()) {
+                int size = mConcertsList.size();
+                mConcertsList.clear();
+                // TODO: reset scroll position (i.e. jump to top) when clearing all data
+                eventsAdapter.notifyItemRangeRemoved(0, size);
+            }
+        /* check if there's still data left */
+            if (bus.getConcerts().size() == 0) {
+                eventsAdapter.setMoreDataAvailable(false);
+            }
+            else {
+            /* Put all events in HashMap to make sure no duplicated event is allowed */
+                HashMap<String, EventsEntity> mConcertsHashMap = new HashMap<>();
+                for (int i = 0; i < bus.getConcerts().size(); i++) {
+                    mConcertsHashMap.put(bus.getConcerts().get(i).getName(), bus.getConcerts().get(i));
+                }
+                Log.e(TAG, "Updating new concerts");
+                mConcertsList.addAll(mConcertsHashMap.values());
+                eventsAdapter.notifyDataChanged();
+            }
+            EventBus.getDefault().removeStickyEvent(bus);
         }
-        EventBus.getDefault().removeStickyEvent(bus);
     }
 }

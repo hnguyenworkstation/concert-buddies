@@ -12,6 +12,8 @@ import com.app.concertbud.concertbuddies.Networking.TicketMasterContext;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.Tasks.Configs.JobProperty.JobGroup;
 import com.app.concertbud.concertbuddies.Tasks.Configs.JobProperty.JobPriority;
+import com.app.concertbud.concertbuddies.ViewFragments.ListSearchEventFragment;
+import com.app.concertbud.concertbuddies.ViewFragments.MapFragment;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
@@ -57,11 +59,13 @@ public class FetchNearbyConcertsJob extends Job {
                         if (response.code() == 200) {
                             if (response.body().getEmbedded() != null) {
                                 List<EventsEntity> concerts = response.body().getEmbedded().getEvents();
-                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(concerts, newLocation));
+                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(concerts, newLocation, MapFragment.class.getSimpleName()));
+                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(concerts, newLocation, ListSearchEventFragment.class.getSimpleName()));
                             }
                             else { /* reach the end */
                                 // TODO: double check if this will update subscribing components
-                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(null, newLocation));
+                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(null, newLocation, MapFragment.class.getSimpleName()));
+                                EventBus.getDefault().postSticky(new ConcertsNearbyBus(null, newLocation, ListSearchEventFragment.class.getSimpleName()));
                             }
                         }
                     }
