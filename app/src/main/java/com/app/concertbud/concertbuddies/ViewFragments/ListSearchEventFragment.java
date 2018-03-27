@@ -1,6 +1,7 @@
 package com.app.concertbud.concertbuddies.ViewFragments;
 
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
 import com.app.concertbud.concertbuddies.Abstracts.OnLoadMoreListener;
+import com.app.concertbud.concertbuddies.Activity.EventActivity;
 import com.app.concertbud.concertbuddies.Adapters.EventsAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
@@ -140,8 +142,16 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     }
 
     @Override
-    public void onEventClicked(int position) {
-
+    public void onEventClicked(final int position) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                getContext().startActivity(new Intent(getActivity(), EventActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .putExtra("EventsEntity", mConcertsList.get(position)));
+            }
+        };
+        new Handler().postDelayed(runnable, 0);
     }
 
     @Override

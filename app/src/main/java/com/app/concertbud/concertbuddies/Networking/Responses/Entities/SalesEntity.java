@@ -3,12 +3,13 @@ package com.app.concertbud.concertbuddies.Networking.Responses.Entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by huongnguyen on 3/14/18.
  */
-public class SalesEntity {
+public class SalesEntity implements Serializable {
 
     @Expose
     @SerializedName("presales")
