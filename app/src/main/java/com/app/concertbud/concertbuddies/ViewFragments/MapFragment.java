@@ -65,7 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         ClusterManager.OnClusterInfoWindowClickListener<EventClusterItemEntity>,
         ClusterManager.OnClusterItemClickListener<EventClusterItemEntity>,
         ClusterManager.OnClusterClickListener<EventClusterItemEntity>,
-        ClusterManager.OnClusterItemInfoWindowClickListener<EventClusterItemEntity>{
+        ClusterManager.OnClusterItemInfoWindowClickListener<EventClusterItemEntity> {
 
     private Unbinder unbinder;
     private GoogleMap mMap;
@@ -188,8 +188,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void addCustomMarkerToMap(Context context, GoogleMap mMap, int width, int height,
-                                            String title, LatLng loc, int drawable) {
-        BitmapDrawable bitmapdraw = (BitmapDrawable)context.getResources().getDrawable(drawable);
+                                      String title, LatLng loc, int drawable) {
+        BitmapDrawable bitmapdraw = (BitmapDrawable) context.getResources().getDrawable(drawable);
         Bitmap bitmap = bitmapdraw.getBitmap();
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
 
@@ -251,7 +251,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         List<EventClusterItemEntity> entities = new ArrayList<>();
 
-        for (EventsEntity eventsEntity: eventsEntities) {
+        for (EventsEntity eventsEntity : eventsEntities) {
             LatLng position = new LatLng(
                     Double.parseDouble(eventsEntity.getEmbedded().getVenues().get(0).getLocation().getLatitude()),
                     Double.parseDouble(eventsEntity.getEmbedded().getVenues().get(0).getLocation().getLongitude()));
