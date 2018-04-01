@@ -1,40 +1,55 @@
 package com.app.concertbud.concertbuddies.Networking.Responses;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by huongnguyen on 3/27/18.
  */
 
 public class Chatroom {
-    private String chatRoomID;
-    private String user1, user2;
+    private String lastMessage;
+    private String timestamp;
+    private Map<String, Boolean> users = new HashMap<>();
 
-    public Chatroom(String chatRoomID, String user1, String user2) {
-        this.chatRoomID = chatRoomID;
-        this.user1 = user1;
-        this.user2 = user2;
+    public Chatroom() {}
+
+    public Chatroom(String lastMessage, String timestamp) {
+        this.lastMessage = lastMessage;
+        this.timestamp = timestamp;
+    }
+    @Exclude
+    public Map<String, Object> toMap () {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("lastMessage", lastMessage);
+        result.put("timestamp", timestamp);
+        result.put("users", users);
+        return result;
     }
 
-    public String getChatRoomID() {
-        return chatRoomID;
+    public String getLastMessage() {
+        return lastMessage;
     }
 
-    public void setChatRoomID(String chatRoomID) {
-        this.chatRoomID = chatRoomID;
+    public Map<String, Boolean> getUsers() {
+        return users;
     }
 
-    public String getUser1() {
-        return user1;
+    public void setUsers(Map<String, Boolean> users) {
+        this.users = users;
     }
 
-    public void setUser1(String user1) {
-        this.user1 = user1;
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
 
-    public String getUser2() {
-        return user2;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setUser2(String user2) {
-        this.user2 = user2;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }

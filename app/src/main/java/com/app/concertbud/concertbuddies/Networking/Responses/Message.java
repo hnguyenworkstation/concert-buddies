@@ -6,20 +6,23 @@ package com.app.concertbud.concertbuddies.Networking.Responses;
 
 public class Message {
     private String content;
-    private String username;
+    private String senderName;
+    private String timestamp;
 
+    /* Required for calls to DataSnapshot.getValue(Message.class) */
     public Message () {}
-    public Message (String content, String username) {
+    public Message (String content, String senderName, String timestamp) {
         this.content = content;
-        this.username = username;
+        this.senderName = senderName;
+        this.timestamp = timestamp;
     }
 
-    public String getUsername() {
-        return username;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
     public String getContent() {
@@ -28,5 +31,13 @@ public class Message {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }

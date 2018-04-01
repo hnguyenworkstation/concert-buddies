@@ -1,5 +1,6 @@
 package com.app.concertbud.concertbuddies.Activity;
 
+import android.app.Activity;
 import android.arch.lifecycle.LifecycleRegistry;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,17 +8,20 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.app.concertbud.concertbuddies.Adapters.MessageAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.Networking.Responses.Message;
+import com.app.concertbud.concertbuddies.Networking.Responses.User;
 import com.app.concertbud.concertbuddies.R;
-import com.app.concertbud.concertbuddies.ViewHolders.MessageViewHolder;
+//import com.app.concertbud.concertbuddies.ViewHolders.MessageViewHolder;
 import com.facebook.Profile;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -52,10 +56,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
 
     private DatabaseReference mDatabase;
     private Unbinder unbinder;
-    private FirebaseRecyclerAdapter<Message,MessageViewHolder> FBRA;
+    private FirebaseRecyclerAdapter<Message,RecyclerView.ViewHolder> FBRA;
 
-    private FirebaseUser mCurrentUser;
+    private DatabaseReference mDatabaseMsgs;
     private DatabaseReference mDatabaseUsers;
+    private DatabaseReference mDatabaseChatrooms;
     private FirebaseAuth mAuth;
 
     private String chatRoomID;
@@ -74,6 +79,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Messages");
 
         mSendButton.setOnClickListener(this);
+
+        // TODO: implement collapsing keyboard when click outside
     }
 
 
@@ -99,17 +106,25 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.send_btn:
-                mCurrentUser = mAuth.getCurrentUser();
-                mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Messages").child(chatRoomID);
+                mDatabaseMsgs = mDatabase.child(chatRoomID);
+                mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(Profile.getCurrentProfile().getId());
+                mDatabaseChatrooms = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
                 final String message = mEditMsg.getText().toString().trim();
                 if (!TextUtils.isEmpty(message)) {
-                    final DatabaseReference newPost = mDatabaseUsers.push();
+                    final DatabaseReference newPostMsg = mDatabaseMsgs.push();
+                    final DatabaseReference newPostChatroom = mDatabaseChatrooms.child(chatRoomID);
                     mDatabaseUsers.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            newPost.child("timestamp").setValue(String.valueOf(Calendar.getInstance().getTimeInMillis()));
-                            newPost.child("content").setValue(message);
-                            newPost.child("senderName").setValue(Profile.getCurrentProfile().getName());
+                            String timestamp = String.valueOf(Calendar.getInstance().getTimeInMillis());
+                            newPostMsg.child("timestamp").setValue(timestamp);
+                            newPostMsg.child("content").setValue(message);
+                            User sender = dataSnapshot.getValue(User.class);
+                            newPostMsg.child("senderName").setValue(sender.getName());
+
+                            /* Update chatroom lastMsg and timestamp */
+                            newPostChatroom.child("lastMessage").setValue(message);
+                            newPostChatroom.child("timestamp").setValue(timestamp);
                         }
 
                         @Override
@@ -117,6 +132,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
 
                         }
                     });
+                    mEditMsg.setText("");
                 }
                 break;
         }
@@ -128,8 +144,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         ((LinearLayoutManager) mLayoutManager).setStackFromEnd(true);
         mChatRecycler.setHasFixedSize(true);
         mChatRecycler.setLayoutManager(mLayoutManager);
-                /* show 50 most recent messages */
-        Query query = FirebaseDatabase.getInstance().getReference().child("Messages").limitToLast(50);
+        /* show 50 most recent messages */
+        Query query = FirebaseDatabase.getInstance().getReference().child("Messages").child(chatRoomID).limitToLast(50);
         FirebaseRecyclerOptions<Message> options =
                 new FirebaseRecyclerOptions.Builder<Message>().setQuery(query, Message.class).build();
         FBRA = new MessageAdapter(options);
