@@ -68,14 +68,4 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<Message, RecyclerVie
         }
     }
 
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        super.onViewRecycled(holder);
-        if (holder instanceof SentMessageHolder) {
-            ((SentMessageHolder)holder).onRecycled();
-        }
-        else {
-            ((ReceivedMessageHolder)holder).onRecycled();
-        }
-    }
 }
