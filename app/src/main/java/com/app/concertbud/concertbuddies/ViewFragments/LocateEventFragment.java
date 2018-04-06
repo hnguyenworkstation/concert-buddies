@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +26,11 @@ import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverPlaceBus;
 import com.app.concertbud.concertbuddies.EventBuses.TriggerViewBus;
+import com.app.concertbud.concertbuddies.Helpers.ImageLoader;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
 import com.birbit.android.jobqueue.JobManager;
+import com.facebook.Profile;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -49,6 +53,10 @@ public class LocateEventFragment extends Fragment {
 
     @BindView(R.id.search_bar)
     RelativeLayout mSearchBar;
+    @BindView(R.id.profile_image)
+    ImageView mProfileImage;
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     private FragmentManager mFragManager;
     private FragmentTransaction mFragTransition;
@@ -112,6 +120,10 @@ public class LocateEventFragment extends Fragment {
     }
 
     private void initView() {
+        ImageLoader.loadSimpleCircleImage(mProfileImage,
+                Profile.getCurrentProfile().getProfilePictureUri(248,248).toString(),
+                mProgressBar);
+
         mFragManager = getChildFragmentManager();
         mFragManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -138,14 +150,12 @@ public class LocateEventFragment extends Fragment {
     private void flipMap() {
         if (isShowingList) {
             getFragmentManager().popBackStack();
-            mSearchBar.setVisibility(View.VISIBLE);
             isShowingList = false;
             return;
         }
 
         // Flip to the back.
         isShowingList = true;
-        mSearchBar.setVisibility(View.GONE);
 
         // Create and commit a new fragment transaction that adds the fragment for
         // the back of the card, uses custom animations, and is part of the fragment
@@ -187,7 +197,7 @@ public class LocateEventFragment extends Fragment {
     }
 
 
-    @OnClick(R.id.search_area)
+    @OnClick(R.id.search_bar)
     public void onSearchAreaClicked() {
         try {
             triggerPlacePicker();
@@ -197,6 +207,10 @@ public class LocateEventFragment extends Fragment {
         }
     }
 
+    @OnClick(R.id.switch_action)
+    public void onSwitchMapClicked() {
+        flipMap();
+    }
 
     @Override
     public void onStart() {
@@ -209,7 +223,6 @@ public class LocateEventFragment extends Fragment {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
-
 
     @Override
     public void onDestroyView() {
@@ -252,5 +265,4 @@ public class LocateEventFragment extends Fragment {
         jobManager.addJobInBackground(new FetchNearbyConcertsJob(mPostion, mLocation.getLongitude(),
                 mLocation.getLatitude(), false));
     }
-
 }

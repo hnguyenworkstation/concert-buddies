@@ -15,8 +15,7 @@
         android:layout_alignParentTop="true"
         android:clickable="true"
         android:focusable="true"
-        android:id="@+id/search_bar"
-        android:layout_marginTop="58dp">
+        android:id="@+id/search_bar">
         <include layout="@layout/custom_map_search_bar"/>
     </RelativeLayout>
 </RelativeLayout>
