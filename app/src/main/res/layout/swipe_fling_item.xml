@@ -10,7 +10,7 @@
     android:layout_marginLeft="@dimen/find_match_card_margin_left_right"
     android:layout_marginRight="@dimen/find_match_card_margin_left_right"
     android:layout_marginTop="@dimen/find_match_card_margin_top"
-    android:layout_marginBottom="78dp"
+    android:layout_marginBottom="88dp"
     android:background="@drawable/swipe_fling_item_bg"
     android:clipChildren="false"
     android:clipToPadding="false"
@@ -23,18 +23,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/item_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
         <RelativeLayout
+            android:background="@drawable/scrim_view_bottomup"
             android:id="@+id/item_bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginBottom="@dimen/margin_12"
             android:textSize="16sp"
             android:paddingTop="14dp">
 
             <LinearLayout
+                android:layout_marginStart="@dimen/margin_16"
+                android:layout_marginEnd="@dimen/margin_16"
                 android:id="@+id/item_bottom_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,7 +56,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:textColor="#FF666666"
+                    android:textColor="@color/white"
                     android:textSize="20sp"
                     tools:text="Amanda AmandaAmandaAmandaAmandaAmanda 28" />
 
@@ -58,11 +65,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/item_name"
-                    android:drawableLeft="@drawable/icon_interest"
+                    android:drawableStart="@drawable/icon_interest"
+                    android:drawableTint="@color/white"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:text="8"
-                    android:textColor="#FFCCCCCC"
+                    android:textColor="@color/darken_white"
                     android:textSize="16sp"
                     tools:text="22" />
 
@@ -71,18 +79,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/item_name"
+                    android:drawableTint="@color/white"
                     android:layout_marginLeft="16dp"
                     android:drawableLeft="@drawable/icon_friend"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:text="8"
-                    android:textColor="#FFCCCCCC"
+                    android:textColor="@color/darken_white"
                     android:textSize="16sp"
                     tools:text="23" />
 
             </LinearLayout>
 
             <TextView
+                android:layout_marginStart="@dimen/margin_16"
                 android:id="@+id/item_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,16 +100,9 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="#FFCCCCCC"
+                android:textColor="@color/white"
                 android:layout_marginBottom="@dimen/margin_12"
                 tools:text="Stanford University" />
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/item_img"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/item_bottom_layout"
-            android:scaleType="centerCrop" />
     </RelativeLayout>
 </FrameLayout>

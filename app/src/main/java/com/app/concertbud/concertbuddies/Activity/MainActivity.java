@@ -2,11 +2,14 @@ package com.app.concertbud.concertbuddies.Activity;
 
 import android.annotation.SuppressLint;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,13 +47,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
-    @BindView(R.id.home_tab)
-    FloatingActionButton mHomeTabBtn;
-    @BindView(R.id.loc_map_tab)
-    FloatingActionButton mLocMapTabBtn;
-    @BindView(R.id.advance_tab)
-    FloatingActionButton mAdvanceTab;
-
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView mBottomTabbar;
 
     @BindView(R.id.tab_view)
     RelativeLayout mTabView;
@@ -101,7 +99,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
                         initView();
                         initViewPager();
-                        initOnClicks();
                     }
                 }).onDenied(new Action() {
                     @Override
@@ -128,12 +125,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 Profile.getCurrentProfile().getProfilePictureUri(248, 248).toString(), mProgressBar);
 
         mTabTitle.setText("Following");
-    }
-
-    private void initOnClicks() {
-        mHomeTabBtn.setOnClickListener(this);
-        mLocMapTabBtn.setOnClickListener(this);
-        mAdvanceTab.setOnClickListener(this);
     }
 
     private void showViewAt(int position) {
@@ -175,6 +166,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             @SuppressLint("SetTextI18n")
             @Override
             public void onPageSelected(int position){
+                mBottomTabbar.getMenu().getItem(position).setChecked(true);
+
                 switch (position) {
                     case 0:
                         mTabTitle.setText("Following");
@@ -199,6 +192,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             }
         });
         mViewPager.setOffscreenPageLimit(limit);
+        /*
+        * Setting up the bottom tabbar with viewpager
+        * */
+        mBottomTabbar.setOnNavigationItemSelectedListener(new BottomNavigationView
+                .OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.home_tab:
+                        mViewPager.setCurrentItem(0);
+                        break;
+                    case R.id.explore_tab:
+                        mViewPager.setCurrentItem(1);
+                        break;
+                    case R.id.matches_tab:
+                        mViewPager.setCurrentItem(2);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
