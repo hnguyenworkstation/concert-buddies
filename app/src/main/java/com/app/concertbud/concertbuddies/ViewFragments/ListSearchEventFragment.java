@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
 import com.app.concertbud.concertbuddies.Abstracts.OnLoadMoreListener;
 import com.app.concertbud.concertbuddies.Activity.EventActivity;
+import com.app.concertbud.concertbuddies.Activity.FindMatchActivity;
 import com.app.concertbud.concertbuddies.Adapters.EventsAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
@@ -146,7 +147,7 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                getContext().startActivity(new Intent(getActivity(), EventActivity.class)
+                getContext().startActivity(new Intent(getActivity(), FindMatchActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .putExtra("EventsEntity", mConcertsList.get(position)));
             }

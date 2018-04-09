@@ -48,8 +48,6 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
 
     public EventViewHolder(View itemView) {
         super(itemView);
-
-        unbinder = ButterKnife.bind(this, itemView);
     }
 
     public void init(final int position, final OnEventClickListener listener, EventsEntity concert) {

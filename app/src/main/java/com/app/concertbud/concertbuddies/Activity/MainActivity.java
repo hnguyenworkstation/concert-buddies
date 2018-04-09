@@ -2,11 +2,14 @@ package com.app.concertbud.concertbuddies.Activity;
 
 import android.annotation.SuppressLint;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,13 +47,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
-    @BindView(R.id.home_tab)
-    FloatingActionButton mHomeTabBtn;
-    @BindView(R.id.loc_map_tab)
-    FloatingActionButton mLocMapTabBtn;
-    @BindView(R.id.advance_tab)
-    FloatingActionButton mAdvanceTab;
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView mBottomTabbar;
 
+    @BindView(R.id.tab_view)
+    RelativeLayout mTabView;
     @BindView(R.id.tab_title)
     TextView mTabTitle;
     @BindView(R.id.viewPager)
@@ -59,18 +60,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     ImageView mProfileImg;
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
-
-    /* Binding Switcher Layout */
-    @BindView(R.id.switcher_layout)
-    RelativeLayout mSwitcherLayout;
-    @BindView(R.id.map_selector)
-    LinearLayout mMapSelector;
-    @BindView(R.id.map_text)
-    TextView mMapText;
-    @BindView(R.id.list_selector)
-    LinearLayout mListSelector;
-    @BindView(R.id.list_text)
-    TextView mListText;
 
     public static final int MAP_VIEW_CODE = 0;
     public static final int LIST_VIEW_CODE = 1;
@@ -110,7 +99,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
                         initView();
                         initViewPager();
-                        initOnClicks();
                     }
                 }).onDenied(new Action() {
                     @Override
@@ -139,62 +127,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         mTabTitle.setText("Following");
     }
 
-    private void initOnClicks() {
-        mHomeTabBtn.setOnClickListener(this);
-        mLocMapTabBtn.setOnClickListener(this);
-        mAdvanceTab.setOnClickListener(this);
-
-        mMapSelector.setOnClickListener(this);
-        mListSelector.setOnClickListener(this);
-    }
-
     private void showViewAt(int position) {
+        switch (position) {
+            case 0:
+            case 2:
+                mTabView.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                mTabView.setVisibility(View.GONE);
+                break;
+            default:
+                break;
+
+        }
+
         if (position >= 0 && position <= 2) {
             mViewPager.setCurrentItem(position);
         }
     }
-
-
-    /*
-    * This method will make sure to keep track of which stage the LocateEventFragment are on
-    * (either on Map stage or List stage). Then it will send a request signal (using Eventbus)
-    * to change stage from MainActivity to LocateEventFragment to trigger the view switch.
-    * */
-    private void triggerSwitchView(int code) {
-        currentSecondStage = code;
-        showSwitcherView(true);
-        EventBus.getDefault().post(new TriggerViewBus(code));
-    }
-
-
-    /*
-    * showSwitcherView function will be triggered when user are currently viewing the LocateEventFragment
-    * it allows user to switch between fragments between List View or Map View
-    * */
-    private void showSwitcherView(boolean shouldBeShown) {
-        if (shouldBeShown) {
-            mTabTitle.setVisibility(View.GONE);
-            mSwitcherLayout.setVisibility(View.VISIBLE);
-
-            if (currentSecondStage == 0) {
-                mMapSelector.setBackground(getResources().getDrawable(R.drawable.bg_button_selected));
-                mMapText.setTextColor(getResources().getColor(R.color.white));
-
-                mListSelector.setBackground(null);
-                mListText.setTextColor(getResources().getColor(R.color.text_light_color));
-            } else {
-                mListSelector.setBackground(getResources().getDrawable(R.drawable.bg_button_selected));
-                mListText.setTextColor(getResources().getColor(R.color.white));
-
-                mMapSelector.setBackground(null);
-                mMapText.setTextColor(getResources().getColor(R.color.text_light_color));
-            }
-        } else {
-            mTabTitle.setVisibility(View.VISIBLE);
-            mSwitcherLayout.setVisibility(View.GONE);
-        }
-    }
-
 
     private void initViewPager() {
         mMainViewPagerAdapter = new CommonViewPagerAdapter(getSupportFragmentManager());
@@ -216,18 +166,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             @SuppressLint("SetTextI18n")
             @Override
             public void onPageSelected(int position){
+                mBottomTabbar.getMenu().getItem(position).setChecked(true);
+
                 switch (position) {
                     case 0:
                         mTabTitle.setText("Following");
-                        showSwitcherView(false);
+                        mTabView.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         mTabTitle.setText("");
-                        showSwitcherView(true);
+                        mTabView.setVisibility(View.GONE);
                         break;
                     case 2:
                         mTabTitle.setText("Matches");
-                        showSwitcherView(false);
+                        mTabView.setVisibility(View.VISIBLE);
                         break;
                     default:
                         break;
@@ -240,6 +192,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             }
         });
         mViewPager.setOffscreenPageLimit(limit);
+        /*
+        * Setting up the bottom tabbar with viewpager
+        * */
+        mBottomTabbar.setOnNavigationItemSelectedListener(new BottomNavigationView
+                .OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.home_tab:
+                        mViewPager.setCurrentItem(0);
+                        break;
+                    case R.id.explore_tab:
+                        mViewPager.setCurrentItem(1);
+                        break;
+                    case R.id.matches_tab:
+                        mViewPager.setCurrentItem(2);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -253,14 +228,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.advance_tab:
                 showViewAt(2);
-                break;
-            case R.id.map_selector:
-                if (!isMapAnimating)
-                    triggerSwitchView(MAP_VIEW_CODE);
-                break;
-            case R.id.list_selector:
-                if (!isMapAnimating)
-                    triggerSwitchView(LIST_VIEW_CODE);
                 break;
             default:
                 break;

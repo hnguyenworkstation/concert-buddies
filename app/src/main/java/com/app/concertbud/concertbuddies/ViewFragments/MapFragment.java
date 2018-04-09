@@ -9,12 +9,22 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
+import com.app.concertbud.concertbuddies.Adapters.EventsCardAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverLocationBus;
@@ -57,15 +67,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
+        OnEventClickListener,
         ClusterManager.OnClusterInfoWindowClickListener<EventClusterItemEntity>,
         ClusterManager.OnClusterItemClickListener<EventClusterItemEntity>,
         ClusterManager.OnClusterClickListener<EventClusterItemEntity>,
         ClusterManager.OnClusterItemInfoWindowClickListener<EventClusterItemEntity> {
+    // Cluster Information Views
+    @BindView(R.id.bottom_sheet_list_clusters)
+    LinearLayout mBottomSheetListClusters;
+    @BindView(R.id.list_events)
+    RecyclerView mBottomEventListRecycler;
 
     private Unbinder unbinder;
     private GoogleMap mMap;
@@ -78,7 +95,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private String TAG = MapFragment.class.getSimpleName();
     private int mPosition;
     private ClusterManager<EventClusterItemEntity> clusterManager;
+
     private ArrayList<EventsEntity> mConcertsList = new ArrayList<>();
+    private ArrayList<EventsEntity> mClusterConcertsList = new ArrayList<>();
+
+    private EventsCardAdapter eventsCardAdapter;
+    private BottomSheetBehavior clusterCardBehavior;
 
     public MapFragment() {
         // Required empty public constructor
@@ -115,6 +137,53 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         unbinder = ButterKnife.bind(this, view);
 
         initMap();
+        initRideRecycler();
+        initBottomListEventsDialog();
+    }
+
+    private void initRideRecycler() {
+        eventsCardAdapter = new EventsCardAdapter(getContext(), mClusterConcertsList, this);
+
+        final RecyclerView.LayoutManager mLayoutManager =
+                new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+
+        mBottomEventListRecycler.setLayoutManager(mLayoutManager);
+        mBottomEventListRecycler.setItemAnimator(new DefaultItemAnimator());
+        mBottomEventListRecycler.setNestedScrollingEnabled(true);
+        mBottomEventListRecycler.setHasFixedSize(false);
+        mBottomEventListRecycler.setAdapter(eventsCardAdapter);
+
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(mBottomEventListRecycler);
+    }
+
+    private void initBottomListEventsDialog() {
+        clusterCardBehavior = BottomSheetBehavior.from(mBottomSheetListClusters);
+        clusterCardBehavior.setHideable(true);
+        clusterCardBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        clusterCardBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     private void initMap() {
@@ -265,6 +334,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         clusterManager.cluster();
     }
 
+    /*
+    * This method will get the height of current height on the recycler view which contains
+    * all events card (in the clicked clusters) then minimize it to fit the screen
+    * */
+    private void updateClusterBottomSheetHeightAndExpand() {
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+
+        int height = displayMetrics.heightPixels;
+        int maxHeight = (int) (height * 0.38);
+
+        int currentHeight = mBottomSheetListClusters.getLayoutParams().height;
+
+        ViewGroup.LayoutParams layoutParams = mBottomSheetListClusters.getLayoutParams();
+        layoutParams.height = currentHeight < maxHeight? currentHeight: maxHeight;
+        mBottomSheetListClusters.setLayoutParams(layoutParams);
+
+        eventsCardAdapter.notifyDataSetChanged();
+        clusterCardBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -317,22 +406,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public boolean onClusterClick(Cluster<EventClusterItemEntity> cluster) {
-        // Create the builder to collect all essential cluster items for the bounds.
-        LatLngBounds.Builder builder = LatLngBounds.builder();
-        for (ClusterItem item : cluster.getItems()) {
-            builder.include(item.getPosition());
-        }
-        // Get the LatLngBounds
-        final LatLngBounds bounds = builder.build();
+//        // Create the builder to collect all essential cluster items for the bounds.
+//        LatLngBounds.Builder builder = LatLngBounds.builder();
+//        for (ClusterItem item : cluster.getItems()) {
+//            builder.include(item.getPosition());
+//        }
+//        // Get the LatLngBounds
+//        final LatLngBounds bounds = builder.build();
+//
+//        // Animate camera to the bounds
+//        try {
+//            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-        // Animate camera to the bounds
-        try {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-        } catch (Exception e) {
-            e.printStackTrace();
+        mClusterConcertsList.clear();
+
+        for(EventClusterItemEntity item: cluster.getItems()) {
+            mClusterConcertsList.add(item.getEntity());
         }
 
-        return true;
+        updateClusterBottomSheetHeightAndExpand();
+
+        return false;
     }
 
     @Override
@@ -342,6 +439,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public boolean onClusterItemClick(EventClusterItemEntity eventClusterItemEntity) {
+        mClusterConcertsList.clear();
+        mClusterConcertsList.add(eventClusterItemEntity.getEntity());
+
+        updateClusterBottomSheetHeightAndExpand();
+
         return false;
     }
 
@@ -388,5 +490,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             }
             EventBus.getDefault().removeStickyEvent(bus);
         }
+    }
+
+    @Override
+    public void onEventClicked(int position) {
+
+    }
+
+    @Override
+    public void onEventLongClicked(int position) {
+
     }
 }
