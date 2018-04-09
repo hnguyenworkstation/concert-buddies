@@ -23,10 +23,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by hungnguyen on 3/3/18.
+ * Created by hungnguyen on 4/8/18.
  */
 
-public class EventViewHolder extends RecyclerView.ViewHolder {
+public class EventCardViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.root_view)
     LinearLayout mRootView;
     @BindView(R.id.event_image)
@@ -41,12 +41,12 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
     TextView mEventName;
     @BindView(R.id.event_location)
     TextView mEventLocation;
-
-
+    @BindView(R.id.event_desc)
+    TextView mEventDesc;
 
     private Unbinder unbinder;
 
-    public EventViewHolder(View itemView) {
+    public EventCardViewHolder(View itemView) {
         super(itemView);
     }
 
