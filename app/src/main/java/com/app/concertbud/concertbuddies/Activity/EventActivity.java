@@ -1,15 +1,24 @@
 package com.app.concertbud.concertbuddies.Activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
+import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView;
+import com.app.concertbud.concertbuddies.EventBuses.JoinedEventSuccessBus;
 import com.app.concertbud.concertbuddies.Helpers.ImageLoader;
 import com.app.concertbud.concertbuddies.Helpers.MapUtils;
 import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 import com.app.concertbud.concertbuddies.R;
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.JoinEventTask;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -19,6 +28,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class EventActivity extends BaseActivity {
@@ -44,6 +54,7 @@ public class EventActivity extends BaseActivity {
 
     private Unbinder unbinder;
     private EventsEntity concert;
+    private MaterialDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +63,18 @@ public class EventActivity extends BaseActivity {
 
         unbinder = ButterKnife.bind(this);
 
+        loadingDialog = new MaterialDialog.Builder(this)
+                .title(R.string.please_wait)
+                .content(R.string.joining_event)
+                .progress(true, 0)
+                .build();
+
         concert = (EventsEntity) getIntent().getSerializableExtra("EventsEntity");
 
         if (concert != null) {
             initConcertView();
         }
     }
-
 
     /*
     * Draw every details of the event entity
@@ -106,9 +122,52 @@ public class EventActivity extends BaseActivity {
                 concert.getEmbedded().getVenues().get(0).getLocation().getLongitude()), mMapProgressBar);
     }
 
+    private void showJoiningEventDialog() {
+        loadingDialog.setContent(R.string.joining_event);
+        loadingDialog.show();
+    }
+
+    private void showLeavingEventDialog() {
+        loadingDialog.setContent(R.string.leaving_event);
+        loadingDialog.show();
+    }
+
+    @OnClick(R.id.join_btn)
+    public void onJoinButtonClicked() {
+        showJoiningEventDialog();
+        BaseApplication.getInstance().getJobManager()
+                .addJobInBackground(new JoinEventTask(concert.getId()));
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        } else {
+            Log.e(TAG, "EventBus is registered");
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if( EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }else{
+            Log.e(TAG, "EventBus is not registered");
+        }
+    }
+
+    @Subscribe
+    public void onEvent(JoinedEventSuccessBus joinedEventSuccessBus) {
+        loadingDialog.dismiss();
+        Toast.makeText(this, "joined event", Toast.LENGTH_SHORT).show();
     }
 }

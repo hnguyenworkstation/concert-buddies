@@ -148,7 +148,7 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                getContext().startActivity(new Intent(getActivity(), FindMatchActivity.class)
+                getContext().startActivity(new Intent(getActivity(), EventActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .putExtra("EventsEntity", mConcertsList.get(position)));
             }
