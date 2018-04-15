@@ -197,7 +197,7 @@ public class LocateEventFragment extends Fragment {
     }
 
 
-    @OnClick(R.id.search_bar)
+    @OnClick(R.id.to_location_input)
     public void onSearchAreaClicked() {
         try {
             triggerPlacePicker();

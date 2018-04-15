@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnChatRoomClickListener;
@@ -33,7 +34,7 @@ import butterknife.Unbinder;
  */
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.root_view)
-    LinearLayout mRootView;
+    RelativeLayout mRootView;
     @BindView(R.id.logo_image)
     ImageView mChatRoomProfile;
     @BindView(R.id.room_status)
@@ -51,7 +52,6 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
 
     public ChatRoomViewHolder(View itemView) {
         super(itemView);
-        unbinder = ButterKnife.bind(this, itemView);
     }
 
     public void init(final Chatroom chatroom, final int position, final OnChatRoomClickListener listener) {
