@@ -17,4 +17,10 @@ public interface EventServices {
     * */
     @POST("/events/join/")
     Call<JoiningEventResponse> joinEvent(@Body EventRequestBody eventRequestBody);
+
+    /*
+    * Leave an Event
+    * */
+    @POST("/events/leave/")
+    Call<JoiningEventResponse> leaveEvent(@Body EventRequestBody eventRequestBody);
 }

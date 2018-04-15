@@ -11,6 +11,7 @@ import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView;
 import com.app.concertbud.concertbuddies.EventBuses.JoinedEventSuccessBus;
+import com.app.concertbud.concertbuddies.EventBuses.LeftEventSuccessBus;
 import com.app.concertbud.concertbuddies.Helpers.ImageLoader;
 import com.app.concertbud.concertbuddies.Helpers.MapUtils;
 import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
@@ -169,5 +170,11 @@ public class EventActivity extends BaseActivity {
     public void onEvent(JoinedEventSuccessBus joinedEventSuccessBus) {
         loadingDialog.dismiss();
         Toast.makeText(this, "joined event", Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe
+    public void onEvent(LeftEventSuccessBus leftEventSuccessBus) {
+        loadingDialog.dismiss();
+        Toast.makeText(this, "left event success", Toast.LENGTH_SHORT).show();
     }
 }
