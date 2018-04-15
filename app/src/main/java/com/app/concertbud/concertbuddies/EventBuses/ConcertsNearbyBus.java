@@ -11,9 +11,14 @@ import java.util.List;
 public class ConcertsNearbyBus {
     private List<EventsEntity> concerts;
     private boolean newLocation;
-    public  ConcertsNearbyBus(List<EventsEntity> concerts, boolean newLocation) {
+
+    // Making sure that the bus will be catched at the right class
+    private String toClass;
+
+    public  ConcertsNearbyBus(List<EventsEntity> concerts, boolean newLocation, String toClass) {
         this.concerts = concerts;
         this.newLocation = newLocation;
+        this.toClass = toClass;
     }
 
     public List<EventsEntity> getConcerts() {
@@ -30,5 +35,13 @@ public class ConcertsNearbyBus {
 
     public void setNewLocation(boolean newLocation) {
         this.newLocation = newLocation;
+    }
+
+    public String getToClass() {
+        return toClass;
+    }
+
+    public void setToClass(String toClass) {
+        this.toClass = toClass;
     }
 }

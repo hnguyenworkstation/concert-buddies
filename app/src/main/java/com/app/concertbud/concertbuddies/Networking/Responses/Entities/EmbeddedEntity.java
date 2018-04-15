@@ -3,6 +3,7 @@ package com.app.concertbud.concertbuddies.Networking.Responses.Entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 
 
-public class EmbeddedEntity {
+public class EmbeddedEntity implements Serializable {
     @Expose
     @SerializedName("events")
     private List<EventsEntity> events;

@@ -2,6 +2,7 @@ package com.app.concertbud.concertbuddies.ViewHolders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -26,28 +27,30 @@ import butterknife.Unbinder;
  */
 
 public class EventViewHolder extends RecyclerView.ViewHolder {
+    @BindView(R.id.root_view)
+    LinearLayout mRootView;
     @BindView(R.id.event_image)
     AdjustableImageView mEventImage;
     @BindView(R.id.event_progress)
     ProgressBar mEventProgress;
-    @BindView(R.id.ride_time)
-    TextView mRideTime;
-    @BindView(R.id.ride_distance)
-    TextView mRideDistance;
+    @BindView(R.id.event_time)
+    TextView mEventTime;
+    @BindView(R.id.event_distance)
+    TextView mEventDistance;
     @BindView(R.id.event_name)
     TextView mEventName;
     @BindView(R.id.event_location)
     TextView mEventLocation;
 
+
+
     private Unbinder unbinder;
 
     public EventViewHolder(View itemView) {
         super(itemView);
-
-        unbinder = ButterKnife.bind(this, itemView);
     }
 
-    public void init(int position, OnEventClickListener listener, EventsEntity concert) {
+    public void init(final int position, final OnEventClickListener listener, EventsEntity concert) {
         unbinder = ButterKnife.bind(this, itemView);
 
         // Get Event Image
@@ -72,10 +75,10 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         try {
             Date d = dpattern.parse(date);
             String date_format = df.format(d);
-            mRideTime.setText(date_format);
+            mEventTime.setText(date_format);
         } catch (ParseException e) {
             // handle exception
-            mRideTime.setText(date.toString());
+            mEventTime.setText(date.toString());
         }
         // Get Venue
         String venueName = concert.getEmbedded().getVenues().get(0).getName();
@@ -83,7 +86,16 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
 
         // Get Distance
         Double distance = concert.getDistance();
-        mRideDistance.setText(Long.toString(Math.round(distance)) + " miles");
+        mEventDistance.setText(Long.toString(Math.round(distance)) + " miles");
+
+
+        // Init OnClicklistener
+        mRootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onEventClicked(position);
+            }
+        });
     }
 
     public void onRecycled() {

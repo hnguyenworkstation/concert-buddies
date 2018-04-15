@@ -2,13 +2,14 @@ package com.app.concertbud.concertbuddies.Networking.Responses.Entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by huongnguyen on 3/14/18.
  */
 
-public class ExternallinksEntity {
+public class ExternallinksEntity implements Serializable {
     @Expose
     @SerializedName("homepage")
     private List<HomepageEntity> homepage;

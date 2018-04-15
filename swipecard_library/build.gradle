@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+apply from: '../dependencies.gradle'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.compileSdk
+        versionCode versions.publishVersionCode
+        versionName versions.publishVersion
+    }
+    buildTypes {
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:support-v4:'+ versions.supportLib
+}
