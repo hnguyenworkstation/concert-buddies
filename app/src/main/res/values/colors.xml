@@ -5,6 +5,8 @@
     <color name="colorAccent">#FF7777</color>
     <color name="colorBackground">@color/white</color>
 
+    <color name="trans_accent">#4DFF7777</color>
+
     <color name="text_dark_color">#424242</color>
     <color name="text_med_color">#616161</color>
     <color name="text_light_color">#757575</color>

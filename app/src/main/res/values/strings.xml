@@ -7,10 +7,11 @@
     <string name="facebook_app_id">428914620878343</string>
     <string name="fb_login_protocol_scheme">fb428914620878343</string>
     <string name="google_map_key">AIzaSyCsqqG6TLRq61EAirtUKZSnw-a4GObEiik</string>
-    <string name="base_url">https://concert-buddies.herokuapp.com</string>
+    <string name="facebook_graph_url">https://graph.facebook.com/v2.12/</string>
+    <string name="base_url"> https://concert-buddies.herokuapp.com/</string>
     <string name="songkick_url">https://api.songkick.com/</string>
     <string name="ticketmaster_url">https://app.ticketmaster.com/</string>
-    <string name="facebook_graph_url">https://graph.facebook.com/v2.12/</string>
+    <string name="firebase_id">concert-buddies-5a975</string>
 
     <!-- Login Activity Strings -->
     <string name="app_fullname">Concert Buddies</string>
@@ -29,4 +30,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="location">Location</string>
+    <string name="search_location">Search Location…</string>
+
+    <string name="please_wait">Please wait</string>
+    <string name="joining_event">Joining an event…</string>
+    <string name="leaving_event">Leaving an event…</string>
 </resources>
