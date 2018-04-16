@@ -1,25 +1,21 @@
-<android.support.v4.widget.SwipeRefreshLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/swipe_ref_root"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.app.concertbud.concertbuddies.ViewFragments.ListSearchEventFragment">
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="62dp"
+        android:id="@+id/top_holder"
+        android:background="@color/white"
+        />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="128dp"
-            android:background="@android:color/transparent"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/events_recycler"/>
-    </LinearLayout>
-
-</android.support.v4.widget.SwipeRefreshLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/events_recycler"/>
+</LinearLayout>

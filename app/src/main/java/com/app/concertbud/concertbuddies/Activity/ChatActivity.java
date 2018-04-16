@@ -158,5 +158,4 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         });
         mChatRecycler.setAdapter(FBRA);
     }
-
 }

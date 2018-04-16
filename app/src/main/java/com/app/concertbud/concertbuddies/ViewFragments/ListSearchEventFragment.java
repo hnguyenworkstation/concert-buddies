@@ -1,6 +1,7 @@
 package com.app.concertbud.concertbuddies.ViewFragments;
 
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,8 @@ import android.view.ViewGroup;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
 import com.app.concertbud.concertbuddies.Abstracts.OnLoadMoreListener;
+import com.app.concertbud.concertbuddies.Activity.EventActivity;
+import com.app.concertbud.concertbuddies.Activity.FindMatchActivity;
 import com.app.concertbud.concertbuddies.Adapters.EventsAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
@@ -141,8 +144,16 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     }
 
     @Override
-    public void onEventClicked(int position) {
-
+    public void onEventClicked(final int position) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                getContext().startActivity(new Intent(getActivity(), FindMatchActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .putExtra("EventsEntity", mConcertsList.get(position)));
+            }
+        };
+        new Handler().postDelayed(runnable, 0);
     }
 
     @Override
@@ -164,7 +175,6 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
     /***********
      * SUBSCRIBERS
      */
-
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(DeliverLocationBus bus) {
         location = bus.getLocation();
@@ -173,31 +183,33 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(ConcertsNearbyBus bus) {
-        /* remove progress item */
-        if (!mConcertsList.isEmpty() && mConcertsList.get(mConcertsList.size() - 1).getType().equals("loading")) {
-            mConcertsList.remove(mConcertsList.size() - 1);
-            eventsAdapter.notifyItemRemoved(mConcertsList.size() - 1);
-        }
-        if (bus.isNewLocation()) {
-            int size = mConcertsList.size();
-            mConcertsList.clear();
-            // TODO: reset scroll position (i.e. jump to top) when clearing all data
-            eventsAdapter.notifyItemRangeRemoved(0, size);
-        }
-        /* check if there's still data left */
-        if (bus.getConcerts().size() == 0) {
-            eventsAdapter.setMoreDataAvailable(false);
-        }
-        else {
-            /* Put all events in HashMap to make sure no duplicated event is allowed */
-            HashMap<String, EventsEntity> mConcertsHashMap = new HashMap<>();
-            for (int i = 0; i < bus.getConcerts().size(); i++) {
-                mConcertsHashMap.put(bus.getConcerts().get(i).getName(), bus.getConcerts().get(i));
+        if (bus.getToClass().equals(ListSearchEventFragment.class.getSimpleName())) {
+            /* remove progress item */
+            if (!mConcertsList.isEmpty() && mConcertsList.get(mConcertsList.size() - 1).getType().equals("loading")) {
+                mConcertsList.remove(mConcertsList.size() - 1);
+                eventsAdapter.notifyItemRemoved(mConcertsList.size() - 1);
             }
-            Log.e(TAG, "Updating new concerts");
-            mConcertsList.addAll(mConcertsHashMap.values());
-            eventsAdapter.notifyDataChanged();
+            if (bus.isNewLocation()) {
+                int size = mConcertsList.size();
+                mConcertsList.clear();
+                // TODO: reset scroll position (i.e. jump to top) when clearing all data
+                eventsAdapter.notifyItemRangeRemoved(0, size);
+            }
+        /* check if there's still data left */
+            if (bus.getConcerts().size() == 0) {
+                eventsAdapter.setMoreDataAvailable(false);
+            }
+            else {
+            /* Put all events in HashMap to make sure no duplicated event is allowed */
+                HashMap<String, EventsEntity> mConcertsHashMap = new HashMap<>();
+                for (int i = 0; i < bus.getConcerts().size(); i++) {
+                    mConcertsHashMap.put(bus.getConcerts().get(i).getName(), bus.getConcerts().get(i));
+                }
+                Log.e(TAG, "Updating new concerts");
+                mConcertsList.addAll(mConcertsHashMap.values());
+                eventsAdapter.notifyDataChanged();
+            }
+            EventBus.getDefault().removeStickyEvent(bus);
         }
-        EventBus.getDefault().removeStickyEvent(bus);
     }
 }

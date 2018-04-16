@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ import butterknife.Unbinder;
  */
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.root_view)
-    CardView mRootView;
+    LinearLayout mRootView;
     @BindView(R.id.logo_image)
     ImageView mChatRoomProfile;
     @BindView(R.id.room_status)

@@ -78,8 +78,7 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public int getItemViewType(int position) {
         if (mConcertsList.get(position).getType().equals("loading")) {
             return TYPE_LOADING;
-        }
-        else {
+        } else {
             return TYPE_CONCERT;
         }
     }
