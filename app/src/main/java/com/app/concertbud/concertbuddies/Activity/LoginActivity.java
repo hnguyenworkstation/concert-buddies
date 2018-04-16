@@ -14,8 +14,15 @@ import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.Helpers.StringUtils;
+import com.app.concertbud.concertbuddies.Networking.FacebookContext;
+import com.app.concertbud.concertbuddies.Networking.NetContext;
+import com.app.concertbud.concertbuddies.Networking.Requests.NewUserRequest;
+import com.app.concertbud.concertbuddies.Networking.Responses.CompleteFacebookUserResponse;
+import com.app.concertbud.concertbuddies.Networking.Services.BackendServices;
+import com.app.concertbud.concertbuddies.Networking.Services.FacebookServices;
 import com.app.concertbud.concertbuddies.Networking.Responses.User;
 import com.app.concertbud.concertbuddies.R;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -31,11 +38,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends BaseActivity {
     @BindView(R.id.logo_image)
@@ -86,6 +97,12 @@ public class LoginActivity extends BaseActivity {
         mFbLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                Toast.makeText(getApplicationContext(), "Logging In Success", Toast.LENGTH_SHORT).show();
+                Log.d("HUONG", "loginsuccess");
+
+                /* Update Backend */
+                updateBackend(loginResult.getAccessToken().getToken());
+
                 AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
                 mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -94,12 +111,6 @@ public class LoginActivity extends BaseActivity {
                             // TODO: Update Firebase database with facebook login info (Server or Client side's job??)
                             // Don't update Firebase here.
                             Log.e(TAG, "signInWithCredential succeeds");
-//                            Profile profile = Profile.getCurrentProfile();
-//                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-//                            mDatabase.child("Users").setValue(mAuth.getUid());
-//                            mDatabase.child("Users").child(mAuth.getUid()).setValue(
-//                                    new User(profile.getName(), profile.getId())
-//                            );
                         }
                     }
                 });
@@ -119,6 +130,24 @@ public class LoginActivity extends BaseActivity {
     private void onFacebookLoginSuccessful(LoginResult loginResults){
         AppUtils.startNewActivityAndFinish(this, LoginActivity.this,
                 SignUpActivity.class);
+    }
+
+    private void updateBackend(final String token) {
+        BackendServices services = NetContext.instance.create(BackendServices.class);
+        services.postUser(new NewUserRequest(token))
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.code() == 200) {
+                            Log.e(TAG, "Successfully posted to database");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
     }
 
     @Override

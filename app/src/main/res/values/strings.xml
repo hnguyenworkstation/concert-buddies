@@ -7,6 +7,7 @@
     <string name="facebook_app_id">428914620878343</string>
     <string name="fb_login_protocol_scheme">fb428914620878343</string>
     <string name="google_map_key">AIzaSyCsqqG6TLRq61EAirtUKZSnw-a4GObEiik</string>
+    <string name="facebook_graph_url">https://graph.facebook.com/v2.12/</string>
     <string name="base_url"> https://concert-buddies.herokuapp.com/</string>
     <string name="songkick_url">https://api.songkick.com/</string>
     <string name="ticketmaster_url">https://app.ticketmaster.com/</string>
