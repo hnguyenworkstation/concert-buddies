@@ -47,7 +47,7 @@ public class JoinEventTask extends Job {
     @Override
     public void onRun() throws Throwable {
         EventServices services = NetContext.instance.create(EventServices.class);
-        services.joinEvent(new EventRequestBody(eventId, AccessToken.getCurrentAccessToken().toString()))
+        services.joinEvent(new EventRequestBody(eventId, AccessToken.getCurrentAccessToken().getToken()))
                 .enqueue(new Callback<JoiningEventResponse>() {
                     @Override
                     public void onResponse(Call<JoiningEventResponse> call, Response<JoiningEventResponse> response) {

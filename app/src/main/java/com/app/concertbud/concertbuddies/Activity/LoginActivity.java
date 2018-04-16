@@ -99,7 +99,7 @@ public class LoginActivity extends BaseActivity {
             public void onSuccess(LoginResult loginResult) {
                 Toast.makeText(getApplicationContext(), "Logging In Success", Toast.LENGTH_SHORT).show();
                 Log.d("HUONG", "loginsuccess");
-
+                Log.e("HUONG", loginResult.getAccessToken().getToken());
                 /* Update Backend */
                 updateBackend(loginResult.getAccessToken().getToken());
 
