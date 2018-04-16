@@ -37,13 +37,15 @@ public class SentMessageHolder extends RecyclerView.ViewHolder{
     }
 
     private void setMsgText(String content) {
-        this.msgText.setText(content);
+        if (msgText != null)
+            this.msgText.setText(content);
     }
 
     private void setMsgTime(String timestamp) {
         Date date = new Date(Long.parseLong(timestamp));
         DateFormat formatter = new SimpleDateFormat("HH:mm");
-        msgTime.setText(formatter.format(date));
+        if (msgTime != null)
+            msgTime.setText(formatter.format(date));
     }
 
     public void onRecycled() {
