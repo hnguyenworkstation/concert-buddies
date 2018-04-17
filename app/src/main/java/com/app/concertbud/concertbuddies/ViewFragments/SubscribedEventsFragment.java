@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnSubscribedEventClickListener;
 import com.app.concertbud.concertbuddies.Adapters.SubscribedEventsAdapter;
@@ -24,6 +25,7 @@ import com.app.concertbud.concertbuddies.Networking.Requests.NewUserRequest;
 import com.app.concertbud.concertbuddies.Networking.Responses.CompleteTMConcertsResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 import com.app.concertbud.concertbuddies.Networking.Responses.Entities.ListEventsEntity;
+import com.app.concertbud.concertbuddies.Networking.Responses.Entities.StartEntity;
 import com.app.concertbud.concertbuddies.Networking.Services.BackendServices;
 import com.app.concertbud.concertbuddies.Networking.Services.EventServices;
 import com.app.concertbud.concertbuddies.R;
@@ -32,7 +34,12 @@ import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.GetEventJob;
 import com.birbit.android.jobqueue.JobManager;
 import com.facebook.AccessToken;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -110,7 +117,8 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
         snapHelper.attachToRecyclerView(mEventsRecycler);
 
         subscribedEventsRefreshLayout = getView().findViewById(R.id.subcribed_events_refresh);
-        subscribedEventsRefreshLayout.setProgressViewEndTarget(true, 300);
+        subscribedEventsRefreshLayout.setDistanceToTriggerSync(600);
+        subscribedEventsRefreshLayout.setProgressViewEndTarget(false, 300);
         subscribedEventsRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -160,6 +168,27 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
         events.set(index, event);
         if (++added == max_events) {
             Log.d("chris", "yippie");
+
+            // sort by date
+            Collections.sort(events, new Comparator<EventsEntity>() {
+                @Override
+                public int compare(EventsEntity e1, EventsEntity e2) {
+                    StartEntity start = e1.getDates().getStart();
+                    String dateStr1 = e1.getDates().getStart().getLocaldate();
+                    String dateStr2 = e2.getDates().getStart().getLocaldate();
+
+                    try {
+                        SimpleDateFormat in_format = new SimpleDateFormat("yyyy-mm-dd");
+                        Date date1 = in_format.parse(dateStr1);
+                        Date date2 = in_format.parse(dateStr2);
+                        return date1.compareTo(date2);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return 0;
+                }
+            });
+
             eventsAdapter.notifyDataSetChanged();
             subscribedEventsRefreshLayout.setRefreshing(false);
         }
