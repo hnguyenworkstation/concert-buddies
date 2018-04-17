@@ -56,7 +56,7 @@ public class GetEventJob extends Job {
 
                     @Override
                     public void onFailure(Call<EventsEntity> call, Throwable t) {
-
+                        Log.e("chris", "couldnt parse " + t.getMessage());
                     }
                 });
     }

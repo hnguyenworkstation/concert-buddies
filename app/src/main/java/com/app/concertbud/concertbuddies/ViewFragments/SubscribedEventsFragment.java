@@ -133,6 +133,7 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                     public void onResponse(Call<ListEventsEntity> call, Response<ListEventsEntity> response) {
                         List<String> eventIds = response.body().getEventIds();
                         max_events = eventIds.size();
+                        Log.d("chris", max_events + " max");
                         added = 0;
                         if (max_events == 0) {
                             subscribedEventsRefreshLayout.setRefreshing(false);
@@ -158,8 +159,10 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     public void addEventCard(EventsEntity event, int index) {
         events.set(index, event);
         if (++added == max_events) {
+            Log.d("chris", "yippie");
             eventsAdapter.notifyDataSetChanged();
             subscribedEventsRefreshLayout.setRefreshing(false);
         }
+        Log.d("chris", added + " added " + event.getName());
     }
 }
