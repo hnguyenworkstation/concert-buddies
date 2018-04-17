@@ -33,18 +33,7 @@
         android:layout_centerVertical="true"
         android:id="@+id/tab_title"
         android:layout_toEndOf="@+id/image_view"
-        android:layout_toStartOf="@+id/add_btn"
         android:maxLines="1"
         style="@style/LargeTitleText"
         />
-
-    <ImageButton
-        android:layout_centerVertical="true"
-        android:id="@+id/add_btn"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/margin_12"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/ic_left_arrow"
-        android:background="@null"/>
 </RelativeLayout>

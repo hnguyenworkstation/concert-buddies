@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="@dimen/margin_16"
+    android:paddingStart="10dp"
+    android:paddingEnd="20dp"
     android:clickable="true"
     android:focusable="true"
     android:id="@+id/root_view"
@@ -42,7 +44,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="@dimen/margin_8"
             android:orientation="vertical">
@@ -59,7 +61,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Boston, MA -- 250 going"
+                android:text="at The House of Blues"
+                android:id="@+id/event_venue"
+                android:textSize="@dimen/text_14"
+                android:textColor="@color/text_light_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="in Boston, MA"
                 android:id="@+id/event_location"
                 android:textSize="@dimen/text_14"
                 android:textColor="@color/text_light_color"
@@ -68,11 +78,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Boston, MA -- 250 going"
-                android:layout_marginTop="@dimen/margin_8"
+                android:text="asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf"
                 android:id="@+id/event_desc"
                 android:textSize="@dimen/text_14"
-                android:textColor="@color/text_light_color"
+                android:textColor="@color/text_dark_color"
                 android:layout_marginEnd="@dimen/margin_10"/>
         </LinearLayout>
     </LinearLayout>
@@ -80,17 +89,6 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_marginStart="@dimen/margin_8"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:id="@+id/stage"
-            android:layout_marginEnd="@dimen/margin_12"
-            android:src="@drawable/ic_filled_heart_red"/>
-
         <TextView
             android:layout_toEndOf="@+id/stage"
             android:layout_centerVertical="true"
@@ -98,7 +96,7 @@
             android:layout_marginBottom="@dimen/margin_4"
             android:layout_marginStart="@dimen/margin_8"
             style="@style/SmallTextStyle"
-            android:id="@+id/event_time"
+            android:id="@+id/event_date"
             android:textColor="@color/light_blue"
             android:layout_toStartOf="@+id/ride_distance"
             android:textSize="@dimen/text_14"
@@ -114,10 +112,12 @@
             android:layout_marginStart="@dimen/margin_8"
             android:layout_marginEnd="@dimen/margin_12"
             style="@style/SmallTextStyle"
-            android:id="@+id/event_distance"
+            android:textColor="@color/light_blue"
+            android:textStyle="bold"
+            android:id="@+id/event_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_12"
+            android:textSize="@dimen/text_14"
             android:text="25 miles"/>
     </RelativeLayout>
 </LinearLayout>

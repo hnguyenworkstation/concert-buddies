@@ -1,9 +1,11 @@
 package com.app.concertbud.concertbuddies.Networking.Services;
 
 import com.app.concertbud.concertbuddies.Networking.Responses.CompleteTMConcertsResponse;
+import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -18,4 +20,9 @@ public interface TicketMasterServices {
                                                        @Query("segmentName") String segment,
                                                        @Query("page") int pageNum,
                                                        @Query("apikey") String api_key);
+
+
+    @GET("/discovery/v2/events/{eventId}")
+    Call<EventsEntity> getEvent(@Path("eventId") String eventId,
+                                @Query("apikey") String api_key);
 }

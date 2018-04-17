@@ -100,6 +100,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:' + versions.butterKnife
+    implementation 'com.squareup.picasso:picasso:2.71828' // for ez imageview setting
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.jakewharton.butterknife'

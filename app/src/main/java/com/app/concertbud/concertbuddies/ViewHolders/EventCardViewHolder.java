@@ -41,8 +41,8 @@ public class EventCardViewHolder extends RecyclerView.ViewHolder {
     TextView mEventName;
     @BindView(R.id.event_location)
     TextView mEventLocation;
-    @BindView(R.id.event_desc)
-    TextView mEventDesc;
+    @BindView(R.id.event_venue)
+    TextView mEventVenue;
 
     private Unbinder unbinder;
 

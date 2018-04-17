@@ -74,10 +74,17 @@ public class EventsEntity implements Serializable {
     @Expose
     @SerializedName("name")
     private String name;
+    @Expose
+    @SerializedName("description")
+    private String description;
 
     /* Customized constructor */
     public EventsEntity(String type) {
         this.type = type;
+    }
+
+    public String getInfo() {
+        return info;
     }
 
     public NestedEmbeddedEntity getEmbedded() {
@@ -214,6 +221,10 @@ public class EventsEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
 
