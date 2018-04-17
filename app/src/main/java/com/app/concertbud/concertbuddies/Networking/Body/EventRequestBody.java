@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class EventRequestBody implements Serializable {
     @Expose
-    @SerializedName("eventId")
+    @SerializedName("event_id")
     private String eventId;
     @Expose
     @SerializedName("fb_token")
