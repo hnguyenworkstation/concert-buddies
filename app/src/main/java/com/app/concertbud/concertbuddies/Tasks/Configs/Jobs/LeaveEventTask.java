@@ -48,10 +48,11 @@ public class LeaveEventTask extends Job {
     @Override
     public void onRun() throws Throwable {
         EventServices services = NetContext.instance.create(EventServices.class);
-        services.leaveEvent(new EventRequestBody(eventId, AccessToken.getCurrentAccessToken().toString()))
+        services.leaveEvent(new EventRequestBody(eventId, AccessToken.getCurrentAccessToken().getToken()))
                 .enqueue(new Callback<JoiningEventResponse>() {
                     @Override
-                    public void onResponse(Call<JoiningEventResponse> call, Response<JoiningEventResponse> response) {
+                    public void onResponse(Call<JoiningEventResponse> call,
+                                           Response<JoiningEventResponse> response) {
                         Log.e("JOIN EVENT", "onResponse: " +  response.toString());
 
                         if (response.code() == 200) {

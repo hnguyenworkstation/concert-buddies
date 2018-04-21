@@ -17,8 +17,8 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/action_buttons"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/join_view_btn"
         android:layout_below="@+id/custom_actionbar">
 
         <LinearLayout
@@ -109,60 +109,99 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <LinearLayout
-        android:baselineAligned="false"
-        android:layout_alignParentBottom="true"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/darken_white"
-        android:id="@+id/action_buttons"
-        android:gravity="end"
-        android:orientation="horizontal"
-        android:weightSum="4">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_margin="@dimen/margin_8"
-            android:layout_weight="2"
-            android:background="@drawable/white_twod_button_layer"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center">
-
-            <TextView
-                style="@style/MediumTitleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_8"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Share"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_18" />
-        </LinearLayout>
+        android:id="@+id/join_view_btn"
+        android:layout_alignParentBottom="true"
+        android:background="@color/darken_white">
 
         <LinearLayout
             android:id="@+id/join_btn"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_margin="@dimen/margin_8"
-            android:layout_weight="2"
-            android:background="@drawable/red_twod_button_layer"
+            android:background="@drawable/white_twod_button_layer"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:orientation="horizontal">
 
+            <ProgressBar
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/subscribe_progress"
+                android:visibility="gone"
+                android:layout_marginEnd="@dimen/margin_16"/>
+
             <TextView
                 style="@style/MediumTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Join"
-                android:textColor="@color/white"
+                android:text="Subscribe Event"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_18" />
         </LinearLayout>
-    </LinearLayout>
+
+        <LinearLayout
+            android:visibility="invisible"
+            android:baselineAligned="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/darken_white"
+            android:id="@+id/action_buttons"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_margin="@dimen/margin_8"
+                android:layout_weight="1"
+                android:background="@drawable/white_twod_button_layer"
+                android:id="@+id/leave_btn"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/MediumTitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_8"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Leave"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_18" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/join_match_btn"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_margin="@dimen/margin_8"
+                android:layout_weight="3"
+                android:background="@drawable/red_twod_button_layer"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/MediumTitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Get Match"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_18" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
 </RelativeLayout>

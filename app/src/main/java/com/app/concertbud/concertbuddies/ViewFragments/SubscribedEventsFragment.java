@@ -23,6 +23,8 @@ import com.app.concertbud.concertbuddies.Abstracts.OnSubscribedEventClickListene
 import com.app.concertbud.concertbuddies.Activity.EventActivity;
 import com.app.concertbud.concertbuddies.Adapters.SubscribedEventsAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
+import com.app.concertbud.concertbuddies.Helpers.AppUtils;
+import com.app.concertbud.concertbuddies.Helpers.DataUtils;
 import com.app.concertbud.concertbuddies.Networking.NetContext;
 import com.app.concertbud.concertbuddies.Networking.Requests.NewUserRequest;
 import com.app.concertbud.concertbuddies.Networking.Responses.CompleteTMConcertsResponse;
@@ -166,6 +168,9 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                         for (int i = 0; i < max_events; i++) {
                             jobManager.addJobInBackground(new GetEventJob(eventIds.get(i), i));
                         }
+
+                        // Store data temporary
+                        DataUtils.setSubscribedEvent(events);
                     }
 
                     @Override
