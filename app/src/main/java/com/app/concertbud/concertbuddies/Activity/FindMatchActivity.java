@@ -25,6 +25,7 @@ import retrofit2.Call;
 public class FindMatchActivity extends BaseActivity implements SwipeFlingView.OnSwipeFlingListener{
     private final static String TAG = FindMatchActivity.class.getSimpleName();
     private final static boolean DEBUG = true;
+    private String eventId;
 
     @BindView(R.id.frame)
     SwipeFlingView mSwipeFlingView;
@@ -40,6 +41,8 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
         setContentView(R.layout.activity_find_match);
 
         unbinder = ButterKnife.bind(this);
+
+        eventId = getIntent().getStringExtra("EVENT_ID");
 
         initView();
         addTestData();

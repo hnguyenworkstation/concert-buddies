@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
 import com.app.concertbud.concertbuddies.Abstracts.OnLoadMoreListener;
 import com.app.concertbud.concertbuddies.Activity.EventActivity;
-import com.app.concertbud.concertbuddies.Activity.FindMatchActivity;
 import com.app.concertbud.concertbuddies.Adapters.EventsAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;

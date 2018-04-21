@@ -1,6 +1,8 @@
 package com.app.concertbud.concertbuddies.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -178,7 +180,14 @@ public class EventActivity extends BaseActivity {
 
     @OnClick(R.id.join_match_btn)
     public void onJoinMatchButtonClicked() {
-
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(EventActivity.this, FindMatchActivity.class)
+                                    .putExtra("EVENT_ID", concert.getId())
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+        });
     }
 
     @Override
@@ -224,6 +233,8 @@ public class EventActivity extends BaseActivity {
     @Subscribe
     public void onEvent(LeftEventSuccessBus leftEventSuccessBus) {
         loadingDialog.dismiss();
+
+        DataUtils.removedSubscribedEvent(concert);
 
         mJoinButton.setVisibility(View.VISIBLE);
         mActionButton.setVisibility(View.INVISIBLE);

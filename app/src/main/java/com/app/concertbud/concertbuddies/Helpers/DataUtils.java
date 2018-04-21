@@ -32,4 +32,13 @@ public class DataUtils {
 
         return false;
     }
+
+    public static void removedSubscribedEvent(EventsEntity eventsEntity) {
+        for (EventsEntity event: DataUtils.subscribedEvent) {
+            if (eventsEntity == event || eventsEntity.getId().equals(event.getId())) {
+                DataUtils.subscribedEvent.remove(eventsEntity);
+                return;
+            }
+        }
+    }
 }
