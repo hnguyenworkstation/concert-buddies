@@ -172,6 +172,7 @@ public class ListSearchEventFragment extends Fragment implements OnEventClickLis
         jobManager.addJobInBackground(new FetchNearbyConcertsJob(mPosition,
                 location.getLongitude(), location.getLatitude(), false));
     }
+
     /***********
      * SUBSCRIBERS
      */

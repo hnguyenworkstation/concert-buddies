@@ -58,6 +58,15 @@ public class SubscribedEventsAdapter extends RecyclerView.Adapter<SubscribedEven
         final View iView = holder.itemView;
         NestedEmbeddedVenuesEntity venue = event.getEmbedded().getVenues().get(0);
 
+        final int position = i;
+
+        iView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onEventClicked(position);
+            }
+        });
+
         String location;
         String city = venue.getCity().getName();
         if (venue.getState() != null) {
@@ -89,6 +98,7 @@ public class SubscribedEventsAdapter extends RecyclerView.Adapter<SubscribedEven
         } else {
             // TODO: SET DEFAULT EVENT IMG
         }
+
         ((TextView)iView.findViewById(R.id.event_name)).setText(event.getName());
         ((TextView)iView.findViewById(R.id.event_venue)).setText("at " + venue.getName());
         ((TextView)iView.findViewById(R.id.event_desc)).setText(event.getInfo());

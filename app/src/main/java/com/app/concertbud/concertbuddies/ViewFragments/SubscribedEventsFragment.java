@@ -1,7 +1,9 @@
 package com.app.concertbud.concertbuddies.ViewFragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnSubscribedEventClickListener;
+import com.app.concertbud.concertbuddies.Activity.EventActivity;
 import com.app.concertbud.concertbuddies.Adapters.SubscribedEventsAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.Networking.NetContext;
@@ -125,11 +128,22 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                 loadEvents();
             }
         });
+
+
         loadEvents();
     }
 
     @Override
-    public void onEventClicked(int position) {
+    public void onEventClicked(final int position) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                getContext().startActivity(new Intent(getActivity(), EventActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .putExtra("EventsEntity", events.get(position)));
+            }
+        };
+        new Handler().postDelayed(runnable, 0);
     }
 
     public void loadEvents() {
