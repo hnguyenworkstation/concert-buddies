@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -110,7 +111,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         /* Chatrooms database ref */
         chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
         final String chatRoomId = chatRoomsRef.push().getKey();
-        Chatroom chatroom = new Chatroom("", String.valueOf(Calendar.getInstance().getTimeInMillis()));
+        Chatroom chatroom = new Chatroom("", String.valueOf(Calendar.getInstance().getTimeInMillis()), facebook_id);
         Map<String, Object> postValues = chatroom.toMap();
         chatRoomsRef.child(chatRoomId).updateChildren(postValues);
         chatRoomsRef.child(chatRoomId).child("users").child(facebook_id).setValue(true);

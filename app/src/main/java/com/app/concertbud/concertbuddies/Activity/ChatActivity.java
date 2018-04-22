@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Calendar;
 
@@ -125,6 +126,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                             /* Update chatroom lastMsg and timestamp */
                             newPostChatroom.child("lastMessage").setValue(message);
                             newPostChatroom.child("timestamp").setValue(timestamp);
+                            newPostChatroom.child("senderId").setValue(Profile.getCurrentProfile().getId());
                         }
 
                         @Override
