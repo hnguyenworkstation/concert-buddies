@@ -16,6 +16,9 @@ public class ReqResponse implements Serializable {
     @Expose
     @SerializedName("event_id")
     private String eventId;
+    @Expose
+    @SerializedName("like")
+    private boolean isLiked;
 
     public String getFbToken() {
         return fbToken;
@@ -31,5 +34,13 @@ public class ReqResponse implements Serializable {
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 }

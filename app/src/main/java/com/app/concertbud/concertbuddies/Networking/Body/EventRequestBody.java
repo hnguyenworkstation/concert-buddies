@@ -16,10 +16,31 @@ public class EventRequestBody implements Serializable {
     @Expose
     @SerializedName("fb_token")
     private String fbToken;
+    @Expose
+    @SerializedName("like")
+    private boolean isLiked;
+
+    public EventRequestBody(String fbToken) {
+        this.fbToken = fbToken;
+    }
 
     public EventRequestBody(String eventId, String fbToken) {
         this.eventId = eventId;
         this.fbToken = fbToken;
+    }
+
+    public EventRequestBody(String eventId, String fbToken, boolean isLiked) {
+        this.eventId = eventId;
+        this.fbToken = fbToken;
+        this.isLiked = isLiked;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 
     public String getEventId() {

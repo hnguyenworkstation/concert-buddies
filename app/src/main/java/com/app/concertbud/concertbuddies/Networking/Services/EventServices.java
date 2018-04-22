@@ -30,7 +30,6 @@ public interface EventServices {
     /*
     * Join an Event
     * */
-
     @GET("/events/list/{user_id}")
     Call<ListEventsEntity> getEvents(@Path("user_id") String user_id);
 }

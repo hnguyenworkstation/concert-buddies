@@ -6,4 +6,5 @@ package com.app.concertbud.concertbuddies.Tasks.Configs.JobProperty;
 
 public class JobGroup {
     public static final String concert = "concert_group";
+    public static final String matching = "matching_group";
 }
