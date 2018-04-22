@@ -21,6 +21,23 @@
         android:clipChildren="false"
         app:rotation_degrees="12" />
 
+    <ProgressBar
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/progress_bar"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:textSize="@dimen/text_20"
+        android:layout_centerInParent="true"
+        android:textAlignment="center"
+        android:id="@+id/empty_message"
+        android:visibility="gone"
+        android:text="@string/empty_stack_message"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

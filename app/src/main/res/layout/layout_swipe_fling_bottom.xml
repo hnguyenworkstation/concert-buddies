@@ -13,6 +13,7 @@
         app:backgroundTint="@color/white"
         android:layout_margin="@dimen/margin_16"
         android:scaleType="fitCenter"
+        android:id="@+id/swipe_left_btn"
         android:src="@drawable/vector_cancel"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -28,5 +29,6 @@
         android:layout_height="56dp"
         app:backgroundTint="@color/white"
         android:layout_margin="@dimen/margin_16"
+        android:id="@+id/swipe_right_btn"
         android:src="@drawable/vector_heart"/>
 </LinearLayout>

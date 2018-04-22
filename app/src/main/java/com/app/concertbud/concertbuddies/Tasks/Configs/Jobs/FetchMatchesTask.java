@@ -50,6 +50,7 @@ public class FetchMatchesTask extends Job {
                     @Override
                     public void onResponse(Call<List<MatchProfileResponse>> call,
                                            Response<List<MatchProfileResponse>> response) {
+
                         EventBus.getDefault().postSticky(new DeliverListMatchProfileBus(eventId,
                                 response.body(), FindMatchActivity.class.getSimpleName(), DeliverListMatchProfileBus.Type.ACTUAL));
 

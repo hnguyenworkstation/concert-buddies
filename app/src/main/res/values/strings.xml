@@ -36,4 +36,5 @@
     <string name="please_wait">Please wait</string>
     <string name="joining_event">Joining an event…</string>
     <string name="leaving_event">Leaving an event…</string>
+    <string name="empty_stack_message">Stack is now empty!\nPlease come back later.</string>
 </resources>

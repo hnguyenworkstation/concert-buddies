@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,11 +46,18 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
     @BindView(R.id.event_id)
     TextView mEventId;
 
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
+    @BindView(R.id.empty_message)
+    TextView mEmptyMessage;
+
     private UserFindMatchAdapter mAdapter;
     private EventsEntity eventsEntity;
 
     private Unbinder unbinder;
     private ArrayList<MatchProfileResponse> mUserList = new ArrayList<>();
+
+    private boolean canLoadMore = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,11 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
 
     private void updateListView(List<MatchProfileResponse> list) {
         if (list == null || list.size() == 0) {
+            canLoadMore = false;
+
+            if (mSwipeFlingView.hasNoEnoughCardSwipe()) {
+                mEmptyMessage.setVisibility(View.VISIBLE);
+            }
             return;
         }
 
@@ -92,6 +105,8 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
 
     @OnClick(R.id.action_back)
     public void onActionBackClicked() {
+        mUserList.clear();
+        mAdapter.notifyDataSetChanged();
         onBackPressed();
     }
 
@@ -121,7 +136,6 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
         }
     }
 
-
     @Override
     public void onStartDragCard() {
 
@@ -144,18 +158,28 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
 
     @Override
     public void onLeftCardExit(View view, Object dataObject, boolean triggerByTouchMove) {
-        MatchProfileResponse response = mUserList.get((int) dataObject - 1);
-
         BaseApplication.getInstance().getJobManager()
-                .addJobInBackground(new PostSwipeTask(response.getUserId(), false));
+                .addJobInBackground(new PostSwipeTask(eventsEntity.getId(), false));
     }
 
     @Override
     public void onRightCardExit(View view, Object dataObject, boolean triggerByTouchMove) {
-        MatchProfileResponse response = mUserList.get((int) dataObject - 1);
-
         BaseApplication.getInstance().getJobManager()
-                .addJobInBackground(new PostSwipeTask(response.getUserId(), true));
+                .addJobInBackground(new PostSwipeTask(eventsEntity.getId(), true));
+    }
+
+    @OnClick(R.id.swipe_right_btn)
+    public void onSwipeRightBtn() {
+        if (!mSwipeFlingView.hasNoEnoughCardSwipe()) {
+            mSwipeFlingView.selectRight();
+        }
+    }
+
+    @OnClick(R.id.swipe_left_btn)
+    public void onSwipeLeftBtn() {
+        if (!mSwipeFlingView.hasNoEnoughCardSwipe()) {
+            mSwipeFlingView.selectLeft();
+        }
     }
 
     @Override
@@ -176,7 +200,8 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
 
     @Override
     public void onAdapterEmpty() {
-
+        mProgressBar.setVisibility(View.GONE);
+        mEmptyMessage.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -190,9 +215,29 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
     }
 
     @Subscribe(sticky = true)
-    public void onEvent(DeliverListMatchProfileBus matchProfileBus) {
-        if (matchProfileBus.getToClass().equals(FindMatchActivity.class.getSimpleName())) {
-            updateListView(matchProfileBus.getMatchProfileResponseList());
+    public void onEvent(final DeliverListMatchProfileBus matchProfileBus) {
+        if (matchProfileBus.getToClass().equals(FindMatchActivity.class.getSimpleName())
+                && matchProfileBus.getType() == DeliverListMatchProfileBus.Type.POTENTIAL ) {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (matchProfileBus.getEventId().equals(eventsEntity.getId())) {
+                        mProgressBar.setVisibility(View.GONE);
+                        updateListView(matchProfileBus.getMatchProfileResponseList());
+
+                        if (matchProfileBus.getMatchProfileResponseList() == null ||
+                                matchProfileBus.getMatchProfileResponseList().size() == 0) {
+                            canLoadMore = false;
+                        }
+                    }
+                }
+            });
+
+            EventBus.getDefault().removeStickyEvent(matchProfileBus);
         }
     }
+
+
 }
