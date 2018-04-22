@@ -28,7 +28,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         String notificationTitle = null, notificationBody = null;
-        if (remoteMessage.getData().get("senderId") == Profile.getCurrentProfile().getId()) return;
+        String senderId = remoteMessage.getData().get("senderId");
+        Log.e("HUONG noti", senderId);
+        if (senderId.equals(Profile.getCurrentProfile().getId())) return;
         Log.e("HUONG noti", "received noti");
         // check if message contains payload
         if (remoteMessage.getNotification() != null) {
