@@ -45,7 +45,7 @@ public class FetchPotentialMatchesTask extends Job {
     @Override
     public void onRun() throws Throwable {
         MatchingServices services = NetContext.instance.create(MatchingServices.class);
-        services.getPotentialMatches(new EventRequestBody(eventId, AccessToken.getCurrentAccessToken().getToken()))
+        services.getPotentialMatches(eventId, AccessToken.getCurrentAccessToken().getToken())
                 .enqueue(new Callback<List<MatchProfileResponse>>() {
                     @Override
                     public void onResponse(Call<List<MatchProfileResponse>> call,

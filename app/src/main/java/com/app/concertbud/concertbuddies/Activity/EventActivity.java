@@ -184,7 +184,7 @@ public class EventActivity extends BaseActivity {
             @Override
             public void run() {
                 startActivity(new Intent(EventActivity.this, FindMatchActivity.class)
-                                    .putExtra("EVENT_ID", concert.getId())
+                                    .putExtra("EventsEntity", concert)
                                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });

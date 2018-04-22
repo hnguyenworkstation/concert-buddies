@@ -45,7 +45,7 @@ public class FetchMatchesTask extends Job {
     @Override
     public void onRun() throws Throwable {
         MatchingServices services = NetContext.instance.create(MatchingServices.class);
-        services.getMatches(new EventRequestBody(AccessToken.getCurrentAccessToken().getToken()))
+        services.getMatches(AccessToken.getCurrentAccessToken().getToken())
                 .enqueue(new Callback<List<MatchProfileResponse>>() {
                     @Override
                     public void onResponse(Call<List<MatchProfileResponse>> call,

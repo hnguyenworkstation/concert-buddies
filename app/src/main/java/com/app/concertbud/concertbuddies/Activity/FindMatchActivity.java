@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.Adapters.UserFindMatchAdapter;
@@ -13,10 +14,12 @@ import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverListMatchProfileBus;
 import com.app.concertbud.concertbuddies.Helpers.TestUserData;
 import com.app.concertbud.concertbuddies.Networking.Responses.BaseResponse;
+import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 import com.app.concertbud.concertbuddies.Networking.Responses.MatchProfileResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.UserResponse;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchPotentialMatchesTask;
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.PostSwipeTask;
 import com.zc.swiple.SwipeFlingView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,18 +30,23 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import retrofit2.Call;
 
 public class FindMatchActivity extends BaseActivity implements SwipeFlingView.OnSwipeFlingListener{
     private final static String TAG = FindMatchActivity.class.getSimpleName();
     private final static boolean DEBUG = true;
-    private String eventId;
 
     @BindView(R.id.frame)
     SwipeFlingView mSwipeFlingView;
+    @BindView(R.id.event_name)
+    TextView mEventName;
+    @BindView(R.id.event_id)
+    TextView mEventId;
 
     private UserFindMatchAdapter mAdapter;
+    private EventsEntity eventsEntity;
 
     private Unbinder unbinder;
     private ArrayList<MatchProfileResponse> mUserList = new ArrayList<>();
@@ -50,7 +58,7 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
 
         unbinder = ButterKnife.bind(this);
 
-        eventId = getIntent().getStringExtra("EVENT_ID");
+        eventsEntity = (EventsEntity) getIntent().getSerializableExtra("EventsEntity");
 
         initView();
 
@@ -59,12 +67,15 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
             @Override
             public void run() {
                 BaseApplication.getInstance().getJobManager()
-                        .addJobInBackground(new FetchPotentialMatchesTask(eventId));
+                        .addJobInBackground(new FetchPotentialMatchesTask(eventsEntity.getId()));
             }
         }, 1000);
     }
 
     private void initView() {
+        mEventName.setText(eventsEntity.getName());
+        mEventId.setText(eventsEntity.getId());
+
         mAdapter = new UserFindMatchAdapter(this, mUserList);
         mSwipeFlingView.setAdapter(mAdapter);
         mSwipeFlingView.setOnSwipeFlingListener(this);
@@ -77,6 +88,11 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
 
         mUserList.addAll(list);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick(R.id.action_back)
+    public void onActionBackClicked() {
+        onBackPressed();
     }
 
     @Override
@@ -128,12 +144,18 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
 
     @Override
     public void onLeftCardExit(View view, Object dataObject, boolean triggerByTouchMove) {
+        MatchProfileResponse response = mUserList.get((int) dataObject - 1);
 
+        BaseApplication.getInstance().getJobManager()
+                .addJobInBackground(new PostSwipeTask(response.getUserId(), false));
     }
 
     @Override
     public void onRightCardExit(View view, Object dataObject, boolean triggerByTouchMove) {
+        MatchProfileResponse response = mUserList.get((int) dataObject - 1);
 
+        BaseApplication.getInstance().getJobManager()
+                .addJobInBackground(new PostSwipeTask(response.getUserId(), true));
     }
 
     @Override
@@ -149,7 +171,7 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
     @Override
     public void onAdapterAboutToEmpty(int itemsInAdapter) {
         BaseApplication.getInstance().getJobManager()
-                .addJobInBackground(new FetchPotentialMatchesTask(eventId));
+                .addJobInBackground(new FetchPotentialMatchesTask(eventsEntity.getId()));
     }
 
     @Override
