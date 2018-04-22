@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.concertbud.concertbuddies.Helpers.ImageLoader;
+import com.app.concertbud.concertbuddies.Networking.Responses.MatchProfileResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.UserResponse;
 import com.app.concertbud.concertbuddies.R;
 
@@ -42,12 +43,12 @@ public class UserCardViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    public void initView(UserResponse response) {
+    public void initView(MatchProfileResponse response) {
         unbinder = ButterKnife.bind(this, itemView);
-        ImageLoader.loadSimpleImage(img, response.getUrl(), null);
+        ImageLoader.loadSimpleImage(img, response.getPicture().getDataEntity().getUrl(), null);
 
-        nameView.setText(response.getWho());
-        addressView.setText(response.getDesc());
+        nameView.setText(response.getFullName());
+        addressView.setText(response.getBirthday());
     }
 
     public void onViewRecycled() {

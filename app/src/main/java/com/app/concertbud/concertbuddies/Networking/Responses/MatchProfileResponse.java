@@ -55,7 +55,7 @@ public class MatchProfileResponse implements Serializable {
         this.picture = picture;
     }
 
-    private class PictureEntity {
+    public class PictureEntity {
         @Expose
         @SerializedName("data")
         private DataEntity dataEntity;
@@ -69,7 +69,7 @@ public class MatchProfileResponse implements Serializable {
         }
     }
 
-    private class DataEntity {
+    public class DataEntity {
         @Expose
         @SerializedName("height")
         private int height;

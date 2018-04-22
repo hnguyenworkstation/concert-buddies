@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.app.concertbud.concertbuddies.Networking.Responses.MatchProfileResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.UserResponse;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.ViewHolders.UserCardViewHolder;
@@ -20,9 +21,9 @@ import java.util.ArrayList;
 public class UserFindMatchAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
-    private ArrayList<UserResponse> mList;
+    private ArrayList<MatchProfileResponse> mList;
 
-    public UserFindMatchAdapter(Context mContext, ArrayList<UserResponse> mList) {
+    public UserFindMatchAdapter(Context mContext, ArrayList<MatchProfileResponse> mList) {
         this.mContext = mContext;
         this.mInflater = LayoutInflater.from(mContext);
         this.mList = mList;
@@ -52,7 +53,7 @@ public class UserFindMatchAdapter extends BaseAdapter {
         }
 
         UserCardViewHolder holder = (UserCardViewHolder) convertView.getTag();
-        UserResponse response = mList.get(position);
+        MatchProfileResponse response = mList.get(position);
         holder.initView(response);
 
         return convertView;

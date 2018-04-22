@@ -12,19 +12,21 @@
         android:layout_height="56dp"
         app:backgroundTint="@color/white"
         android:layout_margin="@dimen/margin_16"
-        android:src="@drawable/ic_left_arrow"/>
+        android:scaleType="fitCenter"
+        android:src="@drawable/vector_cancel"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        app:backgroundTint="@color/white"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/margin_16"
+        android:src="@drawable/vector_star"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="56dp"
         android:layout_height="56dp"
         app:backgroundTint="@color/white"
         android:layout_margin="@dimen/margin_16"
-        android:src="@drawable/ic_left_arrow"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        app:backgroundTint="@color/white"
-        android:layout_margin="@dimen/margin_16"
-        android:src="@drawable/ic_left_arrow"/>
+        android:src="@drawable/vector_heart"/>
 </LinearLayout>

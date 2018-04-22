@@ -33,6 +33,6 @@ public interface MatchingServices {
     /*
     * Swipe Right
     * */
-    @POST("/matches/like")
+    @POST("/matches/like/")
     Call<MatchResponse> swiped(@Body EventRequestBody eventRequestBody);
 }
