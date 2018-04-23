@@ -69,6 +69,7 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     private Unbinder unbinder;
     private SubscribedEventsAdapter eventsAdapter;
     private List<EventsEntity> events = new ArrayList<>();
+    private List<EventsEntity> events_builder = new ArrayList<>();
 
     public SubscribedEventsFragment() {
         // Required empty public constructor
@@ -139,7 +140,6 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                 loadEvents();
             }
         });
-
     }
 
     @Override
@@ -166,15 +166,15 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                         max_events = eventIds.size();
                         Log.d("chris", max_events + " max");
                         added = 0;
-                        while (events.size() < max_events) {
-                            events.add(new EventsEntity(""));
+                        while (events_builder.size() < max_events) {
+                            events_builder.add(new EventsEntity(""));
                         }
-                        while (events.size() > max_events) {
-                            events.remove(events.size()-1);
+                        while (events_builder.size() > max_events) {
+                            events_builder.remove(events.size()-1);
                         }
                         if (max_events == 0) {
                             subscribedEventsRefreshLayout.setRefreshing(false);
-                            eventsAdapter.notifyDataSetChanged();
+                            buildEvents();
                             mEmptyMessage.setVisibility(View.VISIBLE);
                         } else {
                             mEmptyMessage.setVisibility(View.GONE);
@@ -198,7 +198,7 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     private int added;
     public synchronized void addEventCard(EventsEntity event, int index) {
         // Sending signal right away to find match of this event
-        events.set(index, event);
+        events_builder.set(index, event);
         if (++added == max_events) {
             Log.d("chris", "yippie");
 
@@ -222,9 +222,15 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                 }
             });
 
-            eventsAdapter.notifyDataSetChanged();
+            buildEvents();
             subscribedEventsRefreshLayout.setRefreshing(false);
         }
         Log.d("chris", added + " added " + event.getName());
+    }
+
+    public synchronized void buildEvents() {
+        events.removeAll(events);
+        events.addAll(events_builder);
+        eventsAdapter.notifyDataSetChanged();
     }
 }
