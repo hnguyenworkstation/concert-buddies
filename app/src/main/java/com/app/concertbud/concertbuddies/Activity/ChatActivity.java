@@ -72,12 +72,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     private DatabaseReference mDatabaseChatrooms;
     private FirebaseAuth mAuth;
 
+    public static boolean isActivityRunning;
     private String chatRoomID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
+
+        isActivityRunning = true;
 
         mAuth = FirebaseAuth.getInstance();
         unbinder = ButterKnife.bind(this);
@@ -143,6 +146,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+        isActivityRunning = false;
     }
 
     @Override
