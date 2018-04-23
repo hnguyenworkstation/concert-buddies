@@ -129,7 +129,7 @@ public class LoginActivity extends BaseActivity {
 
     private void onFacebookLoginSuccessful(LoginResult loginResults){
         AppUtils.startNewActivityAndFinish(this, LoginActivity.this,
-                SignUpActivity.class);
+                MainActivity.class);
     }
 
     private void updateBackend(final String token) {

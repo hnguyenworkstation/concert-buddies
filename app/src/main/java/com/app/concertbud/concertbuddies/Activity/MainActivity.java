@@ -142,7 +142,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         ImageLoader.loadSimpleCircleImage(mProfileImg,
                 Profile.getCurrentProfile().getProfilePictureUri(248, 248).toString(), mProgressBar);
 
-        mTabTitle.setText("Following");
+        mTabTitle.setText("Joined Events");
     }
 
     private void showViewAt(int position) {
@@ -188,7 +188,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
                 switch (position) {
                     case 0:
-                        mTabTitle.setText("Following");
+                        mTabTitle.setText("Joined Events");
                         mTabView.setVisibility(View.VISIBLE);
                         SubscribedEventsFragment.self.loadEvents();
                         break;

@@ -60,6 +60,8 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     RecyclerView mEventsRecycler;
     @BindView(R.id.subcribed_events_refresh)
     SwipeRefreshLayout subscribedEventsRefreshLayout;
+    @BindView(R.id.empty_message)
+    TextView mEmptyMessage;
 
     public static SubscribedEventsFragment self;
     private final JobManager jobManager = BaseApplication.getInstance().getJobManager();
@@ -83,6 +85,17 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    boolean initial = true;
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!initial) {
+            loadEvents();
+        } else {
+            initial = false;
+        }
     }
 
     @Override
@@ -160,14 +173,21 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                         max_events = eventIds.size();
                         Log.d("chris", max_events + " max");
                         added = 0;
-                        if (max_events == 0) {
-                            subscribedEventsRefreshLayout.setRefreshing(false);
-                        }
                         while (events.size() < max_events) {
                             events.add(new EventsEntity(""));
                         }
+                        while (events.size() > max_events) {
+                            events.remove(events.size()-1);
+                        }
                         for (int i = 0; i < max_events; i++) {
                             jobManager.addJobInBackground(new GetEventJob(eventIds.get(i), i));
+                        }
+                        if (max_events == 0) {
+                            subscribedEventsRefreshLayout.setRefreshing(false);
+                            eventsAdapter.notifyDataSetChanged();
+                            mEmptyMessage.setVisibility(View.VISIBLE);
+                        } else {
+                            mEmptyMessage.setVisibility(View.GONE);
                         }
 
                         // Store data temporary

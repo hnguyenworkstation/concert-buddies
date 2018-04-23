@@ -25,6 +25,15 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <android.widget.TextView
+                    android:id="@+id/empty_message"
+                    android:text="No joined events!"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textAlignment="center"
+                    android:layout_marginTop="40dp"
+                    android:textSize="@dimen/small_text_size"/>
+
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

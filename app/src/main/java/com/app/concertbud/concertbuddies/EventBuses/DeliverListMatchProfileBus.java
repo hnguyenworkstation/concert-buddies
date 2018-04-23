@@ -1,5 +1,7 @@
 package com.app.concertbud.concertbuddies.EventBuses;
 
+import android.util.Log;
+
 import com.app.concertbud.concertbuddies.Networking.Responses.MatchProfileResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.MatchResponse;
 

@@ -2,6 +2,7 @@ package com.app.concertbud.concertbuddies.Tasks.Configs.Jobs;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.app.concertbud.concertbuddies.Activity.FindMatchActivity;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverListMatchProfileBus;
@@ -45,6 +46,7 @@ public class FetchPotentialMatchesTask extends Job {
     @Override
     public void onRun() throws Throwable {
         MatchingServices services = NetContext.instance.create(MatchingServices.class);
+        Log.d("chris", "sent match");
         services.getPotentialMatches(eventId, AccessToken.getCurrentAccessToken().getToken())
                 .enqueue(new Callback<List<MatchProfileResponse>>() {
                     @Override
@@ -56,9 +58,7 @@ public class FetchPotentialMatchesTask extends Job {
                     }
 
                     @Override
-                    public void onFailure(Call<List<MatchProfileResponse>> call, Throwable t) {
-
-                    }
+                    public void onFailure(Call<List<MatchProfileResponse>> call, Throwable t) {}
                 });
     }
 

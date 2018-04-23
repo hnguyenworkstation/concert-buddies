@@ -36,7 +36,7 @@
     <string name="please_wait">Please wait</string>
     <string name="joining_event">Joining an event…</string>
     <string name="leaving_event">Leaving an event…</string>
-    <string name="empty_stack_message">Stack is now empty!\nPlease come back later.</string>
+    <string name="empty_stack_message">No more users in this event!\n:(</string>
 
     <string name="default_notification_channel_id">fcm_default_channel</string>
     <string name="default_notification_channel_name">Notifications</string>
