@@ -83,8 +83,10 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
     private DatabaseReference chatRoomsRef;
     private Unbinder unbinder;
 
+    public static MatchesFragment self;
+
     public MatchesFragment() {
-        // Required empty public constructor
+        self = this;
     }
 
     public static MatchesFragment newInstance() {
@@ -118,7 +120,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         newChatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initNewChatroomFirebase();
+                initNewChatroomFirebase("1234", "1234", "testUser");
             }
         });
 
@@ -128,9 +130,9 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         initMatchRecycler();
     }
 
-    private void initNewChatroomFirebase() {
+    public void initNewChatroomFirebase(final String liked_id, final String liked_firebase_token,
+                                         final String liked_name) {
         final String facebook_id = Profile.getCurrentProfile().getId();
-        // TODO: replace 1234 with actual user
         /* Chatrooms database ref */
         chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
         final String chatRoomId = chatRoomsRef.push().getKey();
@@ -138,7 +140,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         Map<String, Object> postValues = chatroom.toMap();
         chatRoomsRef.child(chatRoomId).updateChildren(postValues);
         chatRoomsRef.child(chatRoomId).child("users").child(facebook_id).setValue(true);
-        chatRoomsRef.child(chatRoomId).child("users").child("1234").setValue(true);
+        chatRoomsRef.child(chatRoomId).child("users").child(liked_id).setValue(true);
 
         /* Users database ref */
         final DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -151,14 +153,14 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
                     Map<String, Object> postValues = user.toMap();
                     usersRef.child(facebook_id).updateChildren(postValues);
                 }
-                if (!dataSnapshot.child("1234").exists()) {
-                    User user = new User("testUser", "1234");
+                if (!dataSnapshot.child(liked_id).exists()) {
+                    User user = new User(liked_name, liked_id);
                     Map<String, Object> postValues = user.toMap();
-                    usersRef.child("1234").updateChildren(postValues);
+                    usersRef.child(liked_id).updateChildren(postValues);
                 }
                 // update both users with new chatroom
                 usersRef.child(facebook_id).child("chatrooms").child(chatRoomId).setValue(true);
-                usersRef.child("1234").child("chatrooms").child(chatRoomId).setValue(true);
+                usersRef.child(liked_id).child("chatrooms").child(chatRoomId).setValue(true);
             }
 
             @Override

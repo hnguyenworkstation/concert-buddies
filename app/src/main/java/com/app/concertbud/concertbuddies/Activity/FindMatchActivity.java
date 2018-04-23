@@ -13,21 +13,26 @@ import com.app.concertbud.concertbuddies.Adapters.UserFindMatchAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverListMatchProfileBus;
+import com.app.concertbud.concertbuddies.EventBuses.DeliverMatchResponseBus;
 import com.app.concertbud.concertbuddies.Helpers.TestUserData;
 import com.app.concertbud.concertbuddies.Networking.Responses.BaseResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
 import com.app.concertbud.concertbuddies.Networking.Responses.MatchProfileResponse;
+import com.app.concertbud.concertbuddies.Networking.Responses.MatchResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.UserResponse;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchPotentialMatchesTask;
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.PostSwipeTask;
+import com.app.concertbud.concertbuddies.ViewFragments.MatchesFragment;
 import com.zc.swiple.SwipeFlingView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,6 +94,8 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
         mSwipeFlingView.setOnSwipeFlingListener(this);
     }
 
+    // this is kinda ugly but idc
+    Map<String, String> idNameMap = new HashMap<>();
     private void updateListView(List<MatchProfileResponse> list) {
         if (list == null || list.size() == 0) {
             canLoadMore = false;
@@ -99,6 +106,9 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
             return;
         }
 
+        for (MatchProfileResponse person : list) {
+            idNameMap.put(person.getUserId(), person.getFullName());
+        }
         mUserList.addAll(list);
         mAdapter.notifyDataSetChanged();
     }
@@ -236,6 +246,29 @@ public class FindMatchActivity extends BaseActivity implements SwipeFlingView.On
             });
 
             EventBus.getDefault().removeStickyEvent(matchProfileBus);
+        }
+    }
+
+    @Subscribe(sticky = true)
+    public void likeResponse(final DeliverMatchResponseBus matchResponseBus) {
+        if (matchResponseBus.getToClass().equals(FindMatchActivity.class.getSimpleName())) {
+            Log.d("chris", "its lit " + matchResponseBus.getMatchResponse().getMatch());
+            MatchResponse mr = matchResponseBus.getMatchResponse();
+            if (mr.getMatch().equals("1")) {
+                if (idNameMap.containsKey(mr.getLikedId())) {
+                    MatchesFragment.self.initNewChatroomFirebase(
+                            mr.getLikedId(),
+                            mr.getLikedFirebaseToken(),
+                            idNameMap.get(mr.getLikedId()));
+                } else {
+                    Log.d("chris",
+                            "this should never happen, we couldnt find the name??");
+                    MatchesFragment.self.initNewChatroomFirebase(
+                            idNameMap.get("SampleUser"),
+                            mr.getLikedFirebaseToken(),
+                            mr.getLikedId());
+                }
+            }
         }
     }
 
