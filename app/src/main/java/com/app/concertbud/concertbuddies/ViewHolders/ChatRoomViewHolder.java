@@ -60,7 +60,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
         mLastMessage.setText(chatroom.getLastMessage());
 
         // room name
-        for (Map.Entry<String, Boolean> entry : chatroom.getUsers().entrySet()) {
+        for (Map.Entry<String, Object> entry : chatroom.getUsers().entrySet()) {
             String key = entry.getKey();
             if (!key.equals(Profile.getCurrentProfile().getId())) {
                 DatabaseReference mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(key).child("name");
