@@ -35,12 +35,6 @@ import butterknife.Unbinder;
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.root_view)
     RelativeLayout mRootView;
-    @BindView(R.id.logo_image)
-    ImageView mChatRoomProfile;
-    @BindView(R.id.room_status)
-    ImageView mRoomStatusIcon;
-    @BindView(R.id.profile_progress)
-    ProgressBar mProfileProgress;
     @BindView(R.id.match_name)
     TextView mRoomName;
     @BindView(R.id.timestamp)

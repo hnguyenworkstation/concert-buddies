@@ -15,9 +15,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.app.concertbud.concertbuddies.Adapters.MessageAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
+import com.app.concertbud.concertbuddies.Networking.Responses.Chatroom;
 import com.app.concertbud.concertbuddies.Networking.Responses.Message;
 import com.app.concertbud.concertbuddies.Networking.Responses.User;
 import com.app.concertbud.concertbuddies.R;
@@ -38,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Calendar;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +58,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     @BindView(R.id.chat_recycler)
     RecyclerView mChatRecycler;
 
+    @BindView(R.id.user_name)
+    TextView mUserName;
+    @BindView(R.id.user_id)
+    TextView mUserId;
+
     private DatabaseReference mDatabase;
     private Unbinder unbinder;
     private FirebaseRecyclerAdapter<Message,RecyclerView.ViewHolder> FBRA;
@@ -65,6 +73,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     private FirebaseAuth mAuth;
 
     private String chatRoomID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,10 +87,43 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         initChatRecycler();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Messages");
-
         mSendButton.setOnClickListener(this);
 
         // TODO: implement collapsing keyboard when click outside
+
+        FirebaseDatabase.getInstance().getReference().child("Chatrooms").child(chatRoomID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Chatroom chatroom = dataSnapshot.getValue(Chatroom.class);
+
+                        // room name
+                        for (Map.Entry<String, Boolean> entry : chatroom.getUsers().entrySet()) {
+                            String key = entry.getKey();
+                            if (!key.equals(Profile.getCurrentProfile().getId())) {
+                                DatabaseReference mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(key).child("name");
+                                mDatabaseUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        mUserName.setText((String)dataSnapshot.getValue());
+                                        mUserId.setText("Online");
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            //mRoomName.setText(Profile.getCurrentProfile().getFirstName());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
 
