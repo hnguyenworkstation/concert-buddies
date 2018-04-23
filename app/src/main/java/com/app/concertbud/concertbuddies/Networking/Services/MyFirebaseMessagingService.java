@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.app.concertbud.concertbuddies.Activity.MainActivity;
 import com.app.concertbud.concertbuddies.R;
 import com.facebook.Profile;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -30,7 +31,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String notificationTitle = null, notificationBody = null;
         String senderId = remoteMessage.getData().get("senderId");
         Log.e("HUONG noti", senderId);
-        if (senderId.equals(Profile.getCurrentProfile().getId())) return;
+        Log.e("HUONG noti sending from", remoteMessage.getFrom());
+        if (senderId.equals(FirebaseAuth.getInstance().getUid())) return;
         Log.e("HUONG noti", "received noti");
         // check if message contains payload
         if (remoteMessage.getNotification() != null) {

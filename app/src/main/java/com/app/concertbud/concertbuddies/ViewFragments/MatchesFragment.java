@@ -26,6 +26,7 @@ import com.app.concertbud.concertbuddies.Activity.FindMatchActivity;
 import com.app.concertbud.concertbuddies.Adapters.ChatRoomAdapter;
 import com.app.concertbud.concertbuddies.Adapters.MatchesAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
+import com.app.concertbud.concertbuddies.AppControllers.BasePreferenceManager;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverListMatchProfileBus;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.Helpers.DataUtils;
@@ -137,7 +138,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
 
     private void initNewChatroomFirebase() {
         final String facebook_id = Profile.getCurrentProfile().getId();
-        final String fcm_token = FirebaseAuth.getInstance().getUid();
+        final String fcm_token = BasePreferenceManager.getDefault().getFcmToken();
         // TODO: replace 1234 with actual user
         BackendServices backendServices = NetContext.instance.create(BackendServices.class);
         backendServices.getUser(facebook_id).enqueue(new Callback<HerokuUser>() {

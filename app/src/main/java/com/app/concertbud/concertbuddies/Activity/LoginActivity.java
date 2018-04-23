@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
+import com.app.concertbud.concertbuddies.AppControllers.BasePreferenceManager;
 import com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.Helpers.StringUtils;
@@ -64,6 +65,8 @@ public class LoginActivity extends BaseActivity {
 
     private FirebaseAuth mAuth;
 
+    private String facebook_token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,16 +104,14 @@ public class LoginActivity extends BaseActivity {
                 Log.d("HUONG", "loginsuccess");
                 Log.e("HUONG", loginResult.getAccessToken().getToken());
 
-                AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+                final AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
                 mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // TODO: Update Firebase database with facebook login info (Server or Client side's job??)
-                            // Don't update Firebase here.
                             /* Update Backend */
-                            updateBackend(loginResult.getAccessToken().getToken(), mAuth.getUid());
-                            Log.e(TAG, "signInWithCredential succeeds");
+                            updateBackend(loginResult.getAccessToken().getToken());
                         }
                     }
                 });
@@ -132,9 +133,10 @@ public class LoginActivity extends BaseActivity {
                 MainActivity.class);
     }
 
-    private void updateBackend(final String token, final String fcm_token) {
+    public void updateBackend(String facebook_token) {
+        String fcm_token = BasePreferenceManager.getDefault().getFcmToken();
         BackendServices services = NetContext.instance.create(BackendServices.class);
-        services.postUser(new NewUserRequest(token, fcm_token))
+        services.postUser(new NewUserRequest(facebook_token, fcm_token))
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

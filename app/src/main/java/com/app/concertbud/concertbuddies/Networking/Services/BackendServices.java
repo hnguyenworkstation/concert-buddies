@@ -21,4 +21,7 @@ public interface BackendServices {
 
     @POST("/users")
     Call<Void> postUser(@Body NewUserRequest request);
+//
+//    @POST("/users/set_firebase_token")
+//    Call<Void> updateFCMToken(@Body UpdateFCMRequest request);
 }
