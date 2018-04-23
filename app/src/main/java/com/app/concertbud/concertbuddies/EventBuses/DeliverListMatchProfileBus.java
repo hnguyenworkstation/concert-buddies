@@ -1,6 +1,7 @@
 package com.app.concertbud.concertbuddies.EventBuses;
 
 import com.app.concertbud.concertbuddies.Networking.Responses.MatchProfileResponse;
+import com.app.concertbud.concertbuddies.Networking.Responses.MatchResponse;
 
 import java.util.List;
 
@@ -18,7 +19,8 @@ public class DeliverListMatchProfileBus {
         POTENTIAL, ACTUAL
     }
 
-    public DeliverListMatchProfileBus(String eventId, List<MatchProfileResponse> matchProfileResponseList, String toClass, Type type) {
+    public DeliverListMatchProfileBus(String eventId, List<MatchProfileResponse> matchProfileResponseList,
+                                      String toClass, Type type) {
         this.eventId = eventId;
         this.matchProfileResponseList = matchProfileResponseList;
         this.toClass = toClass;
