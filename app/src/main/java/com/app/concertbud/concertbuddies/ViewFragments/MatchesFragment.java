@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,8 +92,10 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
     private DatabaseReference chatRoomsRef;
     private Unbinder unbinder;
 
+    public static MatchesFragment self;
+
     public MatchesFragment() {
-        // Required empty public constructor
+        self = this;
     }
 
     public static MatchesFragment newInstance() {
@@ -126,7 +129,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         newChatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initNewChatroomFirebase();
+                initNewChatroomFirebase("1234", "1234", "testUser");
             }
         });
 
@@ -136,7 +139,8 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         initMatchRecycler();
     }
 
-    private void initNewChatroomFirebase() {
+    public void initNewChatroomFirebase(final String match_fb_id, final String match_fcm_token,
+                                         final String match_name) {
         final String facebook_id = Profile.getCurrentProfile().getId();
         final String fcm_token = BasePreferenceManager.getDefault().getFcmToken();
         // TODO: replace 1234 with actual user
@@ -147,8 +151,8 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
                 if (response.code() == 200) {
                     //String match_fcm_token = response.body().getFirebase_token();
                     // TODO: facebook_id is wrong, needs to be match's facebook id
-                    String match_fcm_token = "1234";
-                    createFirebaseChatroom(facebook_id, fcm_token, match_fcm_token);
+                    createFirebaseChatroom(facebook_id, fcm_token, match_fcm_token,
+                            match_fb_id, match_name);
                 }
             }
 
@@ -203,7 +207,10 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
 //        handler.postDelayed(runnable, 0);
     }
 
-    private void createFirebaseChatroom(final String facebook_id, String fcm_token, String match_fcm_token) {
+    private void createFirebaseChatroom(final String facebook_id, String fcm_token,
+                                        String match_fcm_token, final String match_fb_id,
+                                        final String match_name) {
+        Log.d("chris", "match name: " + match_name);
         /* Chatrooms database ref */
         chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
         final String chatRoomId = chatRoomsRef.push().getKey();
@@ -224,14 +231,14 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
                     Map<String, Object> postValues = user.toMap();
                     usersRef.child(facebook_id).updateChildren(postValues);
                 }
-                if (!dataSnapshot.child("1234").exists()) {
-                    User user = new User("testUser", "1234");
+                if (!dataSnapshot.child(match_fb_id).exists()) {
+                    User user = new User(match_name, match_fb_id);
                     Map<String, Object> postValues = user.toMap();
-                    usersRef.child("1234").updateChildren(postValues);
+                    usersRef.child(match_fb_id).updateChildren(postValues);
                 }
                 // update both users with new chatroom
                 usersRef.child(facebook_id).child("chatrooms").child(chatRoomId).setValue(true);
-                usersRef.child("1234").child("chatrooms").child(chatRoomId).setValue(true);
+                usersRef.child(match_fb_id).child("chatrooms").child(chatRoomId).setValue(true);
             }
 
             @Override
