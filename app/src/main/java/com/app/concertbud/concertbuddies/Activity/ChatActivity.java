@@ -98,7 +98,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                         Chatroom chatroom = dataSnapshot.getValue(Chatroom.class);
 
                         // room name
-                        for (Map.Entry<String, Boolean> entry : chatroom.getUsers().entrySet()) {
+                        for (Map.Entry<String, Object> entry : chatroom.getUsers().entrySet()) {
                             String key = entry.getKey();
                             if (!key.equals(Profile.getCurrentProfile().getId())) {
                                 DatabaseReference mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(key).child("name");
@@ -168,7 +168,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                             /* Update chatroom lastMsg and timestamp */
                             newPostChatroom.child("lastMessage").setValue(message);
                             newPostChatroom.child("timestamp").setValue(timestamp);
-                            newPostChatroom.child("senderId").setValue(Profile.getCurrentProfile().getId());
                         }
 
                         @Override

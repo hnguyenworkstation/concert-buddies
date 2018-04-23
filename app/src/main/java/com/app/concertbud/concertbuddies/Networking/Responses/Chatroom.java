@@ -12,15 +12,13 @@ import java.util.Map;
 public class Chatroom {
     private String lastMessage;
     private String timestamp;
-    private String senderId;
-    private Map<String, Boolean> users = new HashMap<>();
+    private Map<String, Object> users = new HashMap<>();
 
     public Chatroom() {}
 
-    public Chatroom(String lastMessage, String timestamp, String senderId) {
+    public Chatroom(String lastMessage, String timestamp) {
         this.lastMessage = lastMessage;
         this.timestamp = timestamp;
-        this.senderId = senderId;
     }
     @Exclude
     public Map<String, Object> toMap () {
@@ -35,19 +33,12 @@ public class Chatroom {
         return lastMessage;
     }
 
-    public Map<String, Boolean> getUsers() {
+    public Map<String, Object> getUsers() {
         return users;
     }
 
-    public String getSenderId() {
-        return senderId;
-    }
 
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
-    }
-
-    public void setUsers(Map<String, Boolean> users) {
+    public void setUsers(Map<String, Object> users) {
         this.users = users;
     }
 

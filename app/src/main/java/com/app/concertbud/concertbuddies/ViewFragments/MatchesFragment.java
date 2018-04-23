@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,15 +30,19 @@ import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.DeliverListMatchProfileBus;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
 import com.app.concertbud.concertbuddies.Helpers.DataUtils;
+import com.app.concertbud.concertbuddies.Networking.NetContext;
 import com.app.concertbud.concertbuddies.Networking.Responses.Chatroom;
 import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
+import com.app.concertbud.concertbuddies.Networking.Responses.HerokuUser;
 import com.app.concertbud.concertbuddies.Networking.Responses.MatchProfileResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.MatchResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.User;
+import com.app.concertbud.concertbuddies.Networking.Services.BackendServices;
 import com.app.concertbud.concertbuddies.R;
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchMatchesTask;
 import com.facebook.Profile;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,6 +64,9 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -130,17 +138,85 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         initMatchRecycler();
     }
 
-    public void initNewChatroomFirebase(final String liked_id, final String liked_firebase_token,
-                                         final String liked_name) {
+    public void initNewChatroomFirebase(final String match_fb_id, final String match_fcm_token,
+                                         final String match_name) {
         final String facebook_id = Profile.getCurrentProfile().getId();
+        final String fcm_token = FirebaseAuth.getInstance().getUid();
+        BackendServices backendServices = NetContext.instance.create(BackendServices.class);
+        backendServices.getUser(facebook_id).enqueue(new Callback<HerokuUser>() {
+            @Override
+            public void onResponse(Call<HerokuUser> call, Response<HerokuUser> response) {
+                if (response.code() == 200) {
+                    //String match_fcm_token = response.body().getFirebase_token();
+                    // TODO: facebook_id is wrong, needs to be match's facebook id
+                    createFirebaseChatroom(facebook_id, fcm_token, match_fcm_token,
+                            match_fb_id, match_name);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HerokuUser> call, Throwable t) {
+
+            }
+        });
+//        /* Chatrooms database ref */
+//        chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
+//        final String chatRoomId = chatRoomsRef.push().getKey();
+//        Chatroom chatroom = new Chatroom("", String.valueOf(Calendar.getInstance().getTimeInMillis()), facebook_id);
+//        Map<String, Object> postValues = chatroom.toMap();
+//        chatRoomsRef.child(chatRoomId).updateChildren(postValues);
+//        chatRoomsRef.child(chatRoomId).child("users").child(fcm_token).setValue(true);
+//        chatRoomsRef.child(chatRoomId).child("users").child("1234").setValue(true);
+
+//        /* Users database ref */
+//        final DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+//        // determine if user already exists
+//        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (!dataSnapshot.child(facebook_id).exists()) {
+//                    User user = new User(Profile.getCurrentProfile().getName(), facebook_id);
+//                    Map<String, Object> postValues = user.toMap();
+//                    usersRef.child(facebook_id).updateChildren(postValues);
+//                }
+//                if (!dataSnapshot.child("1234").exists()) {
+//                    User user = new User("testUser", "1234");
+//                    Map<String, Object> postValues = user.toMap();
+//                    usersRef.child("1234").updateChildren(postValues);
+//                }
+//                // update both users with new chatroom
+//                usersRef.child(facebook_id).child("chatrooms").child(chatRoomId).setValue(true);
+//                usersRef.child("1234").child("chatrooms").child(chatRoomId).setValue(true);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+        //AppUtils.startNewActivity(getContext(), getActivity(), ChatActivity.class);
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                getContext().startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("chatRoomID", chatRoomId));
+//            }
+//        };
+//        Handler handler = new Handler();
+//        handler.postDelayed(runnable, 0);
+    }
+
+    private void createFirebaseChatroom(final String facebook_id, String fcm_token,
+                                        String match_fcm_token, final String match_fb_id,
+                                        final String match_name) {
+        Log.d("chris", "match name: " + match_name);
         /* Chatrooms database ref */
         chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
         final String chatRoomId = chatRoomsRef.push().getKey();
-        Chatroom chatroom = new Chatroom("", String.valueOf(Calendar.getInstance().getTimeInMillis()), facebook_id);
+        Chatroom chatroom = new Chatroom("", String.valueOf(Calendar.getInstance().getTimeInMillis()));
         Map<String, Object> postValues = chatroom.toMap();
         chatRoomsRef.child(chatRoomId).updateChildren(postValues);
-        chatRoomsRef.child(chatRoomId).child("users").child(facebook_id).setValue(true);
-        chatRoomsRef.child(chatRoomId).child("users").child(liked_id).setValue(true);
+        chatRoomsRef.child(chatRoomId).child("users").child(fcm_token).child("last_msg_seen").setValue(0);
+        chatRoomsRef.child(chatRoomId).child("users").child(match_fcm_token).child("last_msg_seen").setValue(0);
 
         /* Users database ref */
         final DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -153,14 +229,14 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
                     Map<String, Object> postValues = user.toMap();
                     usersRef.child(facebook_id).updateChildren(postValues);
                 }
-                if (!dataSnapshot.child(liked_id).exists()) {
-                    User user = new User(liked_name, liked_id);
+                if (!dataSnapshot.child(match_fb_id).exists()) {
+                    User user = new User(match_name, match_fb_id);
                     Map<String, Object> postValues = user.toMap();
-                    usersRef.child(liked_id).updateChildren(postValues);
+                    usersRef.child(match_fb_id).updateChildren(postValues);
                 }
                 // update both users with new chatroom
                 usersRef.child(facebook_id).child("chatrooms").child(chatRoomId).setValue(true);
-                usersRef.child(liked_id).child("chatrooms").child(chatRoomId).setValue(true);
+                usersRef.child(match_fb_id).child("chatrooms").child(chatRoomId).setValue(true);
             }
 
             @Override
@@ -168,7 +244,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
 
             }
         });
-        //AppUtils.startNewActivity(getContext(), getActivity(), ChatActivity.class);
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
