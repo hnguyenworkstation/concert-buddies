@@ -122,6 +122,8 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
             }
         });
 
+        BaseApplication.getInstance().getJobManager().addJobInBackground(new FetchMatchesTask());
+
         initChatRoomsRecycler();
         initMatchRecycler();
     }

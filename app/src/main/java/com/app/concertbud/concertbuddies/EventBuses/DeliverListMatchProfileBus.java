@@ -27,6 +27,12 @@ public class DeliverListMatchProfileBus {
         this.type = type;
     }
 
+    public DeliverListMatchProfileBus(List<MatchProfileResponse> matchProfileResponseList, String toClass, Type type) {
+        this.matchProfileResponseList = matchProfileResponseList;
+        this.toClass = toClass;
+        this.type = type;
+    }
+
     public Type getType() {
         return type;
     }

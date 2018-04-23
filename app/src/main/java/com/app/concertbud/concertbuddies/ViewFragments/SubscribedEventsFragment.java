@@ -186,8 +186,6 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     synchronized
     public void addEventCard(EventsEntity event, int index) {
         // Sending signal right away to find match of this event
-        BaseApplication.getInstance().getJobManager().addJobInBackground(new FetchMatchesTask(event.getId()));
-        
         events.set(index, event);
         if (++added == max_events) {
             Log.d("chris", "yippie");
