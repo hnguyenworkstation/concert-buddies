@@ -34,6 +34,7 @@ import com.app.concertbud.concertbuddies.Networking.Responses.Entities.StartEnti
 import com.app.concertbud.concertbuddies.Networking.Services.BackendServices;
 import com.app.concertbud.concertbuddies.Networking.Services.EventServices;
 import com.app.concertbud.concertbuddies.R;
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchMatchesTask;
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.GetEventJob;
 import com.birbit.android.jobqueue.JobManager;
@@ -184,6 +185,9 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     private int added;
     synchronized
     public void addEventCard(EventsEntity event, int index) {
+        // Sending signal right away to find match of this event
+        BaseApplication.getInstance().getJobManager().addJobInBackground(new FetchMatchesTask(event.getId()));
+        
         events.set(index, event);
         if (++added == max_events) {
             Log.d("chris", "yippie");
