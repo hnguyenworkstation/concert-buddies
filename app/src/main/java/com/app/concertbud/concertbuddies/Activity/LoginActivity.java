@@ -96,12 +96,10 @@ public class LoginActivity extends BaseActivity {
         mFbLoginButton.setReadPermissions(Arrays.asList(StringUtils.getFbPermissions()));
         mFbLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(final LoginResult loginResult) {
                 Toast.makeText(getApplicationContext(), "Logging In Success", Toast.LENGTH_SHORT).show();
                 Log.d("HUONG", "loginsuccess");
                 Log.e("HUONG", loginResult.getAccessToken().getToken());
-                /* Update Backend */
-                updateBackend(loginResult.getAccessToken().getToken());
 
                 AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
                 mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -110,6 +108,8 @@ public class LoginActivity extends BaseActivity {
                         if (task.isSuccessful()) {
                             // TODO: Update Firebase database with facebook login info (Server or Client side's job??)
                             // Don't update Firebase here.
+                            /* Update Backend */
+                            updateBackend(loginResult.getAccessToken().getToken(), mAuth.getUid());
                             Log.e(TAG, "signInWithCredential succeeds");
                         }
                     }
@@ -132,9 +132,9 @@ public class LoginActivity extends BaseActivity {
                 MainActivity.class);
     }
 
-    private void updateBackend(final String token) {
+    private void updateBackend(final String token, final String fcm_token) {
         BackendServices services = NetContext.instance.create(BackendServices.class);
-        services.postUser(new NewUserRequest(token))
+        services.postUser(new NewUserRequest(token, fcm_token))
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
