@@ -8,7 +8,7 @@ const functions = require('firebase-functions');
 // });
 
 const admin = require('firebase-admin');
-admin.initializeApp();
+admin.initializeApp(functions.config().firebase);
 
 // send notification
 exports.sendNotification = functions.database.ref('/Chatrooms/{chatroomId}').onWrite((change, context) => {

@@ -40,7 +40,7 @@
         android:windowSoftInputMode="adjustResize"
         tools:replace="android:allowBackup,android:label">
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/vector_heart" />
+            android:resource="@drawable/ic_explore_gray" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/file_provider_authorities"
