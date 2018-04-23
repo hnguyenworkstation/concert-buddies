@@ -55,6 +55,12 @@ public class SubscribedEventsAdapter extends RecyclerView.Adapter<SubscribedEven
     @Override
     public void onBindViewHolder(SubscribedEventViewHolder holder, int i) {
         EventsEntity event = eventList.get(i);
+        Log.d("chris", event.getId() + "");
+        if (event.getId() == null) {
+            Log.d("chris",
+                    "error, we should not be printing empty events dog (Join Event Page)");
+            return;
+        }
         final View iView = holder.itemView;
         NestedEmbeddedVenuesEntity venue = event.getEmbedded().getVenues().get(0);
 

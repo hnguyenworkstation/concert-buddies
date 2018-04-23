@@ -190,7 +190,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     case 0:
                         mTabTitle.setText("Joined Events");
                         mTabView.setVisibility(View.VISIBLE);
-                        SubscribedEventsFragment.self.loadEvents();
                         break;
                     case 1:
                         mTabTitle.setText("");

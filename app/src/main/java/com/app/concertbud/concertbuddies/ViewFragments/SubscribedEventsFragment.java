@@ -87,15 +87,10 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
         super.onCreate(savedInstanceState);
     }
 
-    boolean initial = true;
     @Override
     public void onResume() {
         super.onResume();
-        if (!initial) {
-            loadEvents();
-        } else {
-            initial = false;
-        }
+        loadEvents();
     }
 
     @Override
@@ -145,8 +140,6 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
             }
         });
 
-
-        loadEvents();
     }
 
     @Override
@@ -179,15 +172,15 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                         while (events.size() > max_events) {
                             events.remove(events.size()-1);
                         }
-                        for (int i = 0; i < max_events; i++) {
-                            jobManager.addJobInBackground(new GetEventJob(eventIds.get(i), i));
-                        }
                         if (max_events == 0) {
                             subscribedEventsRefreshLayout.setRefreshing(false);
                             eventsAdapter.notifyDataSetChanged();
                             mEmptyMessage.setVisibility(View.VISIBLE);
                         } else {
                             mEmptyMessage.setVisibility(View.GONE);
+                            for (int i = 0; i < max_events; i++) {
+                                jobManager.addJobInBackground(new GetEventJob(eventIds.get(i), i));
+                            }
                         }
 
                         // Store data temporary
@@ -203,8 +196,7 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
 
     private int max_events;
     private int added;
-    synchronized
-    public void addEventCard(EventsEntity event, int index) {
+    public synchronized void addEventCard(EventsEntity event, int index) {
         // Sending signal right away to find match of this event
         events.set(index, event);
         if (++added == max_events) {
