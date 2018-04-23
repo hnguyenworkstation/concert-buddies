@@ -10,11 +10,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:id="@+id/custom_actionbar">
+        <include layout="@layout/custom_chatroom_actionbar"/>
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chat_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/custom_actionbar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_above="@id/horizontalLine">

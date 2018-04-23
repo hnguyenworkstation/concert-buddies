@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+
+    <ImageButton
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:background="@null"
+        android:id="@+id/action_back"
+        android:layout_width="@dimen/actionbar_icon_size"
+        android:layout_height="@dimen/actionbar_icon_size"
+        android:tint="@color/colorAccent"
+        android:src="@drawable/ic_left_arrow"
+        android:layout_marginStart="@dimen/actionbar_margin"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/action_back"
+        android:layout_toStartOf="@+id/action_more">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hung Nguyen"
+            android:textSize="@dimen/custom_toolbar_text_size"
+            android:id="@+id/user_name"
+            android:maxLines="1"
+            android:textColor="@color/text_med_color"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/user_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="/@hungnguyen"
+            android:textSize="14dp"
+            android:textColor="@color/gray_alpha"
+            android:textAlignment="center"
+            android:layout_centerVertical="true"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/action_more"
+        android:background="@null"
+        android:layout_width="@dimen/actionbar_icon_size"
+        android:layout_height="@dimen/actionbar_icon_size"
+        android:src="@drawable/ic_more_vert"
+        android:tint="@color/colorAccent"
+        android:scaleType="centerInside"
+        android:layout_marginEnd="@dimen/actionbar_margin"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="@dimen/margin_12"
+        android:layout_marginEnd="@dimen/margin_12"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_alpha"/>
+</RelativeLayout>

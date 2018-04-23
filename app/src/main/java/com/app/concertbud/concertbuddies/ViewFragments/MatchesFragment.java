@@ -234,11 +234,11 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
 
     @Override
     public void onChatRoomClicked(final int position) {
-        Toast.makeText(getContext(), "clicked at: " + position, Toast.LENGTH_SHORT).show();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                getContext().startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("chatRoomID", chatrooms.get(position)));
+                getContext().startActivity(new Intent(getActivity(),
+                        ChatActivity.class).putExtra("chatRoomID", chatrooms.get(position)));
             }
         };
         Handler handler = new Handler();
