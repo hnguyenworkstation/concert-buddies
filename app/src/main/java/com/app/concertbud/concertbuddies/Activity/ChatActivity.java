@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.app.concertbud.concertbuddies.Adapters.MessageAdapter;
@@ -59,6 +60,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     EditText mEditMsg;
     @BindView(R.id.chat_recycler)
     RecyclerView mChatRecycler;
+    @BindView(R.id.action_back)
+    ImageButton actionBack;
 
     @BindView(R.id.user_name)
     TextView mUserName;
@@ -94,6 +97,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Messages");
         mSendButton.setOnClickListener(this);
+
+        actionBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         // TODO: implement collapsing keyboard when click outside
 
