@@ -143,24 +143,26 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
                                          final String match_name) {
         final String facebook_id = Profile.getCurrentProfile().getId();
         final String fcm_token = BasePreferenceManager.getDefault().getFcmToken();
+        createFirebaseChatroom(facebook_id, fcm_token, match_fcm_token,
+                match_fb_id, match_name);
         // TODO: replace 1234 with actual user
-        BackendServices backendServices = NetContext.instance.create(BackendServices.class);
-        backendServices.getUser(facebook_id).enqueue(new Callback<HerokuUser>() {
-            @Override
-            public void onResponse(Call<HerokuUser> call, Response<HerokuUser> response) {
-                if (response.code() == 200) {
-                    //String match_fcm_token = response.body().getFirebase_token();
-                    // TODO: facebook_id is wrong, needs to be match's facebook id
-                    createFirebaseChatroom(facebook_id, fcm_token, match_fcm_token,
-                            match_fb_id, match_name);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HerokuUser> call, Throwable t) {
-
-            }
-        });
+//        BackendServices backendServices = NetContext.instance.create(BackendServices.class);
+//        backendServices.getUser(match_fb_id).enqueue(new Callback<HerokuUser>() {
+//            @Override
+//            public void onResponse(Call<HerokuUser> call, Response<HerokuUser> response) {
+//                if (response.code() == 200) {
+//                    //String match_fcm_token = response.body().getFirebase_token();
+//                    // TODO: facebook_id is wrong, needs to be match's facebook id
+//                    createFirebaseChatroom(facebook_id, fcm_token, match_fcm_token,
+//                            match_fb_id, match_name);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<HerokuUser> call, Throwable t) {
+//
+//            }
+//        });
 //        /* Chatrooms database ref */
 //        chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
 //        final String chatRoomId = chatRoomsRef.push().getKey();
@@ -231,10 +233,10 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
                     Map<String, Object> postValues = user.toMap();
                     usersRef.child(fcm_token).updateChildren(postValues);
                 }
-                if (!dataSnapshot.child(match_fb_id).exists()) {
+                if (!dataSnapshot.child(match_fcm_token).exists()) {
                     User user = new User(match_name, match_fb_id);
                     Map<String, Object> postValues = user.toMap();
-                    usersRef.child(match_fb_id).updateChildren(postValues);
+                    usersRef.child(match_fcm_token).updateChildren(postValues);
                 }
                 // update both users with new chatroom
                 // <<<
