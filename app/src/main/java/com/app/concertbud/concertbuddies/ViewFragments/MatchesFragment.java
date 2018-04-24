@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -75,10 +76,10 @@ import retrofit2.Response;
 public class MatchesFragment extends Fragment implements OnChatRoomClickListener, OnMatchClickListener{
     @BindView(R.id.chat_recycler)
     RecyclerView mRoomsRecycler;
-    @BindView(R.id.newchat)
-    Button newChatBtn;
     @BindView(R.id.matches_recycler)
     RecyclerView mMatchesRecyclerView;
+    @BindView(R.id.matches_refresh_layout)
+    SwipeRefreshLayout refreshLayout;
 
     private ArrayList<String> chatrooms;
     private List<MatchProfileResponse> matchResponseList;
@@ -126,17 +127,11 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
 
-        newChatBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initNewChatroomFirebase("1234", "1234", "testUser");
-            }
-        });
-
         BaseApplication.getInstance().getJobManager().addJobInBackground(new FetchMatchesTask());
 
         initChatRoomsRecycler();
         initMatchRecycler();
+        refreshLayout.setEnabled(false);
     }
 
     public void initNewChatroomFirebase(final String match_fb_id, final String match_fcm_token,
