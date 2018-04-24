@@ -3,10 +3,12 @@ package com.app.concertbud.concertbuddies.ViewFragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -24,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnEventClickListener;
+import com.app.concertbud.concertbuddies.Activity.EventActivity;
 import com.app.concertbud.concertbuddies.Adapters.EventsCardAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
 import com.app.concertbud.concertbuddies.EventBuses.ConcertsNearbyBus;
@@ -493,8 +496,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onEventClicked(int position) {
-
+    public void onEventClicked(final int position) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                getContext().startActivity(new Intent(getActivity(), EventActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .putExtra("EventsEntity", mClusterConcertsList.get(position)));
+            }
+        };
+        new Handler().postDelayed(runnable, 0);
     }
 
     @Override

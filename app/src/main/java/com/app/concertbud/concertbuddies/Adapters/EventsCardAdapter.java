@@ -44,4 +44,6 @@ public class EventsCardAdapter extends RecyclerView.Adapter<EventCardViewHolder>
     public int getItemCount() {
         return mConcertsList.size();
     }
+
+
 }
