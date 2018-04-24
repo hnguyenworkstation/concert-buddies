@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnChatRoomClickListener;
+import com.app.concertbud.concertbuddies.AppControllers.BasePreferenceManager;
 import com.app.concertbud.concertbuddies.Networking.Responses.Chatroom;
 import com.app.concertbud.concertbuddies.R;
 import com.facebook.Profile;
@@ -62,7 +63,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
         // room name
         for (Map.Entry<String, Object> entry : chatroom.getUsers().entrySet()) {
             String key = entry.getKey();
-            if (!key.equals(Profile.getCurrentProfile().getId())) {
+            if (!key.equals(BasePreferenceManager.getDefault().getFcmToken())) {
                 DatabaseReference mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(key).child("name");
                 mDatabaseUsers.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

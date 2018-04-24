@@ -207,8 +207,8 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
 //        handler.postDelayed(runnable, 0);
     }
 
-    private void createFirebaseChatroom(final String facebook_id, String fcm_token,
-                                        String match_fcm_token, final String match_fb_id,
+    private void createFirebaseChatroom(final String facebook_id, final String fcm_token,
+                                        final String match_fcm_token, final String match_fb_id,
                                         final String match_name) {
         Log.d("chris", "match name: " + match_name);
         /* Chatrooms database ref */
@@ -226,10 +226,10 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.child(facebook_id).exists()) {
+                if (!dataSnapshot.child(fcm_token).exists()) {
                     User user = new User(Profile.getCurrentProfile().getName(), facebook_id);
                     Map<String, Object> postValues = user.toMap();
-                    usersRef.child(facebook_id).updateChildren(postValues);
+                    usersRef.child(fcm_token).updateChildren(postValues);
                 }
                 if (!dataSnapshot.child(match_fb_id).exists()) {
                     User user = new User(match_name, match_fb_id);
@@ -237,8 +237,9 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
                     usersRef.child(match_fb_id).updateChildren(postValues);
                 }
                 // update both users with new chatroom
-                usersRef.child(facebook_id).child("chatrooms").child(chatRoomId).setValue(true);
-                usersRef.child(match_fb_id).child("chatrooms").child(chatRoomId).setValue(true);
+                // <<<
+                usersRef.child(fcm_token).child("chatrooms").child(chatRoomId).setValue(true);
+                usersRef.child(match_fcm_token).child("chatrooms").child(chatRoomId).setValue(true);
             }
 
             @Override
@@ -288,7 +289,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         mRoomsRecycler.setAdapter(chatRoomAdapter);
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(mRoomsRecycler);
-        FirebaseDatabase.getInstance().getReference().child("Users").child(Profile.getCurrentProfile().getId()).child("chatrooms")
+        FirebaseDatabase.getInstance().getReference().child("Users").child(BasePreferenceManager.getDefault().getFcmToken()).child("chatrooms")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
