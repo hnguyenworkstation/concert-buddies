@@ -179,12 +179,19 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     protected void onStop() {
         super.onStop();
         FBRA.stopListening();
+        isActivityRunning = false;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //unbinder.unbind();
+        isActivityRunning = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         isActivityRunning = false;
     }
 
