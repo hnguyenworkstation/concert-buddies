@@ -12,7 +12,9 @@
     <com.app.concertbud.concertbuddies.CustomUI.SquareImageView
         android:layout_width="@dimen/large_icon_size"
         android:layout_height="@dimen/large_icon_size"
-        android:layout_margin="@dimen/margin_16"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginBottom="@dimen/margin_16"
         android:id="@+id/logo">
         <com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView
             android:layout_width="@dimen/large_icon_size"

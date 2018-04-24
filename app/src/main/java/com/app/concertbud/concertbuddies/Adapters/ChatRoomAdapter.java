@@ -53,7 +53,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomViewHolder> {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Chatroom chatroom = dataSnapshot.getValue(Chatroom.class);
-                        holder.init(chatroom, position, listener);
+                        holder.init(chatroom, position, listener, holder.itemView.getContext().getResources());
                     }
 
                     @Override

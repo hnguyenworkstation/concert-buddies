@@ -1,6 +1,11 @@
 package com.app.concertbud.concertbuddies.ViewHolders;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -64,7 +69,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
         super(itemView);
     }
 
-    public void init(final Chatroom chatroom, final int position, final OnChatRoomClickListener listener) {
+    public void init(final Chatroom chatroom, final int position, final OnChatRoomClickListener listener, final Resources resources) {
         unbinder = ButterKnife.bind(this, itemView);
 
         // TODO: mRoomImage
@@ -112,6 +117,11 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
                                         public void onSuccess() {
                                             Log.e("LOADING IMAGE", "profile pic link: " + url);
                                             mProgressBar.setVisibility(View.GONE);
+                                            Bitmap imgBitmap = ((BitmapDrawable) mLogoImage.getDrawable()).getBitmap();
+                                            RoundedBitmapDrawable imgDrawable = RoundedBitmapDrawableFactory.create(resources, imgBitmap);
+                                            imgDrawable.setCircular(true);
+                                            imgDrawable.setCornerRadius(Math.max(imgBitmap.getWidth(), imgBitmap.getHeight()) / 2.0f);
+                                            mLogoImage.setImageDrawable(imgDrawable);
                                         }
 
                                         @Override
