@@ -20,12 +20,22 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.app.concertbud.concertbuddies.Abstracts.OnChatRoomClickListener;
+import com.app.concertbud.concertbuddies.Abstracts.OnMatchClickListener;
 import com.app.concertbud.concertbuddies.Activity.ChatActivity;
+import com.app.concertbud.concertbuddies.Activity.FindMatchActivity;
 import com.app.concertbud.concertbuddies.Adapters.ChatRoomAdapter;
+import com.app.concertbud.concertbuddies.Adapters.MatchesAdapter;
+import com.app.concertbud.concertbuddies.AppControllers.BaseApplication;
+import com.app.concertbud.concertbuddies.EventBuses.DeliverListMatchProfileBus;
 import com.app.concertbud.concertbuddies.Helpers.AppUtils;
+import com.app.concertbud.concertbuddies.Helpers.DataUtils;
 import com.app.concertbud.concertbuddies.Networking.Responses.Chatroom;
+import com.app.concertbud.concertbuddies.Networking.Responses.Entities.EventsEntity;
+import com.app.concertbud.concertbuddies.Networking.Responses.MatchProfileResponse;
+import com.app.concertbud.concertbuddies.Networking.Responses.MatchResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.User;
 import com.app.concertbud.concertbuddies.R;
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchMatchesTask;
 import com.facebook.Profile;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -36,9 +46,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,17 +63,23 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MatchesFragment extends Fragment implements OnChatRoomClickListener{
+public class MatchesFragment extends Fragment implements OnChatRoomClickListener, OnMatchClickListener{
     @BindView(R.id.chat_recycler)
     RecyclerView mRoomsRecycler;
-    // <<<
     @BindView(R.id.newchat)
     Button newChatBtn;
+    @BindView(R.id.matches_recycler)
+    RecyclerView mMatchesRecyclerView;
+
     private ArrayList<String> chatrooms;
+    private List<MatchProfileResponse> matchResponseList;
+
     private Set<String> chatroomsSoFar;
     private OnChatRoomClickListener listener = this;
 
     private ChatRoomAdapter chatRoomAdapter;
+    private MatchesAdapter matchesAdapter;
+
     private DatabaseReference chatRoomsRef;
     private Unbinder unbinder;
 
@@ -79,6 +99,8 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+
+        matchResponseList = new ArrayList<>();
     }
 
     @Override
@@ -93,8 +115,6 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
 
-        // <<<
-        // TODO: remove this when swipe tinder is implemented
         newChatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +122,12 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
             }
         });
 
+//        for (EventsEntity entity : DataUtils.getSubscribedEvent()) {
+//            BaseApplication.getInstance().getJobManager().addJobInBackground(new FetchMatchesTask(entity.getId()));
+//        }
+
         initChatRoomsRecycler();
+        initMatchRecycler();
     }
 
     private void initNewChatroomFirebase() {
@@ -111,7 +136,7 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         /* Chatrooms database ref */
         chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
         final String chatRoomId = chatRoomsRef.push().getKey();
-        Chatroom chatroom = new Chatroom("", String.valueOf(Calendar.getInstance().getTimeInMillis()), facebook_id);
+        Chatroom chatroom = new Chatroom("", String.valueOf(Calendar.getInstance().getTimeInMillis()), false);
         Map<String, Object> postValues = chatroom.toMap();
         chatRoomsRef.child(chatRoomId).updateChildren(postValues);
         chatRoomsRef.child(chatRoomId).child("users").child(facebook_id).setValue(true);
@@ -165,6 +190,19 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         getChatRooms();
     }
 
+    private void initMatchRecycler() {
+        matchesAdapter = new MatchesAdapter(getContext(), matchResponseList, this);
+        final RecyclerView.LayoutManager mLayoutManager =
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
+                        false);
+
+        mMatchesRecyclerView.setLayoutManager(mLayoutManager);
+        mMatchesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mMatchesRecyclerView.setNestedScrollingEnabled(false);
+        mMatchesRecyclerView.setHasFixedSize(false);
+        mMatchesRecyclerView.setAdapter(matchesAdapter);
+    }
+
     private void getChatRooms() {
         chatrooms = new ArrayList<>();
         chatroomsSoFar = new HashSet<>();
@@ -196,7 +234,6 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         unbinder.unbind();
     }
 
-
     @Override
     public void onChatRoomClicked(final int position) {
         Toast.makeText(getContext(), "clicked at: " + position, Toast.LENGTH_SHORT).show();
@@ -213,5 +250,27 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
     @Override
     public void onChatRoomLongClicked(int position) {
 
+    }
+
+    @Override
+    public void onMatchClicked(int position) {
+
+    }
+
+    @Subscribe(sticky = true)
+    public void onEvent(final DeliverListMatchProfileBus matchProfileBus) {
+        if (matchProfileBus.getToClass().equals(FindMatchActivity.class.getSimpleName())
+                && matchProfileBus.getType() == DeliverListMatchProfileBus.Type.ACTUAL ) {
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    matchResponseList.addAll(matchProfileBus.getMatchProfileResponseList());
+                    matchesAdapter.notifyDataSetChanged();
+                }
+            });
+
+            EventBus.getDefault().removeStickyEvent(matchProfileBus);
+        }
     }
 }

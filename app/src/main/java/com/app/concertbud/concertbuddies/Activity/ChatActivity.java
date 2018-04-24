@@ -18,10 +18,12 @@ import android.widget.EditText;
 
 import com.app.concertbud.concertbuddies.Adapters.MessageAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
+import com.app.concertbud.concertbuddies.Networking.Responses.Chatroom;
 import com.app.concertbud.concertbuddies.Networking.Responses.Message;
 import com.app.concertbud.concertbuddies.Networking.Responses.User;
 import com.app.concertbud.concertbuddies.R;
 //import com.app.concertbud.concertbuddies.ViewHolders.MessageViewHolder;
+import com.bumptech.glide.signature.ObjectKey;
 import com.facebook.Profile;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -38,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Calendar;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +65,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     private DatabaseReference mDatabaseMsgs;
     private DatabaseReference mDatabaseUsers;
     private DatabaseReference mDatabaseChatrooms;
+    private DatabaseReference newPostChatroom;
     private FirebaseAuth mAuth;
 
     private String chatRoomID;
@@ -78,7 +82,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         initChatRecycler();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Messages");
-
+        mDatabaseMsgs = mDatabase.child(chatRoomID);
+        mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(Profile.getCurrentProfile().getId());
+        mDatabaseChatrooms = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
+        newPostChatroom = mDatabaseChatrooms.child(chatRoomID);
+        newPostChatroom.child("read").setValue(true);
         mSendButton.setOnClickListener(this);
 
         // TODO: implement collapsing keyboard when click outside
@@ -107,13 +115,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.send_btn:
-                mDatabaseMsgs = mDatabase.child(chatRoomID);
-                mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(Profile.getCurrentProfile().getId());
-                mDatabaseChatrooms = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
                 final String message = mEditMsg.getText().toString().trim();
                 if (!TextUtils.isEmpty(message)) {
                     final DatabaseReference newPostMsg = mDatabaseMsgs.push();
-                    final DatabaseReference newPostChatroom = mDatabaseChatrooms.child(chatRoomID);
                     mDatabaseUsers.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -124,9 +128,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                             newPostMsg.child("senderName").setValue(sender.getName());
 
                             /* Update chatroom lastMsg and timestamp */
+//                            Chatroom room = new Chatroom(message, timestamp, Profile.getCurrentProfile().getId());
+//                            Map<String, Object> postValues = room.toMap();
+//                            newPostChatroom.updateChildren(postValues);
                             newPostChatroom.child("lastMessage").setValue(message);
                             newPostChatroom.child("timestamp").setValue(timestamp);
-                            newPostChatroom.child("senderId").setValue(Profile.getCurrentProfile().getId());
+                            newPostChatroom.child("read").setValue(false);
                         }
 
                         @Override

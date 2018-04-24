@@ -3,6 +3,8 @@ package com.app.concertbud.concertbuddies.Activity;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -82,6 +84,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private int currentSecondStage = MAP_VIEW_CODE;
 
     private boolean isMapAnimating = false;
+    public static boolean isAppRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,14 +99,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         // Subscribe to Notifications
         FirebaseMessaging.getInstance().subscribeToTopic("pushNotifications");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create channel to show notifications.
-            String channelId  = getString(R.string.default_notification_channel_id);
-            String channelName = getString(R.string.default_notification_channel_name);
-            NotificationManager notificationManager =
-                    getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_LOW));
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            // Create channel to show notifications.
+//            String channelId  = getString(R.string.default_notification_channel_id);
+//            String channelName = getString(R.string.default_notification_channel_name);
+//            NotificationManager notificationManager =
+//                    getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
+//                    channelName, NotificationManager.IMPORTANCE_LOW));
+//        }
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId  = getString(R.string.default_notification_channel_id);
+        String channel2 = getString(R.string.default_notification_channel_name);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(channelId,
+                    "Channel 1",NotificationManager.IMPORTANCE_HIGH);
+
+            notificationChannel.setDescription("This is BNT");
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setShowBadge(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+            NotificationChannel notificationChannel2 = new NotificationChannel(channel2,
+                    "Channel 2",NotificationManager.IMPORTANCE_MIN);
+
+            notificationChannel.setDescription("This is bTV");
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setShowBadge(true);
+            notificationManager.createNotificationChannel(notificationChannel2);
+
         }
     }
 
@@ -265,6 +291,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     protected void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isAppRunning = false;
     }
 
     @Subscribe
