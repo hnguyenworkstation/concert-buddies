@@ -16,7 +16,7 @@ public class HerokuUser {
     private String name;
     @Expose
     @SerializedName("picture")
-    private HerokuImage image;
+    private HerokuImageWrapper image;
     @Expose
     @SerializedName("firebase_token")
     private String firebase_token;
@@ -37,11 +37,11 @@ public class HerokuUser {
         this.name = name;
     }
 
-    public HerokuImage getImage() {
+    public HerokuImageWrapper getImage() {
         return image;
     }
 
-    public void setImage(HerokuImage image) {
+    public void setImage(HerokuImageWrapper image) {
         this.image = image;
     }
 

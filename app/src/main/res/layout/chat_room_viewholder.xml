@@ -9,7 +9,22 @@
     android:foreground="?android:attr/selectableItemBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+    <com.app.concertbud.concertbuddies.CustomUI.SquareImageView
+        android:layout_width="@dimen/large_icon_size"
+        android:layout_height="@dimen/large_icon_size"
+        android:layout_margin="@dimen/margin_16"
+        android:id="@+id/logo">
+        <com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView
+            android:layout_width="@dimen/large_icon_size"
+            android:layout_height="@dimen/large_icon_size"
+            android:id="@+id/logo_image"/>
 
+        <ProgressBar
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:id="@+id/profile_progress"
+            android:layout_gravity="center"/>
+    </com.app.concertbud.concertbuddies.CustomUI.SquareImageView>
     <TextView
         android:layout_marginStart="@dimen/margin_16"
         style="@style/RegTextStyle"

@@ -215,7 +215,9 @@ public class MatchesFragment extends Fragment implements OnChatRoomClickListener
         Map<String, Object> postValues = chatroom.toMap();
         chatRoomsRef.child(chatRoomId).updateChildren(postValues);
         chatRoomsRef.child(chatRoomId).child("users").child(fcm_token).child("last_msg_seen").setValue(0);
+        chatRoomsRef.child(chatRoomId).child("users").child(fcm_token).child("fb_id").setValue(facebook_id);
         chatRoomsRef.child(chatRoomId).child("users").child(match_fcm_token).child("last_msg_seen").setValue(0);
+        chatRoomsRef.child(chatRoomId).child("users").child(match_fcm_token).child("fb_id").setValue(match_fb_id);
 
         /* Users database ref */
         final DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
