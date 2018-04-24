@@ -31,8 +31,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         String notificationTitle = null, notificationBody = null;
         String senderId = remoteMessage.getData().get("senderId");
-        Log.e("HUONG noti", senderId);
-        Log.e("HUONG noti sending from", remoteMessage.getFrom());
         if (senderId.equals(FirebaseAuth.getInstance().getUid())) return;
         Log.e("HUONG noti", "received noti");
         // check if message contains payload

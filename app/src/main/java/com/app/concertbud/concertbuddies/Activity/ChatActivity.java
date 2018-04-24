@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.app.concertbud.concertbuddies.Adapters.MessageAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
+import com.app.concertbud.concertbuddies.AppControllers.BasePreferenceManager;
 import com.app.concertbud.concertbuddies.Networking.Responses.Chatroom;
 import com.app.concertbud.concertbuddies.Networking.Responses.Message;
 import com.app.concertbud.concertbuddies.Networking.Responses.User;
@@ -105,7 +106,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                         // room name
                         for (Map.Entry<String, Object> entry : chatroom.getUsers().entrySet()) {
                             String key = entry.getKey();
-                            if (!key.equals(Profile.getCurrentProfile().getId())) {
+                            if (!key.equals(BasePreferenceManager.getDefault().getFcmToken())) {
                                 DatabaseReference mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(key).child("name");
                                 mDatabaseUsers.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -155,6 +156,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.send_btn:
+                mDatabaseMsgs = mDatabase.child(chatRoomID);
+                mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(BasePreferenceManager.getDefault().getFcmToken());
+                mDatabaseChatrooms = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
                 final String message = mEditMsg.getText().toString().trim();
                 if (!TextUtils.isEmpty(message)) {
                     final DatabaseReference newPostMsg = mDatabaseMsgs.push();
