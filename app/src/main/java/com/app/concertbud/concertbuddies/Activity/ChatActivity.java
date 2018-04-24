@@ -162,6 +162,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                 final String message = mEditMsg.getText().toString().trim();
                 if (!TextUtils.isEmpty(message)) {
                     final DatabaseReference newPostMsg = mDatabaseMsgs.push();
+                    final DatabaseReference newPostChatroom = mDatabaseChatrooms.child(chatRoomID);
                     mDatabaseUsers.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
