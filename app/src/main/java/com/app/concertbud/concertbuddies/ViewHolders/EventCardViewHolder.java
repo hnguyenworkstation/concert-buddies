@@ -33,9 +33,10 @@ public class EventCardViewHolder extends RecyclerView.ViewHolder {
     AdjustableImageView mEventImage;
     @BindView(R.id.event_progress)
     ProgressBar mEventProgress;
-    @BindView(R.id.event_time)
+    //@BindView(R.id.event_time)
+    @BindView(R.id.event_date)
     TextView mEventTime;
-    @BindView(R.id.event_distance)
+    @BindView(R.id.event_time) // TODO: freaking edit this plz!!!!
     TextView mEventDistance;
     @BindView(R.id.event_name)
     TextView mEventName;

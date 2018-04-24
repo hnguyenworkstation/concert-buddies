@@ -78,7 +78,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf"
                 android:id="@+id/event_desc"
                 android:textSize="@dimen/text_14"
                 android:textColor="@color/text_dark_color"
