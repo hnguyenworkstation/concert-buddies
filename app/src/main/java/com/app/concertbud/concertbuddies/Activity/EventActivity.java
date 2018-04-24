@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -53,6 +54,8 @@ public class EventActivity extends BaseActivity {
     TextView mEventName;
     @BindView(R.id.event_location)
     TextView mEventLocation;
+    @BindView(R.id.action_back)
+    ImageButton back_button;
 
     // Event Map Location
     @BindView(R.id.map_image)
@@ -153,6 +156,13 @@ public class EventActivity extends BaseActivity {
         // Load Map Image
         ImageLoader.loadAdjustImageFromURL(mMapImage, MapUtils.getMapLocationUrl(concert.getEmbedded().getVenues().get(0).getLocation().getLatitude(),
                 concert.getEmbedded().getVenues().get(0).getLocation().getLongitude()), mMapProgressBar);
+
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void showJoiningEventDialog() {

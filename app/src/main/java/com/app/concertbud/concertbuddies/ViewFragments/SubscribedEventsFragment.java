@@ -34,6 +34,7 @@ import com.app.concertbud.concertbuddies.Networking.Responses.Entities.StartEnti
 import com.app.concertbud.concertbuddies.Networking.Services.BackendServices;
 import com.app.concertbud.concertbuddies.Networking.Services.EventServices;
 import com.app.concertbud.concertbuddies.R;
+import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchMatchesTask;
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.FetchNearbyConcertsJob;
 import com.app.concertbud.concertbuddies.Tasks.Configs.Jobs.GetEventJob;
 import com.birbit.android.jobqueue.JobManager;
@@ -59,6 +60,8 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     RecyclerView mEventsRecycler;
     @BindView(R.id.subcribed_events_refresh)
     SwipeRefreshLayout subscribedEventsRefreshLayout;
+    @BindView(R.id.empty_message)
+    TextView mEmptyMessage;
 
     public static SubscribedEventsFragment self;
     private final JobManager jobManager = BaseApplication.getInstance().getJobManager();
@@ -66,6 +69,7 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     private Unbinder unbinder;
     private SubscribedEventsAdapter eventsAdapter;
     private List<EventsEntity> events = new ArrayList<>();
+    private List<EventsEntity> events_builder = new ArrayList<>();
 
     public SubscribedEventsFragment() {
         // Required empty public constructor
@@ -82,6 +86,12 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadEvents();
     }
 
     @Override
@@ -130,9 +140,6 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                 loadEvents();
             }
         });
-
-
-        loadEvents();
     }
 
     @Override
@@ -159,14 +166,21 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                         max_events = eventIds.size();
                         Log.d("chris", max_events + " max");
                         added = 0;
+                        while (events_builder.size() < max_events) {
+                            events_builder.add(new EventsEntity(""));
+                        }
+                        while (events_builder.size() > max_events) {
+                            events_builder.remove(events.size()-1);
+                        }
                         if (max_events == 0) {
                             subscribedEventsRefreshLayout.setRefreshing(false);
-                        }
-                        while (events.size() < max_events) {
-                            events.add(new EventsEntity(""));
-                        }
-                        for (int i = 0; i < max_events; i++) {
-                            jobManager.addJobInBackground(new GetEventJob(eventIds.get(i), i));
+                            buildEvents();
+                            mEmptyMessage.setVisibility(View.VISIBLE);
+                        } else {
+                            mEmptyMessage.setVisibility(View.GONE);
+                            for (int i = 0; i < max_events; i++) {
+                                jobManager.addJobInBackground(new GetEventJob(eventIds.get(i), i));
+                            }
                         }
 
                         // Store data temporary
@@ -182,9 +196,9 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
 
     private int max_events;
     private int added;
-    synchronized
-    public void addEventCard(EventsEntity event, int index) {
-        events.set(index, event);
+    public synchronized void addEventCard(EventsEntity event, int index) {
+        // Sending signal right away to find match of this event
+        events_builder.set(index, event);
         if (++added == max_events) {
             Log.d("chris", "yippie");
 
@@ -208,9 +222,15 @@ public class SubscribedEventsFragment extends Fragment implements OnSubscribedEv
                 }
             });
 
-            eventsAdapter.notifyDataSetChanged();
+            buildEvents();
             subscribedEventsRefreshLayout.setRefreshing(false);
         }
         Log.d("chris", added + " added " + event.getName());
+    }
+
+    public synchronized void buildEvents() {
+        events.removeAll(events);
+        events.addAll(events_builder);
+        eventsAdapter.notifyDataSetChanged();
     }
 }

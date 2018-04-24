@@ -18,6 +18,9 @@ public class MatchResponse implements Serializable {
     @SerializedName("liked_firebase_token")
     private String likedFirebaseToken;
     @Expose
+    @SerializedName("liked_id")
+    private String likedId;
+    @Expose
     @SerializedName("message")
     private String message;
     @Expose
@@ -38,6 +41,14 @@ public class MatchResponse implements Serializable {
 
     public void setLikedFirebaseToken(String likedFirebaseToken) {
         this.likedFirebaseToken = likedFirebaseToken;
+    }
+
+    public String getLikedId() {
+        return likedId;
+    }
+
+    public void setLikedId(String likedId) {
+        this.likedId = likedId;
     }
 
     public String getMessage() {

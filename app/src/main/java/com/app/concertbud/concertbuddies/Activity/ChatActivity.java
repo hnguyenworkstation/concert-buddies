@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.app.concertbud.concertbuddies.Adapters.MessageAdapter;
 import com.app.concertbud.concertbuddies.AppControllers.BaseActivity;
@@ -58,6 +59,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     @BindView(R.id.chat_recycler)
     RecyclerView mChatRecycler;
 
+    @BindView(R.id.user_name)
+    TextView mUserName;
+    @BindView(R.id.user_id)
+    TextView mUserId;
+
     private DatabaseReference mDatabase;
     private Unbinder unbinder;
     private FirebaseRecyclerAdapter<Message,RecyclerView.ViewHolder> FBRA;
@@ -68,11 +74,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     private DatabaseReference newPostChatroom;
     private FirebaseAuth mAuth;
 
+    public static boolean isActivityRunning;
     private String chatRoomID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
+
+        isActivityRunning = true;
 
         mAuth = FirebaseAuth.getInstance();
         unbinder = ButterKnife.bind(this);
@@ -82,14 +92,43 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         initChatRecycler();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Messages");
-        mDatabaseMsgs = mDatabase.child(chatRoomID);
-        mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(Profile.getCurrentProfile().getId());
-        mDatabaseChatrooms = FirebaseDatabase.getInstance().getReference().child("Chatrooms");
-        newPostChatroom = mDatabaseChatrooms.child(chatRoomID);
-        newPostChatroom.child("read").setValue(true);
         mSendButton.setOnClickListener(this);
 
         // TODO: implement collapsing keyboard when click outside
+
+        FirebaseDatabase.getInstance().getReference().child("Chatrooms").child(chatRoomID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Chatroom chatroom = dataSnapshot.getValue(Chatroom.class);
+
+                        // room name
+                        for (Map.Entry<String, Object> entry : chatroom.getUsers().entrySet()) {
+                            String key = entry.getKey();
+                            if (!key.equals(Profile.getCurrentProfile().getId())) {
+                                DatabaseReference mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(key).child("name");
+                                mDatabaseUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        mUserName.setText((String)dataSnapshot.getValue());
+                                        mUserId.setText("Online");
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            //mRoomName.setText(Profile.getCurrentProfile().getFirstName());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
 
@@ -109,6 +148,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+        isActivityRunning = false;
     }
 
     @Override
@@ -133,7 +173,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
 //                            newPostChatroom.updateChildren(postValues);
                             newPostChatroom.child("lastMessage").setValue(message);
                             newPostChatroom.child("timestamp").setValue(timestamp);
-                            newPostChatroom.child("read").setValue(false);
                         }
 
                         @Override

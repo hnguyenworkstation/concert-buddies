@@ -1,6 +1,7 @@
 package com.app.concertbud.concertbuddies.Networking.Services;
 
 import com.app.concertbud.concertbuddies.Networking.Requests.NewUserRequest;
+import com.app.concertbud.concertbuddies.Networking.Responses.HerokuUser;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -16,8 +17,11 @@ import retrofit2.http.Query;
 
 public interface BackendServices {
     @GET("/users/{user_id}")
-    Call<Void> getUser(@Path("user_id") int user_id);
+    Call<HerokuUser> getUser(@Path("user_id") String user_id);
 
     @POST("/users")
     Call<Void> postUser(@Body NewUserRequest request);
+//
+//    @POST("/users/set_firebase_token")
+//    Call<Void> updateFCMToken(@Body UpdateFCMRequest request);
 }

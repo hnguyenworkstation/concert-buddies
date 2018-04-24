@@ -11,24 +11,29 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         app:backgroundTint="@color/white"
-        android:layout_margin="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="39dp"
         android:scaleType="fitCenter"
         android:id="@+id/swipe_left_btn"
         android:src="@drawable/vector_cancel"/>
 
+    <!-- dont need this?
     <android.support.design.widget.FloatingActionButton
         android:layout_width="46dp"
         android:layout_height="46dp"
         app:backgroundTint="@color/white"
         android:layout_gravity="center_vertical"
         android:layout_margin="@dimen/margin_16"
-        android:src="@drawable/vector_star"/>
+        android:src="@drawable/vector_star"/>-->
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="56dp"
         android:layout_height="56dp"
         app:backgroundTint="@color/white"
-        android:layout_margin="@dimen/margin_16"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="39dp"
         android:id="@+id/swipe_right_btn"
         android:src="@drawable/vector_heart"/>
 </LinearLayout>

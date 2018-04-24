@@ -35,12 +35,6 @@ import butterknife.Unbinder;
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.root_view)
     RelativeLayout mRootView;
-    @BindView(R.id.logo_image)
-    ImageView mChatRoomProfile;
-    @BindView(R.id.room_status)
-    ImageView mRoomStatusIcon;
-    @BindView(R.id.profile_progress)
-    ProgressBar mProfileProgress;
     @BindView(R.id.match_name)
     TextView mRoomName;
     @BindView(R.id.timestamp)
@@ -66,7 +60,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
         mLastMessage.setText(chatroom.getLastMessage());
 
         // room name
-        for (Map.Entry<String, Boolean> entry : chatroom.getUsers().entrySet()) {
+        for (Map.Entry<String, Object> entry : chatroom.getUsers().entrySet()) {
             String key = entry.getKey();
             if (!key.equals(Profile.getCurrentProfile().getId())) {
                 DatabaseReference mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(key).child("name");

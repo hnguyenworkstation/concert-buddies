@@ -29,12 +29,9 @@ import retrofit2.Response;
  * Created by hungnguyen on 4/21/18.
  */
 public class FetchMatchesTask extends Job {
-    private String eventId;
-
-    public FetchMatchesTask(String eventId) {
+    public FetchMatchesTask() {
         super(new Params(JobPriority.HIGH).requireNetwork()
                 .persist().groupBy(JobGroup.matching));
-        this.eventId = eventId;
     }
 
     @Override
@@ -51,10 +48,10 @@ public class FetchMatchesTask extends Job {
                     public void onResponse(Call<List<MatchProfileResponse>> call,
                                            Response<List<MatchProfileResponse>> response) {
 
-                        EventBus.getDefault().postSticky(new DeliverListMatchProfileBus(eventId,
+                        EventBus.getDefault().postSticky(new DeliverListMatchProfileBus(
                                 response.body(), FindMatchActivity.class.getSimpleName(), DeliverListMatchProfileBus.Type.ACTUAL));
 
-                        EventBus.getDefault().postSticky(new DeliverListMatchProfileBus(eventId,
+                        EventBus.getDefault().postSticky(new DeliverListMatchProfileBus(
                                 response.body(), MatchesFragment.class.getSimpleName(), DeliverListMatchProfileBus.Type.ACTUAL));
                     }
 

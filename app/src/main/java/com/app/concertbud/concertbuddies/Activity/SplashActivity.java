@@ -35,7 +35,7 @@ public class SplashActivity extends BaseActivity {
                 } else {
                     // TODO: check facebook user id with what's in the database to get correct user's infos
                     AppUtils.startNewActivityAndFinish(getBaseContext(), SplashActivity.this,
-                            SignUpActivity.class);
+                            MainActivity.class);
                 }
             }
         }, SPLASH_TIME_OUT);

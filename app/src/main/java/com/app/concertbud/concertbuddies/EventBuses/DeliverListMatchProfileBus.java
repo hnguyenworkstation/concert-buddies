@@ -1,5 +1,7 @@
 package com.app.concertbud.concertbuddies.EventBuses;
 
+import android.util.Log;
+
 import com.app.concertbud.concertbuddies.Networking.Responses.MatchProfileResponse;
 import com.app.concertbud.concertbuddies.Networking.Responses.MatchResponse;
 
@@ -22,6 +24,12 @@ public class DeliverListMatchProfileBus {
     public DeliverListMatchProfileBus(String eventId, List<MatchProfileResponse> matchProfileResponseList,
                                       String toClass, Type type) {
         this.eventId = eventId;
+        this.matchProfileResponseList = matchProfileResponseList;
+        this.toClass = toClass;
+        this.type = type;
+    }
+
+    public DeliverListMatchProfileBus(List<MatchProfileResponse> matchProfileResponseList, String toClass, Type type) {
         this.matchProfileResponseList = matchProfileResponseList;
         this.toClass = toClass;
         this.type = type;

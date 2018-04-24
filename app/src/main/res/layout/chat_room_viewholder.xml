@@ -10,31 +10,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <com.app.concertbud.concertbuddies.CustomUI.SquareImageView
-        android:layout_width="@dimen/large_icon_size"
-        android:layout_height="@dimen/large_icon_size"
-        android:layout_margin="@dimen/margin_16"
-        android:id="@+id/logo">
-        <com.app.concertbud.concertbuddies.CustomUI.AdjustableImageView
-            android:layout_width="@dimen/large_icon_size"
-            android:layout_height="@dimen/large_icon_size"
-            android:id="@+id/logo_image"/>
-
-        <ProgressBar
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:id="@+id/profile_progress"
-            android:layout_gravity="center"/>
-
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:id="@+id/room_status"
-            android:src="@drawable/ic_left_arrow"
-            android:layout_gravity="bottom|end"/>
-    </com.app.concertbud.concertbuddies.CustomUI.SquareImageView>
-
     <TextView
+        android:layout_marginStart="@dimen/margin_16"
         style="@style/RegTextStyle"
         android:singleLine="true"
         android:layout_width="wrap_content"
@@ -47,20 +24,18 @@
         android:text="Hung Nguyen"/>
 
     <TextView
-        android:layout_centerVertical="true"
         android:id="@+id/timestamp"
-        android:layout_width="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="@dimen/margin_16"
-        android:layout_marginTop="@dimen/margin_16"
         style="@style/RegTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_alignEnd="@+id/last_message"
+        android:layout_alignTop="@+id/match_name"
         android:singleLine="true"
+        android:text="5 mins ago"
         android:textColor="@color/colorAccent"
-        android:textSize="@dimen/text_12"
-        android:text="5 mins ago"/>
+        android:textSize="@dimen/text_12" />
 
     <TextView
+        android:layout_marginStart="@dimen/margin_16"
         android:layout_marginTop="@dimen/margin_4"
         android:maxLines="2"
         style="@style/RegTextStyle"
