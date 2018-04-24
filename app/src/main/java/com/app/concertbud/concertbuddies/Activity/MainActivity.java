@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -131,7 +133,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             notificationManager.createNotificationChannel(notificationChannel2);
 
         }
+        getPendingIntent();
     }
+
+
+    private void getPendingIntent() {
+        Log.e(TAG, "getPendingIntent: checking for pending intents.");
+        final Intent intent = getIntent();
+        if (intent.hasExtra("intent_chatroom")) {
+            Log.e(TAG, "getPendingIntent: pending intent detected.");
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    getApplicationContext().startActivity(new Intent(getApplicationContext(),
+                            ChatActivity.class).putExtra("chatRoomID", intent.getStringExtra("intent_chatroom")));
+                }
+            };
+            Handler handler = new Handler();
+            handler.postDelayed(runnable, 0);
+        }
+    }
+
 
     private void getPermission() {
         AndPermission.with(this)

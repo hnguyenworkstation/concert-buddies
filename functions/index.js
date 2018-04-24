@@ -9,6 +9,11 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 exports.sendNotification = functions.database.ref('/Chatrooms/{chatroomID}').onWrite((change, context) => {
+
+    if (!change.before.exists()) {
+        console.log("newest data");
+        return null;
+    }
     // get the message that was written
     let message = change.after.child("lastMessage").val();
     let chatroomID = context.params.chatroomID;

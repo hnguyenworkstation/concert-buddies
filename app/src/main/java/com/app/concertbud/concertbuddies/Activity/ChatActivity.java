@@ -111,7 +111,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                                 mDatabaseUsers.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        mUserName.setText((String)dataSnapshot.getValue());
+                                        mUserName.setText(dataSnapshot.getValue(String.class));
                                         mUserId.setText("Online");
                                     }
 
@@ -130,8 +130,34 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
 
                     }
                 });
+
+        // <<<
+        enableChatroomListener();
     }
 
+    private void enableChatroomListener() {
+        mDatabase.child(chatRoomID).addValueEventListener(mValueEventListener);
+    }
+
+    ValueEventListener mValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            int numMessages = (int) dataSnapshot.getChildrenCount();
+            updateNumMessages(numMessages);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    private void updateNumMessages(int numMessages) {
+        FirebaseDatabase.getInstance().getReference().child("Chatrooms").child(chatRoomID)
+                .child("users").child(BasePreferenceManager.getDefault().getFcmToken())
+                .child("last_msg_seen")
+                .setValue(numMessages);
+    }
 
     @Override
     protected void onStart() {
@@ -148,7 +174,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
+        //unbinder.unbind();
         isActivityRunning = false;
     }
 
