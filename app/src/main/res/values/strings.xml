@@ -26,7 +26,8 @@
 
     <!-- API ACCESS TOKEN -->
     <string name="songkick_api_token">SoC1KPUMa6mRlrFx</string>
-    <string name="ticket_master_api_token">p8DswULsnRGgm3LH0gwIdZazv4E1pa40</string>
+    <!--<string name="ticket_master_api_token">p8DswULsnRGgm3LH0gwIdZazv4E1pa40</string> -->
+    <string name="ticket_master_api_token">vi5Cti5xuwA75Qmqawb9EiiSxyQEBVLe</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
